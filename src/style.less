@@ -1,0 +1,749 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  //   color-scheme: light dark;
+  //   color: rgba(255, 255, 255, 0.87);
+  //   background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  .hidden {
+    display: none;
+  }
+}
+
+// @text-selected: #12488b;
+@text-normal: black;
+@text-grey: #888;
+@text-high: #12488b;
+
+@piece-size: 32pt;
+@square-size: 10vw;
+@move-size: 14pt;
+
+@clock-height: 24pt;
+
+@score-cp-size: 3em;
+@score-cp-size-half: calc(3em / 2);
+
+@app-margin: 2em;
+@to-top: 45%;
+
+.A1,
+.C1,
+.E1,
+.G1,
+.B2,
+.D2,
+.F2,
+.H2,
+.A3,
+.C3,
+.E3,
+.G3,
+.B4,
+.D4,
+.F4,
+.H4,
+.A5,
+.C5,
+.E5,
+.G5,
+.B6,
+.D6,
+.F6,
+.H6,
+.A7,
+.C7,
+.E7,
+.G7,
+.B8,
+.D8,
+.F8,
+.H8 {
+  background-image: url("/ucui.svg");
+  background-size: contain;
+}
+
+.help {
+  font-size: small;
+  font-style: italic;
+}
+
+.to-button {
+  position: absolute;
+  top: @to-top;
+  font-size: medium;
+  font-weight: bold;
+  padding: 0.5em;
+  margin: 0.5em;
+  border: 2px solid;
+  border-radius: 6px;
+  color: @text-grey;
+}
+
+.clock {
+  position: absolute;
+  top: 0;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  border-bottom: 5px solid white;
+  font-size: 12pt;
+  line-height: @clock-height;
+  .time {
+    width: 50%;
+    text-align: center;
+    color: @text-grey;
+    background-color: white;
+    &.active {
+      color: @text-normal;
+      font-weight: bold;
+
+      &.white {
+        border-left: 0.5em solid black;
+      }
+
+      &.black {
+        border-right: 0.5em solid black;
+      }
+
+      &.flag {
+        background-color: black;
+        color: white;
+      }
+    }
+  }
+}
+
+.engine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 64pt;
+  padding-top: 30%;
+  background-color: black;
+  color: white;
+
+  .to-list {
+    right: 0;
+  }
+
+  .info {
+    font-size: small;
+    position: absolute;
+    top: calc(@clock-height + 1em);
+    width: 100%;
+  }
+
+  .score {
+    position: absolute;
+    font-size: small;
+    bottom: 4 * @piece-size;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+
+    .score-cp,
+    .score-none {
+      position: absolute;
+      width: @score-cp-size;
+      height: @score-cp-size;
+      text-align: center;
+      background-color: black;
+      color: white;
+      color: rgb(50%, 50%, 50%);
+      border: 1px solid;
+      border-radius: @score-cp-size-half;
+      line-height: @score-cp-size;
+      left: calc(50% - @score-cp-size-half);
+    }
+  }
+
+  .idle {
+    font-size: x-large;
+  }
+
+  // https://cssloaders.github.io/
+  .compute {
+    width: 96px;
+    height: 24px;
+    display: inline-block;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    background: linear-gradient(
+        45deg,
+        transparent 49%,
+        #fff 50%,
+        #fff 50%,
+        transparent 51%,
+        transparent
+      ),
+      linear-gradient(
+        -45deg,
+        transparent 49%,
+        #fff 50%,
+        #fff 50%,
+        transparent 51%,
+        transparent
+      );
+    font-size: 15px;
+    background-size: 1em 1em;
+    box-sizing: border-box;
+    animation: barStripe 0.6s linear infinite;
+  }
+
+  @keyframes barStripe {
+    0% {
+      background-position: 1em 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+}
+
+.input {
+  position: absolute;
+  // top: 20px;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background-color: white;
+  // background-color: aquamarine;
+  .pieces {
+    // background-color: bisque;
+    // position: absolute;
+    width: 100%;
+    bottom: 0;
+    line-height: 2 * @piece-size;
+    display: flex;
+    justify-content: space-evenly;
+    .piece {
+      font-size: @piece-size;
+      // color: @text-normal;
+      color: @text-grey;
+      &.selected {
+        color: @text-normal;
+      }
+    }
+  }
+  .moves {
+    width: 100%;
+    bottom: 2 * @piece-size;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    justify-content: center;
+    padding-top: 2em;
+
+    .select {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: flex-start;
+      margin-bottom: 1em;
+      margin-left: 1em;
+      margin-top: -1em;
+      .move {
+        color: white;
+        font-size: @move-size;
+        font-weight: bold;
+        margin: 6pt;
+        padding: 5px 0.3em;
+        min-width: 32pt;
+        border: 2px solid black;
+        background: black;
+        border-radius: 5px;
+      }
+    }
+
+    .rank {
+      display: flex;
+      justify-content: center;
+      height: @square-size;
+      width: 100%;
+      // background-color: aquamarine;
+      .ord {
+        height: @square-size;
+        line-height: @square-size;
+        width: @square-size;
+        background-color: white;
+        color: @text-grey;
+
+        &.selected {
+          color: @text-normal;
+          font-weight: bold;
+        }
+      }
+      .square {
+        height: @square-size;
+        width: @square-size;
+
+        &.dim {
+          filter: opacity(50%);
+        }
+
+        &.target {
+          .label {
+            // background-color: rgba(255, 255, 255, 0.8);
+            background-color: white; // still not sure
+            font-weight: bold;
+            line-height: @square-size;
+          }
+          &.selected-file,
+          &.selected-rank {
+            color: @text-grey;
+          }
+
+          &.selected {
+            .label {
+              background-color: @text-normal;
+            }
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+.home {
+  margin: @app-margin;
+  text-align: center;
+  .intro {
+    .ucui {
+      font-weight: bold;
+    }
+  }
+
+  .button {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-top: 1em;
+
+    &-play {
+      font-size: xxx-large;
+      margin-top: 2em;
+    }
+    &-config {
+      font-size: large;
+    }
+    &-history {
+      font-size: medium;
+    }
+  }
+
+  .footer {
+    left: 0;
+    position: absolute;
+    width: 100%;
+    bottom: 1em;
+    .link {
+      color: @text-high;
+    }
+  }
+}
+
+.config {
+  margin: @app-margin;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 4em);
+  // background-color: brown;
+  justify-content: space-between;
+  // .main {
+  //   // position: absolute;
+  //   // top: @config-margin;
+  //   // left: @config-margin;
+  //   // right: @config-margin;
+  //   // background-color: antiquewhite;
+  // }
+  .engine-color {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    div {
+      margin: 0 1em;
+    }
+    .color {
+      font-weight: bold;
+      border: 2px solid black;
+      padding: 4px 8px;
+      border-radius: 3px;
+      &.black {
+        color: white;
+        border: 2px solid white;
+        background-color: black;
+      }
+    }
+  }
+  .times {
+    display: flex;
+    .time {
+      margin: 1em auto;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  .position {
+    // position: absolu100te;
+    border-top: 1px solid;
+    padding-top: 1em;
+    // padding-bottom: 1em;
+    bottom: 0;
+    left: @app-margin;
+    right: @app-margin;
+    background-color: white;
+    .input-fen {
+      width: 96%;
+    }
+
+    .ok-button {
+      margin-top: 1em;
+      font-size: large;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+  .button-play {
+    font-size: xxx-large;
+    font-weight: bold;
+    text-decoration: underline;
+    text-align: center;
+    padding-top: 0em;
+    border-bottom: 1px solid;
+    padding-bottom: 0.5em;
+    border-top: 1px solid;
+  }
+
+  .eco {
+    padding-top: 0.5em;
+    flex-grow: 3;
+    overflow-y: auto;
+
+    .lookup {
+      padding-bottom: 0.5em;
+      display: flex;
+      justify-content: space-evenly;
+      align-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+      padding-top: 0.5em;
+      input.i {
+        line-height: 22px;
+        text-align: left;
+      }
+      .go-button {
+        font-weight: bold;
+        text-decoration: underline;
+        line-height: 22px;
+      }
+    }
+
+    .listing {
+      text-align: left;
+      // min-height: 100vh;
+      .item {
+        // display: flex;
+        // flex-wrap: wrap;
+        justify-content: space-between;
+        font-size: small;
+        padding: 3px 0;
+        border-bottom: 1px solid gray;
+        .names {
+          display: flex;
+          justify-content: flex-start;
+          .name {
+            font-style: italic;
+          }
+          .code {
+            font-weight: bold;
+            padding-right: 1em;
+          }
+        }
+        .actions {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          padding-top: 0.5em;
+          .moves {
+            margin-right: 1em;
+            font-size: smaller;
+            font-family: "Courier New", Courier, monospace;
+          }
+          .play {
+            margin-left: 3px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.movelist {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 4em);
+  margin: @app-margin;
+
+  .to-game {
+    left: 0;
+  }
+
+  .listing {
+    flex-grow: 10;
+    overflow-y: auto;
+    // margin-left: 5em;
+    font-family: "Courier New", Courier, monospace;
+    .ply {
+      font-size: large;
+      .ord {
+        color: @text-grey;
+        display: inline-block;
+        width: 1.5em;
+
+        .replay {
+          color: @text-normal;
+        }
+      }
+
+      .moves {
+        .move {
+          display: inline-block;
+          width: 4em;
+        }
+
+        // https://cssloaders.github.io/
+        .pending {
+          width: 1em;
+          height: 1em;
+          display: inline-block;
+          background-color: black;
+          border: 1px solid black;
+          border-radius: 4px;
+          background: linear-gradient(
+              45deg,
+              transparent 49%,
+              black 50%,
+              black 50%,
+              transparent 51%,
+              transparent
+            ),
+            linear-gradient(
+              -45deg,
+              transparent 49%,
+              black 50%,
+              black 50%,
+              transparent 51%,
+              transparent
+            );
+          font-size: 15px;
+          background-size: 1em 1em;
+          box-sizing: border-box;
+          animation: barStripe 0.6s linear infinite;
+        }
+      }
+    }
+    .outcome {
+      font-style: italic;
+      font-weight: bold;
+      margin-top: 1em;
+    }
+  }
+  .actions {
+    display: flex;
+    margin-top: 1em;
+    justify-content: space-around;
+    width: 100%;
+    .button {
+      // padding-left: 1em;
+      text-align: center;
+      text-decoration: underline;
+      font-weight: bold;
+
+      &.disabled {
+        color: @text-grey;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.history {
+  margin: @app-margin;
+
+  .listing {
+    text-align: left;
+    // min-height: 100vh;
+    .item {
+      // display: flex;
+      // flex-wrap: wrap;
+      justify-content: space-between;
+      font-size: small;
+      padding: 3px 0;
+      border-bottom: 1px solid gray;
+      .names {
+        display: flex;
+        justify-content: flex-start;
+        .name {
+          font-style: italic;
+        }
+        .code {
+          font-weight: bold;
+          padding-right: 1em;
+        }
+      }
+      .moves {
+        margin-right: 1em;
+        font-size: smaller;
+        font-family: "Courier New", Courier, monospace;
+        padding-top: 0.5em;
+      }
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-top: 0.5em;
+
+        .play {
+          width: 2em;
+          line-height: 2em;
+          // color: white;
+          // background-color: black;
+          text-align: center;
+          // border: 1px solid;
+          // border-radius: 1em;
+        }
+
+        .delete {
+          color: red;
+        }
+      }
+    }
+  }
+
+  .pgn-play {
+    border-top: 1px solid;
+    padding: 1em 0;
+    margin-top: 1em;
+    .help {
+      margin-bottom: 1em;
+    }
+    .ply {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      justify-content: flex-start;
+      font-size: larger;
+      font-family: "Courier New", Courier, monospace;
+      margin-left: 1em;
+      .ord {
+        width: 2em;
+        color: @text-grey;
+      }
+      .m0,
+      .m1 {
+        width: 3em;
+      }
+    }
+
+    .fen-play {
+      @square-size: 32px;
+
+      .updatable-board {
+        user-select: none;
+
+        .board {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: nowrap;
+          align-items: center;
+          margin: 1em;
+          .rank {
+            display: flex;
+            width: calc(8 * @square-size);
+
+            .square {
+              width: @square-size;
+              height: @square-size;
+              line-height: @square-size;
+              text-align: center;
+              font-size: calc(@square-size * 0.7);
+              background: none;
+            }
+          }
+        }
+
+        .nav-game {
+          display: flex;
+          justify-content: center;
+
+          .prev-button,
+          .next-button {
+            margin: 0 2em;
+            font-size: larger;
+
+            &.disabled {
+              color: @text-grey;
+            }
+          }
+        }
+
+        .play-button {
+          font-weight: bold;
+          text-decoration: underline;
+        }
+        .cancel-button {
+          // font-weight: bold;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.lock {
+  width: 100%;
+  height: 0.5em;
+  position: absolute;
+  bottom: 0;
+  background-color: @text-high;
+
+  &.locked {
+    background-color: @text-grey;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  .title {
+    margin-top: 0;
+  }
+  .to-button {
+    position: initial;
+    margin: 0;
+    padding: 0.2em;
+  }
+}

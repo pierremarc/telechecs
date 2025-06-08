@@ -1,0 +1,24 @@
+{
+  "name": "telechecs",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "vitest",
+    "build": "vite build --emptyOutDir"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^1.2.0",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.5",
+    "vite-plugin-checker": "^0.8.0",
+    "vite-plugin-node-csp": "^0.1.3",
+    "vitest": "^3.1.4"
+  },
+  "dependencies": {
+    "@bity/oauth2-auth-code-pkce": "^2.13.0",
+    "chess.js": "^1.3.1",
+    "zod": "^3.25.42"
+  }
+}
