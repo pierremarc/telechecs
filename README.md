@@ -2,7 +2,15 @@
 
 Play on [Lichess](https://lichess.org/) over the board, for cheap.
 
+You can try it on https://pierremarc.github.io/telechecs/
+
 ![scene with a chess set and a smartphone running Téléchecs](./picture.jpg)
+
+## Publish
+
+_rather a note for myself though_
+
+`npm run build && git commit www/ -m 'Build' git subtree push --prefix www/telechecs origin pages`
 
 ## License
 
