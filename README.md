@@ -10,7 +10,12 @@ You can try it on https://pierremarc.github.io/telechecs/
 
 _rather a note for myself though_
 
-`npm run build && git commit www/ -m 'Build' && git subtree push --prefix www/telechecs origin pages`
+```
+npm run build \
+    && git add www \
+    && git commit www/ -m 'Build' \
+    && git subtree push --prefix www/telechecs origin pages
+```
 
 ## License
 
