@@ -35,14 +35,14 @@ export const mountHome = (root: HTMLElement) => {
     "footer",
     ANCHOR(
       "link",
-      "https://github.com/pierremarc/ucui",
+      "https://github.com/pierremarc/telechecs",
       "Source code & feedback"
     )
   );
 
   const intro = DIV(
     "intro",
-    SPAN("ucui", "µcui "),
+    SPAN("ucui", "Téléchecs "),
     `
   is a Lichess client for OTB maniacs. Enjoy! 
     `

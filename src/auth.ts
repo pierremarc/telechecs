@@ -6,10 +6,11 @@ import { get } from "./store";
 import { Nullable } from "./lib/ucui/types";
 import { Streamer, streamWith } from "./lib/stream";
 import { fromNullable, map, Option } from "./lib/option";
+import { basedPath } from "./env";
 
 export const scopes = ["board:play", "challenge:read"];
 export const clientId = `ucui-${location.host}`;
-export const clientUrl = `${location.protocol}//${location.host}/lichess`;
+export const clientUrl = `${location.protocol}//${location.host}${basedPath()}`;
 
 type UserConfig_ = {
   id: string;

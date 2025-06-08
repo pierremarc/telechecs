@@ -19,6 +19,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     // "noUncheckedSideEffectImports": true // dont know why but its giving an error here
+
+     "types": ["node", "vite/client"],
   },
   // "include": ["src"]
 }
