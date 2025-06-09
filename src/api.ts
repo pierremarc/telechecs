@@ -11,6 +11,7 @@ import {
   ResponseOkZ,
   StreamEvent,
   StreamEventZ,
+  User,
   UserZ,
 } from "./lib/ucui/lichess-types";
 import { get, getMutable } from "./store";
@@ -45,6 +46,20 @@ export const streamBoard = (
       BoardEventZ,
       apiUrl(`/board/game/stream/${gameId}`)
     );
+    stream.onMessage(handler);
+    return true;
+  }
+  return false;
+};
+
+/**
+ * doc: https://lichess.org/api#tag/Relations/operation/apiUserFollowing
+ * path: /rel/following
+ */
+export const streamFollowing = (handler: (e: User) => boolean) => {
+  const config = getMutable("lichess/user");
+  if (config) {
+    const stream = config.streamer(UserZ, apiUrl(`/rel/following`));
     stream.onMessage(handler);
     return true;
   }

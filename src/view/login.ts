@@ -64,10 +64,30 @@ const lookup = () => {
   return DIV("lookup", DIV("search-block", input, submit), results);
 };
 
+const buttonFollow = () =>
+  events(DIV("button button-follow", "See Following"), (add) =>
+    add("click", () => assign("screen", "follow"))
+  );
+
+const logout = () =>
+  events(DIV("button button-logout", "logout"), (add) =>
+    add("click", () =>
+      authObject.logout().then(() => assign("lichess/user", null))
+    )
+  );
+
 const renderUser = (root: HTMLElement) => (user: UserConfig) => {
   listenEvents();
   emptyElement(root);
-  root.append(DIV("user", DIV("username", user.username), lookup()));
+  root.append(
+    DIV(
+      "user",
+      DIV("username", user.username),
+      logout(),
+      buttonFollow(),
+      lookup()
+    )
+  );
 };
 
 const renderLogin = (root: HTMLElement) => () => {

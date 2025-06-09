@@ -17,6 +17,7 @@ import { mountEvents } from "./view/events";
 import { connect } from "./play";
 import { stopClock } from "./clock";
 import { mountChallenge } from "./view/challenge";
+import { mountFollowing } from "./view/follow";
 
 const fullscreen = (elem: HTMLElement) => (toggle: boolean) =>
   toggle && document.location.hostname !== "localhost"
@@ -95,6 +96,10 @@ const main = (root: HTMLElement) => {
       case "challenge": {
         toggleFullscreen(false);
         return mountChallenge(root);
+      }
+      case "follow": {
+        toggleFullscreen(false);
+        return mountFollowing(root);
       }
     }
   });

@@ -8,7 +8,7 @@ import { streamWith } from "./lib/stream";
 import { fromNullable, map, Option } from "./lib/option";
 import { basedPath } from "./env";
 
-export const scopes = ["board:play", "challenge:read"];
+export const scopes = ["board:play", "challenge:read", "follow:read"];
 export const clientId = `ucui-${location.host}`;
 export const clientUrl = `${location.protocol}//${location.host}${basedPath()}`;
 

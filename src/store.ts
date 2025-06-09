@@ -85,6 +85,7 @@ let state = {
   "lichess/game-info": null as Nullable<GameEventInfo>,
   "lichess/game-state": null as Nullable<GameStateEvent>,
   "lichess/opponent": null as Nullable<User>,
+  "lichess/following": [] as User[],
 };
 
 export type State = typeof state;

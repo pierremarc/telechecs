@@ -13,7 +13,8 @@ export type LichessScreen =
   | "events"
   | "seek"
   | "movelist"
-  | "challenge";
+  | "challenge"
+  | "follow";
 
 export type Role = "Pawn" | "Knight" | "Bishop" | "Rook" | "Queen" | "King";
 
