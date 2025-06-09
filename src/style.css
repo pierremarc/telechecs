@@ -682,3 +682,17 @@
 .challenge-page .waiting {
   font-size: xx-large;
 }
+.follow {
+  margin: 2em;
+}
+.follow .title {
+  font-size: large;
+  font-weight: bold;
+}
+.follow .users {
+  margin-top: 2em;
+}
+.follow .users .user {
+  margin-bottom: 0.5em;
+  font-size: larger;
+}

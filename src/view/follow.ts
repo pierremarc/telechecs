@@ -28,7 +28,7 @@ export const mountFollowing = (root: HTMLElement) => {
   getFollowing();
   const users = DIV("users", ...get("lichess/following").map(renderUser));
   const header = DIV("header", DIV("title", `Following`));
-  root.append(header, users);
+  root.append(DIV("follow", header, users));
 
   subscribe("lichess/following")(() => {
     replaceNodeContent(users)(...get("lichess/following").map(renderUser));
