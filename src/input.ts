@@ -287,7 +287,7 @@ export const mountInput = (root: HTMLElement) => {
       emptyElement(pieces);
     }
   };
-  subscribe("lichess/game-state", "input")(update);
+  subscribe("lichess/game-state", "lichess/game-info", "input")(update);
 
   update();
 };

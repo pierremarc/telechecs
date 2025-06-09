@@ -37,9 +37,9 @@ const gameMonitor = () => {
       const lastEvent = events[events.length - 1];
 
       if (lastEvent.type === "gameStart") {
-        assign("screen", "game");
         assign("lichess/game-info", lastEvent.game);
         assign("lichess/challenges", []);
+        assign("screen", "game");
         connect(lastEvent.game.gameId);
       } else if (lastEvent.type === "gameFinish") {
         stopClock();

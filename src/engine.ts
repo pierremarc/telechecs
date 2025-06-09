@@ -1,7 +1,8 @@
 import { events } from "./lib/dom";
 import { replaceNodeContent, SPAN, DIV } from "./lib/html";
+import { defaultFormatSymbol, formatMove } from "./san";
 import { assign, get, getPlayerColor, getTurn, subscribe } from "./store";
-import { lastMoveSan } from "./util";
+import { getMoveListFromMoveString, legalMoves } from "./util";
 
 const render = (engineInfo: HTMLElement, engineState: HTMLElement) => {
   const info = get("lichess/game-info");
@@ -15,7 +16,18 @@ const render = (engineInfo: HTMLElement, engineState: HTMLElement) => {
     setEngineInfo(SPAN("name", info.opponent.username));
 
     if (turn === playerColor) {
-      setEngine(lastMoveSan(state.moves));
+      const moves = getMoveListFromMoveString(state.moves);
+      if (moves.length > 0) {
+        const move = moves[moves.length - 1];
+        const formated = formatMove(
+          move,
+          legalMoves(state.moves),
+          defaultFormatSymbol
+        );
+        setEngine(formated);
+      } else {
+        setEngine(DIV("idle", `Your turn to play ${turn}`));
+      }
     } else {
       setEngine(DIV("compute"));
     }

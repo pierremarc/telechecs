@@ -67,7 +67,7 @@ export const mountHome = (root: HTMLElement) => {
     ...get("lichess/challenges").map(renderChallenge)
   );
   const replaceCh = replaceNodeContent(challenges);
-  const updateCh = subscribe("lichess/stream-events");
+  const updateCh = subscribe("lichess/challenges");
   updateCh(() => {
     replaceCh(...get("lichess/challenges").map(renderChallenge));
   });
