@@ -17,11 +17,12 @@ const render = (engineInfo: HTMLElement, engineState: HTMLElement) => {
 
     if (turn === playerColor) {
       const moves = getMoveListFromMoveString(state.moves);
-      if (moves.length > 0) {
-        const move = moves[moves.length - 1];
+
+      const move = moves.pop();
+      if (move) {
         const formated = formatMove(
           move,
-          legalMoves(state.moves),
+          legalMoves(state.moves, moves.length),
           defaultFormatSymbol
         );
         setEngine(formated);

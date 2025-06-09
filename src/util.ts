@@ -73,7 +73,7 @@ export const uciMoveList = (uciString: string) =>
 export const legalMoves = (moves: string, at?: number): Move[] => {
   const game = new Chess();
   const uciMoves =
-    at === undefined ? uciMoveList(moves) : uciMoveList(moves).slice(0, at + 1);
+    at === undefined ? uciMoveList(moves) : uciMoveList(moves).slice(0, at);
   uciMoves.forEach((uci) => game.move(uciToObj(uci)));
   return game.moves({ verbose: true }).map((m) => {
     if (m.isKingsideCastle()) {
