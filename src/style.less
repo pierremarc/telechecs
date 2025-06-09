@@ -811,20 +811,32 @@
     font-weight: bold;
   }
   .choices {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: center;
+    // display: flex;
+    // flex-wrap: wrap;
+    // justify-content: space-around;
+    // align-items: center;
     margin-top: 2em;
     .challenge-create {
-      width: 82px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
       height: 82px;
       padding: 6px;
       margin: 6px;
       border: 1px solid;
-      text-align: center;
-      line-height: 82px;
-      font-size: xx-large;
+      .time {
+        font-weight: bold;
+        font-size: xx-large;
+        padding: 0.5em;
+      }
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        .button {
+          margin-right: 12px;
+        }
+      }
     }
   }
   .waiting {

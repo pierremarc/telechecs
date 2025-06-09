@@ -656,21 +656,28 @@
   font-weight: bold;
 }
 .challenge-page .choices {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
   margin-top: 2em;
 }
 .challenge-page .choices .challenge-create {
-  width: 82px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   height: 82px;
   padding: 6px;
   margin: 6px;
   border: 1px solid;
-  text-align: center;
-  line-height: 82px;
+}
+.challenge-page .choices .challenge-create .time {
+  font-weight: bold;
   font-size: xx-large;
+  padding: 0.5em;
+}
+.challenge-page .choices .challenge-create .actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.challenge-page .choices .challenge-create .actions .button {
+  margin-right: 12px;
 }
 .challenge-page .waiting {
   font-size: xx-large;
