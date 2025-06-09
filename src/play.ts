@@ -3,7 +3,13 @@ import {
   GameFullEvent,
   GameStateEvent,
 } from "./lib/ucui/lichess-types";
-import { Move, clockRunning, inputNone, moveToUCI } from "./lib/ucui/types";
+import {
+  Move,
+  clockInitial,
+  clockRunning,
+  inputNone,
+  moveToUCI,
+} from "./lib/ucui/types";
 import { boardMove, streamBoard } from "./api";
 import { startClock } from "./clock";
 
@@ -14,6 +20,7 @@ const handleStart = (message: GameFullEvent) => {
   assign("input", inputNone());
   assign("lichess/game-state", message.state);
   assign("started", true);
+  assign("clock", clockInitial());
 
   return true;
 };

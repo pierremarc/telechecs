@@ -9,7 +9,7 @@ import {
   Square,
   uciLetterToRole,
 } from "./lib/ucui/types";
-import { Chess } from "chess.js";
+import { Chess, Move as ChessJSMove } from "chess.js";
 
 export const ROLE_LIST: Role[] = [
   "Pawn",
@@ -70,9 +70,11 @@ const uciToObj = (uci: string): MoveObj => {
 export const uciMoveList = (uciString: string) =>
   uciString.split(" ").filter((m) => m.trim().length > 0);
 
-export const legalMoves = (moves: string): Move[] => {
+export const legalMoves = (moves: string, at?: number): Move[] => {
   const game = new Chess();
-  uciMoveList(moves).forEach((uci) => game.move(uciToObj(uci)));
+  const uciMoves =
+    at === undefined ? uciMoveList(moves) : uciMoveList(moves).slice(0, at + 1);
+  uciMoves.forEach((uci) => game.move(uciToObj(uci)));
   return game.moves({ verbose: true }).map((m) => {
     if (m.isKingsideCastle()) {
       if (m.color == "w") {
@@ -111,37 +113,39 @@ export const legalMovesForRole = (role: Role, gameMoves: string): Move[] => {
   uciMoveList(gameMoves).forEach((uci) => game.move(uciToObj(uci)));
   return game
     .moves({ piece: roleToUCILetter(role), verbose: true })
-    .map((m) => {
-      if (m.isKingsideCastle()) {
-        if (m.color == "w") {
-          return moveCastle("E1", "H1");
-        } else {
-          return moveCastle("E8", "H8");
-        }
-      }
-      if (m.isQueensideCastle()) {
-        if (m.color == "w") {
-          return moveCastle("E1", "A1");
-        } else {
-          return moveCastle("E8", "A8");
-        }
-      }
+    .map(chessjsMoveToMove);
+};
 
-      if (m.isEnPassant()) {
-        return moveEnPassant(
-          m.from.toUpperCase() as Square,
-          m.to.toUpperCase() as Square
-        );
-      }
+const chessjsMoveToMove = (m: ChessJSMove): Move => {
+  if (m.isKingsideCastle()) {
+    if (m.color == "w") {
+      return moveCastle("E1", "H1");
+    } else {
+      return moveCastle("E8", "H8");
+    }
+  }
+  if (m.isQueensideCastle()) {
+    if (m.color == "w") {
+      return moveCastle("E1", "A1");
+    } else {
+      return moveCastle("E8", "A8");
+    }
+  }
 
-      return moveNormal(
-        uciLetterToRole(m.piece),
-        m.from.toUpperCase() as Square,
-        m.to.toUpperCase() as Square,
-        m.isCapture() ? uciLetterToRole(m.captured!) : null,
-        m.isPromotion() ? uciLetterToRole(m.promotion!) : null
-      );
-    });
+  if (m.isEnPassant()) {
+    return moveEnPassant(
+      m.from.toUpperCase() as Square,
+      m.to.toUpperCase() as Square
+    );
+  }
+
+  return moveNormal(
+    uciLetterToRole(m.piece),
+    m.from.toUpperCase() as Square,
+    m.to.toUpperCase() as Square,
+    m.isCapture() ? uciLetterToRole(m.captured!) : null,
+    m.isPromotion() ? uciLetterToRole(m.promotion!) : null
+  );
 };
 
 export const lastMoveSan = (gameMoves: string): string => {
@@ -152,6 +156,12 @@ export const lastMoveSan = (gameMoves: string): string => {
 };
 export const getPGN = (gameMoves: string): string => {
   const game = new Chess();
+  // TODO: game.setHeader()...
   uciMoveList(gameMoves).forEach((uci) => game.move(uciToObj(uci)));
   return game.pgn();
+};
+export const getMoveListFromMoveString = (gameMoves: string): Move[] => {
+  const game = new Chess();
+  uciMoveList(gameMoves).forEach((uci) => game.move(uciToObj(uci)));
+  return game.history({ verbose: true }).map(chessjsMoveToMove);
 };

@@ -1,7 +1,7 @@
 import { events } from ".././lib/dom";
 import { DIV, ANCHOR, SPAN, replaceNodeContent } from ".././lib/html";
 import { ChallengeJson, TimeControl } from ".././lib/ucui/lichess-types";
-import { startNewGame } from "../game";
+import { declineChallenge, startNewGame } from "../game";
 import { assign, get, subscribe } from "../store";
 import { mountLogin } from "./login";
 
@@ -21,13 +21,27 @@ const rtc = (tc: TimeControl) => {
 };
 
 const renderChallenge = (c: ChallengeJson) =>
-  events(
-    DIV("button button-play", `${c.challenger.name} --- ${rtc(c.timeControl)}`),
-    (add) =>
-      add("click", () => {
-        startNewGame(c.id);
-        assign("screen", "game");
-      })
+  DIV(
+    "challenge",
+    DIV(
+      "spec",
+      DIV("challenger", c.challenger.name),
+      DIV("time", rtc(c.timeControl))
+    ),
+    DIV(
+      "actions",
+      events(DIV("button button-accept", "Accept"), (add) =>
+        add("click", () => {
+          startNewGame(c);
+          assign("screen", "game");
+        })
+      ),
+      events(DIV("button button-decline", "Decline"), (add) =>
+        add("click", () => {
+          declineChallenge(c);
+        })
+      )
+    )
   );
 
 export const mountHome = (root: HTMLElement) => {
@@ -48,18 +62,14 @@ export const mountHome = (root: HTMLElement) => {
     `
   );
 
-  const challenges = DIV("challenges");
+  const challenges = DIV(
+    "challenges",
+    ...get("lichess/challenges").map(renderChallenge)
+  );
   const replaceCh = replaceNodeContent(challenges);
   const updateCh = subscribe("lichess/stream-events");
   updateCh(() => {
-    const challenges: ChallengeJson[] = [];
-    for (const e of get("lichess/stream-events")) {
-      if (e.type === "challenge" && e.challenge.status === "created") {
-        challenges.push(e.challenge);
-      }
-    }
-
-    replaceCh(...challenges.map(renderChallenge));
+    replaceCh(...get("lichess/challenges").map(renderChallenge));
   });
 
   const login = DIV("login");

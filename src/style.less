@@ -329,7 +329,8 @@
   text-align: center;
   .intro {
     .ucui {
-      font-weight: bold;
+      // font-weight: bold;
+      font-style: italic;
     }
   }
 
@@ -357,6 +358,61 @@
     bottom: 1em;
     .link {
       color: @text-high;
+    }
+  }
+
+  .login {
+    .user {
+      border-top: 1px solid;
+      margin-top: 1em;
+      .username {
+        font-style: italic;
+        text-align: left;
+        font-size: small;
+        font-weight: bold;
+        padding: 0.5em;
+      }
+      .search-block {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .results {
+        margin-top: 1em;
+        .result {
+          font-size: xx-large;
+          font-weight: bold;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .challenge {
+    margin: 1em;
+    padding: 0.5em;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .spec {
+      text-align: left;
+      .challenger {
+        font-size: large;
+        font-weight: bold;
+      }
+    }
+    .actions {
+      text-align: right;
+      .button {
+        font-weight: normal;
+        margin: auto;
+        &.button-decline {
+          color: @text-grey;
+        }
+      }
     }
   }
 }
@@ -745,5 +801,33 @@
     position: initial;
     margin: 0;
     padding: 0.2em;
+  }
+}
+
+.challenge-page {
+  margin: @app-margin;
+  .title {
+    font-size: large;
+    font-weight: bold;
+  }
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 2em;
+    .challenge-create {
+      width: 82px;
+      height: 82px;
+      padding: 6px;
+      margin: 6px;
+      border: 1px solid;
+      text-align: center;
+      line-height: 82px;
+      font-size: xx-large;
+    }
+  }
+  .waiting {
+    font-size: xx-large;
   }
 }

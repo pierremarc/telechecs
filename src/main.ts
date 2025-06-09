@@ -1,5 +1,12 @@
 import "./style.css";
-import { assign, clearSubscriptions, get, StateKey, subscribe } from "./store";
+import {
+  assign,
+  clearSubscriptions,
+  dispatch,
+  get,
+  StateKey,
+  subscribe,
+} from "./store";
 import { mountHome } from "./view/home";
 import { mountGame } from "./game";
 import { screenLocker } from "./lock-screen";
@@ -9,6 +16,7 @@ import { map, fromNullable } from "./lib/option";
 import { mountEvents } from "./view/events";
 import { connect } from "./play";
 import { stopClock } from "./clock";
+import { mountChallenge } from "./view/challenge";
 
 const fullscreen = (elem: HTMLElement) => (toggle: boolean) =>
   toggle && document.location.hostname !== "localhost"
@@ -31,6 +39,7 @@ const gameMonitor = () => {
       if (lastEvent.type === "gameStart") {
         assign("screen", "game");
         assign("lichess/game-info", lastEvent.game);
+        assign("lichess/challenges", []);
         connect(lastEvent.game.gameId);
       } else if (lastEvent.type === "gameFinish") {
         stopClock();
@@ -38,6 +47,16 @@ const gameMonitor = () => {
         assign("lichess/game-info", null);
         assign("lichess/game-state", null);
         assign("screen", "home");
+      } else if (lastEvent.type === "challenge") {
+        if (lastEvent.challenge.status === "created") {
+          dispatch("lichess/challenges", (cs) =>
+            cs.concat(lastEvent.challenge)
+          );
+        }
+      } else if (lastEvent.type === "challengeCanceled") {
+        dispatch("lichess/challenges", (cs) =>
+          cs.filter((c) => c.id === lastEvent.challenge.id)
+        );
       }
     }
   });
@@ -72,6 +91,10 @@ const main = (root: HTMLElement) => {
       case "movelist": {
         toggleFullscreen(false);
         return mountMoveList(root);
+      }
+      case "challenge": {
+        toggleFullscreen(false);
+        return mountChallenge(root);
       }
     }
   });

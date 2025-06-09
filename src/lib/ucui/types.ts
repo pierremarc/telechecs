@@ -3,8 +3,17 @@
  * and hold only types and contructors/accessors
  */
 
+import { HttpClient } from "@bity/oauth2-auth-code-pkce";
+import { Streamer } from "../stream";
+
 export type Screen = "home" | "game" | "movelist" | "config" | "history";
-export type LichessScreen = "home" | "game" | "events" | "seek" | "movelist";
+export type LichessScreen =
+  | "home"
+  | "game"
+  | "events"
+  | "seek"
+  | "movelist"
+  | "challenge";
 
 export type Role = "Pawn" | "Knight" | "Bishop" | "Rook" | "Queen" | "King";
 
@@ -387,3 +396,12 @@ export const savedGame = (
   outcome,
   timestamp,
 });
+export type UserConfig_ = {
+  id: string;
+  username: string;
+  httpClient: HttpClient;
+  streamer: Streamer;
+  perfs: { [key: string]: any }; // ??
+};
+
+export type UserConfig = Omit<UserConfig_, "perfs">;

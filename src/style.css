@@ -257,7 +257,7 @@
   text-align: center;
 }
 .home .intro .ucui {
-  font-weight: bold;
+  font-style: italic;
 }
 .home .button {
   font-weight: bold;
@@ -282,6 +282,56 @@
 }
 .home .footer .link {
   color: #12488b;
+}
+.home .login .user {
+  border-top: 1px solid;
+  margin-top: 1em;
+}
+.home .login .user .username {
+  font-style: italic;
+  text-align: left;
+  font-size: small;
+  font-weight: bold;
+  padding: 0.5em;
+}
+.home .login .user .search-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.home .login .user .results {
+  margin-top: 1em;
+}
+.home .login .user .results .result {
+  font-size: xx-large;
+  font-weight: bold;
+  text-decoration: underline;
+}
+.home .challenge {
+  margin: 1em;
+  padding: 0.5em;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.home .challenge .spec {
+  text-align: left;
+}
+.home .challenge .spec .challenger {
+  font-size: large;
+  font-weight: bold;
+}
+.home .challenge .actions {
+  text-align: right;
+}
+.home .challenge .actions .button {
+  font-weight: normal;
+  margin: auto;
+}
+.home .challenge .actions .button.button-decline {
+  color: #888;
 }
 .config {
   margin: 2em;
@@ -597,4 +647,31 @@
   position: initial;
   margin: 0;
   padding: 0.2em;
+}
+.challenge-page {
+  margin: 2em;
+}
+.challenge-page .title {
+  font-size: large;
+  font-weight: bold;
+}
+.challenge-page .choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 2em;
+}
+.challenge-page .choices .challenge-create {
+  width: 82px;
+  height: 82px;
+  padding: 6px;
+  margin: 6px;
+  border: 1px solid;
+  text-align: center;
+  line-height: 82px;
+  font-size: xx-large;
+}
+.challenge-page .waiting {
+  font-size: xx-large;
 }

@@ -1,26 +1,24 @@
 import { addClass, DIV, removeClass } from "./lib/html";
 import { ChallengeJson } from "./lib/ucui/lichess-types";
 import { inputNone } from "./lib/ucui/types";
-import { challengeAccept } from "./api";
+import { challengeAccept, challengeDecline } from "./api";
 import { mountClock } from "./clock";
 import { mountOpponent } from "./engine";
 import { mountInput } from "./input";
-import { assign, get, subscribe } from "./store";
+import { assign, dispatch, get, subscribe } from "./store";
 
-export const startNewGame = (challengeId: string) => {
-  const challenges: ChallengeJson[] = [];
-  for (const e of get("lichess/stream-events")) {
-    if (e.type === "challenge" && e.challenge.status === "created") {
-      challenges.push(e.challenge);
-    }
-  }
-  const challenge = challenges.find((c) => c.id === challengeId);
+export const startNewGame = (challenge: ChallengeJson) => {
+  assign("lichess/current-challenge", challenge);
+  assign("lichess/challenges", []);
+  assign("input", inputNone());
+  challengeAccept(challenge.id);
+};
 
-  if (challenge) {
-    assign("lichess/current-challenge", challenge);
-    assign("input", inputNone());
-    challengeAccept(challenge.id);
-  }
+export const declineChallenge = (challenge: ChallengeJson) => {
+  dispatch("lichess/challenges", (cs) =>
+    cs.filter((c) => c.id !== challenge.id)
+  );
+  challengeDecline(challenge.id, "generic");
 };
 
 const mountLock = (root: HTMLElement) => {

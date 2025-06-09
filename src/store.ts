@@ -4,6 +4,7 @@ import {
   GameEventInfo,
   GameStateEvent,
   StreamEvent,
+  User,
 } from "./lib/ucui/lichess-types";
 import {
   Color,
@@ -19,12 +20,13 @@ import {
   Nullable,
   FEN_INITIAL_POSITION,
   LichessScreen,
+  Move,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
-import { UserConfig } from "./auth";
+import { UserConfig } from "./lib/ucui/types";
 
 import { startingLegalMoves } from "./data";
-import { uciMoveList } from "./util";
+import { getMoveListFromMoveString, uciMoveList } from "./util";
 
 export const getTurn = (): Nullable<Color> => {
   const game = get("lichess/game-state");
@@ -50,6 +52,14 @@ export const getPlayerColor = (): Nullable<Color> => {
   return null;
 };
 
+export const getMoveList = (): Move[] => {
+  const state = get("lichess/game-state");
+  if (state) {
+    return getMoveListFromMoveString(state.moves);
+  }
+  return [];
+};
+
 export const defaultGameConfig = () =>
   gameConfig(10 * 60 * 1000, 60 * 1000, "black");
 export const defaultInput = (): Input => inputNone();
@@ -66,14 +76,15 @@ let state = {
   input: defaultInput(),
   started: false,
   lockScreen: false,
-  // gameConfig: defaultGameConfig(),
   "lichess/host": "https://lichess.org",
   "lichess/user": null as Nullable<UserConfig>,
   "lichess/stream-events": [] as StreamEvent[],
   "lichess/challenges": [] as ChallengeJson[],
   "lichess/current-challenge": null as Nullable<ChallengeJson>,
+  "lichess/my-challenge": null as Nullable<ChallengeJson>,
   "lichess/game-info": null as Nullable<GameEventInfo>,
   "lichess/game-state": null as Nullable<GameStateEvent>,
+  "lichess/opponent": null as Nullable<User>,
 };
 
 export type State = typeof state;

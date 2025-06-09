@@ -1,15 +1,11 @@
 import { assign, dispatch, get, subscribe } from "../store";
-import { auth, UserConfig } from "../auth";
+import { UserConfig } from "../lib/ucui/types";
 import { map, orElseL, pipe2 } from ".././lib/option";
-import { emptyElement, events } from ".././lib/dom";
-import { DIV } from ".././lib/html";
-import { once } from ".././lib/util";
-import { streamEvent } from "../api";
-
-const authObject = auth();
-const init = once(() =>
-  authObject.init().then(() => console.log("Auth#init returned"))
-);
+import { attrs, emptyElement, events } from ".././lib/dom";
+import { DIV, INPUT, replaceNodeContent } from ".././lib/html";
+import { getUserById, streamEvent } from "../api";
+import { authObject } from "../auth";
+import { User } from "../lib/ucui/lichess-types";
 
 let listening = false;
 
@@ -44,18 +40,34 @@ const buttonLogin = () =>
     })
   );
 
+const renderLookupUser = (user: User) =>
+  events(DIV("result", user.username), (add) =>
+    add("click", () => {
+      assign("lichess/opponent", user);
+      assign("screen", "challenge");
+    })
+  );
+
+const lookup = () => {
+  const input = attrs(INPUT("", "search"), (set) =>
+    set("placeholder", "username")
+  );
+  const results = DIV("results");
+  const submit = events(DIV("button submit", "search"), (add) =>
+    add("click", () => {
+      const username = input.value;
+      getUserById(username).then((users) =>
+        replaceNodeContent(results)(...users.map(renderLookupUser))
+      );
+    })
+  );
+  return DIV("lookup", DIV("search-block", input, submit), results);
+};
+
 const renderUser = (root: HTMLElement) => (user: UserConfig) => {
   listenEvents();
   emptyElement(root);
-  root.append(
-    DIV(
-      "user",
-      user.username,
-      events(DIV("navigate", "events"), (add) =>
-        add("click", () => assign("screen", "events"))
-      )
-    )
-  );
+  root.append(DIV("user", DIV("username", user.username), lookup()));
 };
 
 const renderLogin = (root: HTMLElement) => () => {
@@ -64,8 +76,6 @@ const renderLogin = (root: HTMLElement) => () => {
 };
 
 export const mountLogin = (root: HTMLElement) => {
-  init();
-
   const withUser = map(renderUser(root));
   const withoutUser = orElseL(renderLogin(root));
 

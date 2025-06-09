@@ -27,7 +27,7 @@ export const withQueryString = (
 
 const defaultGetOptions = (
   contentType = "application/json" as ContentType
-): RequestInit => {
+): any => {
   const headers = new Headers();
   if (contentType !== "none") {
     headers.append("Content-Type", contentType);
@@ -44,8 +44,8 @@ const defaultGetOptions = (
 
 export const fetchWithClient =
   (client: typeof fetch) =>
-  <T>(zt: z.ZodType<T>, url: string, init?: RequestInit) => {
-    const options: RequestInit = {
+  <T>(zt: z.ZodType<T>, url: string, init?: any) => {
+    const options: any = {
       method: "GET",
       ...defaultGetOptions(),
       ...init,
@@ -65,7 +65,7 @@ export const fetchZ = fetchWithClient(fetch);
 
 const defaultPostOptions = (
   contentType = "application/x-www-form-urlencoded" as ContentType
-): RequestInit => {
+): any => {
   const headers: Record<string, string> = {};
   if (contentType !== "none") {
     headers["Content-Type"] = contentType;
@@ -86,15 +86,20 @@ export const postWithClient =
   <T>(
     zt: z.ZodType<T>,
     url: string,
-    data: Record<string, Encodable>,
-    init?: RequestInit
+    data: string | Record<string, Encodable>,
+    init?: any
   ) => {
-    const options: RequestInit = {
+    const options: any = {
       method: "POST",
-      body: encodeQueryString(data),
       ...defaultPostOptions(),
       ...init,
     };
+
+    if (typeof data === "string") {
+      options.body = data;
+    } else {
+      options.body = encodeQueryString(data);
+    }
 
     return client(url, options)
       .then((response) => {

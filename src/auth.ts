@@ -1,10 +1,10 @@
 /**
  * Taken from https://github.com/lichess-org/api-demo/blob/master/src/auth.ts
  */
-import { HttpClient, OAuth2AuthCodePKCE } from "@bity/oauth2-auth-code-pkce";
-import { get } from "./store";
-import { Nullable } from "./lib/ucui/types";
-import { Streamer, streamWith } from "./lib/stream";
+import { OAuth2AuthCodePKCE } from "@bity/oauth2-auth-code-pkce";
+import { assign, get } from "./store";
+import { Nullable, UserConfig, UserConfig_ } from "./lib/ucui/types";
+import { streamWith } from "./lib/stream";
 import { fromNullable, map, Option } from "./lib/option";
 import { basedPath } from "./env";
 
@@ -12,17 +12,7 @@ export const scopes = ["board:play", "challenge:read"];
 export const clientId = `ucui-${location.host}`;
 export const clientUrl = `${location.protocol}//${location.host}${basedPath()}`;
 
-type UserConfig_ = {
-  id: string;
-  username: string;
-  httpClient: HttpClient;
-  streamer: Streamer;
-  perfs: { [key: string]: any }; // ??
-};
-
-export type UserConfig = Omit<UserConfig_, "perfs">;
-
-export const auth = () => {
+const auth = () => {
   const lichessHost = get("lichess/host");
   let userConfig: Nullable<UserConfig_> = null;
 
@@ -97,3 +87,10 @@ export const auth = () => {
 };
 
 export type Auth = ReturnType<typeof auth>;
+
+export const authObject = auth();
+
+authObject.init().then(() => {
+  const updateConfig = map((uc: UserConfig) => assign("lichess/user", uc));
+  updateConfig(authObject.user());
+});

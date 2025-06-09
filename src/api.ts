@@ -11,6 +11,7 @@ import {
   ResponseOkZ,
   StreamEvent,
   StreamEventZ,
+  UserZ,
 } from "./lib/ucui/lichess-types";
 import { get, getMutable } from "./store";
 
@@ -78,7 +79,7 @@ const getPoster = (throwMissingUser = false) => {
 
 /**
  * doc: https://lichess.org/api#tag/Challenges/operation/challengeList
- * path: /api/challenge
+ * path: /challenge
  */
 export const challengeList = () => {
   const fetch = getFetch();
@@ -87,7 +88,7 @@ export const challengeList = () => {
 
 /**
  * doc: https://lichess.org/api#tag/Challenges/operation/challengeCreate
- * path: /api/challenge/{username}
+ * path: /challenge/{username}
  */
 export const challengeCreate = (
   username: string,
@@ -103,7 +104,7 @@ export const challengeCreate = (
 
 /**
  * doc: https://lichess.org/api#tag/Challenges/operation/challengeAccept
- * path: /api/challenge/{challengeId}/accept
+ * path: /challenge/{challengeId}/accept
  *
  */
 export const challengeAccept = (challengeId: string) => {
@@ -117,7 +118,7 @@ export const challengeAccept = (challengeId: string) => {
 
 /**
  * doc: https://lichess.org/api#tag/Challenges/operation/challengeDecline
- * path: /api/challenge/{challengeId}/decline
+ * path: /challenge/{challengeId}/decline
  *
  */
 export const challengeDecline = (
@@ -150,28 +151,67 @@ export const boardMove = (gameId: string, move: string) => {
 
 /**
  * doc: https://lichess.org/api#tag/Board/operation/boardGameAbort
- * path: /api/board/game/{gameId}/abort
+ * path: /board/game/{gameId}/abort
  *
  */
 export const boardAbort = (gameId: string) => {
   const post = getPoster();
   return post<ResponseOk>(
     ResponseOkZ,
-    apiUrl(`/api/board/game/${gameId}/abort`),
+    apiUrl(`/board/game/${gameId}/abort`),
     {}
   );
 };
 
 /**
  * doc: https://lichess.org/api#tag/Board/operation/boardGameResign
- * path: /api/board/game/{gameId}/resign
+ * path: /board/game/{gameId}/resign
  *
  */
 export const boardResign = (gameId: string) => {
   const post = getPoster();
   return post<ResponseOk>(
     ResponseOkZ,
-    apiUrl(`https://lichess.org/api/board/game/${gameId}/resign`),
+    apiUrl(`/board/game/${gameId}/resign`),
     {}
   );
+};
+
+/**
+ * doc: https://lichess.org/api#tag/Board/operation/boardGameDraw
+ * path: /board/game/{gameId}/draw/{accept}
+ *
+ */
+export const boardDraw = (gameId: string, accept: "yes" | "no") => {
+  const post = getPoster();
+  return post<ResponseOk>(
+    ResponseOkZ,
+    apiUrl(`/board/game/${gameId}/draw/${accept}`),
+    {}
+  );
+};
+
+/**
+ * doc: https://lichess.org/api#tag/Users/operation/apiUsers
+ * path: /users
+ *
+ */
+export const getUserById = (id: string) => {
+  const post = getPoster();
+  return post(UserZ.array(), apiUrl(`/users`), id, {
+    "Content-Type": "text/plain",
+  });
+};
+
+/**
+ * doc: https://lichess.org/api#tag/Challenges/operation/challengeCreate
+ * path: /challenge/{username}
+ *
+ */
+export const challengeUser = (
+  username: string,
+  request: RequesChallengeCreate
+) => {
+  const post = getPoster();
+  return post(ChallengeJsonZ, apiUrl(`/challenge/${username}`), request);
 };

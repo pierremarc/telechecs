@@ -222,7 +222,7 @@ export const RequesChallengeCreateClockZ = z.strictObject({
   variant: VariantKeyZ,
   fen: z.string().optional(),
   keepAliveStream: z.boolean(),
-  rules: RulesZ,
+  rules: RulesZ.optional(),
 });
 
 export const CorrespondenceDaysZ = z.union([
@@ -243,7 +243,7 @@ export const RequesChallengeCreateCorrespondenceZ = z.strictObject({
   variant: VariantKeyZ,
   fen: z.string().optional(),
   keepAliveStream: z.boolean(),
-  rules: RulesZ,
+  rules: RulesZ.optional(),
 });
 
 export const RequesChallengeCreateZ = z.union([
@@ -359,6 +359,206 @@ export const BoardMoveZ = z.strictObject({
   offeringDraw: z.boolean().optional(),
 });
 
+export const UserZ = z.object({
+  id: z.string(),
+  username: z.string(),
+  perfs: z
+    .union([
+      z.object({
+        chess960: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        atomic: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        racingKings: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        ultraBullet: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        blitz: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        kingOfTheHill: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        threeCheck: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        antichess: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        crazyhouse: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        bullet: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        correspondence: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        horde: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        puzzle: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        classical: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        rapid: z
+          .object({
+            games: z.number(),
+            rating: z.number(),
+            rd: z.number(),
+            prog: z.number(),
+            prov: z.union([z.boolean(), z.undefined()]).optional(),
+          })
+          .optional(),
+        storm: z
+          .object({
+            runs: z.number(),
+            score: z.number(),
+          })
+          .optional(),
+        racer: z
+          .object({
+            runs: z.number(),
+            score: z.number(),
+          })
+          .optional(),
+        streak: z
+          .object({
+            runs: z.number(),
+            score: z.number(),
+          })
+          .optional(),
+      }),
+      z.undefined(),
+    ])
+    .optional(),
+  title: TitleZ.optional(),
+  flair: z.union([z.string(), z.undefined()]).optional(),
+  createdAt: z.union([z.number(), z.undefined()]).optional(),
+  disabled: z.union([z.boolean(), z.undefined()]).optional(),
+  tosViolation: z.union([z.boolean(), z.undefined()]).optional(),
+  profile: z
+    .union([
+      z.object({
+        flag: z.string().optional(),
+        location: z.string().optional(),
+        bio: z.string().optional(),
+        realName: z.string().optional(),
+        fideRating: z.number().optional(),
+        uscfRating: z.number().optional(),
+        ecfRating: z.number().optional(),
+        cfcRating: z.number().optional(),
+        rcfRating: z.number().optional(),
+        dsbRating: z.number().optional(),
+        links: z.string().optional(),
+      }),
+      z.undefined(),
+    ])
+    .optional(),
+  seenAt: z.union([z.number(), z.undefined()]).optional(),
+  playTime: z
+    .union([
+      z.object({
+        total: z.number(),
+        tv: z.number(),
+      }),
+      z.undefined(),
+    ])
+    .optional(),
+  patron: z.union([z.boolean(), z.undefined()]).optional(),
+  verified: z.union([z.boolean(), z.undefined()]).optional(),
+});
+
 export type Color = z.infer<typeof ColorZ>;
 export type Source = z.infer<typeof SourceZ>;
 export type Status = z.infer<typeof StatusZ>;
@@ -406,3 +606,4 @@ export type ChatLineEvent = z.infer<typeof ChatLineEventZ>;
 export type OpponentGoneEvent = z.infer<typeof OpponentGoneEventZ>;
 export type BoardEvent = z.infer<typeof BoardEventZ>;
 export type BoardMove = z.infer<typeof BoardMoveZ>;
+export type User = z.infer<typeof UserZ>;
