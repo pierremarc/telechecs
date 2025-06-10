@@ -15,7 +15,6 @@ import { emptyElement } from "./lib/dom";
 import { map, fromNullable } from "./lib/option";
 import { mountEvents } from "./view/events";
 import { connect } from "./play";
-import { stopClock } from "./clock";
 import { mountChallenge } from "./view/challenge";
 import { mountFollowing } from "./view/follow";
 
@@ -43,7 +42,6 @@ const gameMonitor = () => {
         assign("screen", "game");
         connect(lastEvent.game.gameId);
       } else if (lastEvent.type === "gameFinish") {
-        stopClock();
         assign("lichess/current-challenge", null);
         assign("lichess/game-info", null);
         assign("lichess/game-state", null);

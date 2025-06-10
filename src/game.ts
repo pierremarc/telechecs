@@ -2,7 +2,7 @@ import { addClass, DIV, removeClass } from "./lib/html";
 import { ChallengeJson } from "./lib/ucui/lichess-types";
 import { inputNone } from "./lib/ucui/types";
 import { challengeAccept, challengeDecline } from "./api";
-import { mountClock } from "./clock";
+import { mountClock } from "./view/clock";
 import { mountOpponent } from "./engine";
 import { mountInput } from "./input";
 import { assign, dispatch, get, subscribe } from "./store";

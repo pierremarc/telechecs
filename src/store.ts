@@ -14,13 +14,12 @@ import {
   inputNone,
   position,
   MoveHist,
-  ClockState,
-  clockInitial,
   Eco,
   Nullable,
   FEN_INITIAL_POSITION,
   LichessScreen,
   Move,
+  ClockState,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -67,12 +66,11 @@ export const defaultPosition = () =>
   position(startingLegalMoves, FEN_INITIAL_POSITION);
 export const defaultScreen = (): LichessScreen => "home";
 export const defaultMoveList = (): MoveHist[] => [];
-export const defaultClock = (): ClockState => clockInitial();
 export const defaultEcoList = (): Eco[] => [];
 
 let state = {
   screen: defaultScreen(),
-  clock: defaultClock(),
+  clock: null as Nullable<ClockState>,
   input: defaultInput(),
   started: false,
   lockScreen: false,
@@ -83,7 +81,9 @@ let state = {
   "lichess/current-challenge": null as Nullable<ChallengeJson>,
   "lichess/my-challenge": null as Nullable<ChallengeJson>,
   "lichess/game-info": null as Nullable<GameEventInfo>,
-  "lichess/game-state": null as Nullable<GameStateEvent>,
+  "lichess/game-state": null as Nullable<
+    GameStateEvent & { timestamp: number }
+  >,
   "lichess/opponent": null as Nullable<User>,
   "lichess/following": [] as User[],
 };

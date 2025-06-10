@@ -3,24 +3,16 @@ import {
   GameFullEvent,
   GameStateEvent,
 } from "./lib/ucui/lichess-types";
-import {
-  Move,
-  clockInitial,
-  clockRunning,
-  inputNone,
-  moveToUCI,
-} from "./lib/ucui/types";
+import { Move, inputNone, moveToUCI, stampEvent } from "./lib/ucui/types";
 import { boardMove, streamBoard } from "./api";
-import { startClock } from "./clock";
 
 import { playSound } from "./sound";
-import { assign, dispatch, get } from "./store";
+import { assign, get } from "./store";
 
 const handleStart = (message: GameFullEvent) => {
   assign("input", inputNone());
-  assign("lichess/game-state", message.state);
+  assign("lichess/game-state", stampEvent(message.state));
   assign("started", true);
-  assign("clock", clockInitial());
 
   return true;
 };
@@ -29,20 +21,7 @@ const handleMove = (message: GameStateEvent) => {
   console.debug("handleMove", message);
   playSound();
   assign("input", inputNone());
-  assign("lichess/game-state", message);
-  if (get("clock")._tag === "initial") {
-    startClock(message.wtime, message.btime);
-  } else {
-    dispatch("clock", (c) =>
-      c._tag === "running"
-        ? {
-            ...c,
-            remaining_black: message.btime,
-            remaining_white: message.wtime,
-          }
-        : clockRunning(Date.now(), message.wtime, message.btime)
-    );
-  }
+  assign("lichess/game-state", stampEvent(message));
 
   return true;
 };

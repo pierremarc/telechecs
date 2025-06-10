@@ -192,41 +192,44 @@ export type Color = "black" | "white";
 export const otherColor = (color: Color): Color =>
   color === "black" ? "white" : "black";
 
-export type ClockInitial = { readonly _tag: "initial" };
+// export type ClockInitial = { readonly _tag: "initial" };
 
-export const clockInitial = (): ClockInitial => ({ _tag: "initial" });
+// export const clockInitial = (): ClockInitial => ({ _tag: "initial" });
 
-export type ClockRunning = {
-  readonly _tag: "running";
-  start_time: number;
-  remaining_white: number;
-  remaining_black: number;
+// export type ClockRunning = {
+//   readonly _tag: "running";
+//   start_time: number;
+//   remaining_white: number;
+//   remaining_black: number;
+// };
+
+// export const clockRunning = (
+//   start_time: number,
+//   remaining_white: number,
+//   remaining_black: number
+// ): ClockRunning => ({
+//   _tag: "running",
+//   start_time,
+//   remaining_white,
+//   remaining_black,
+// });
+
+// export type ClockFlag = {
+//   readonly _tag: "flag";
+//   color: Color; // fallen color
+//   other: number; // other's time
+// };
+
+// export const clockFlag = (color: Color, other: number): ClockFlag => ({
+//   _tag: "flag",
+//   color,
+//   other,
+// });
+
+export type ClockState = {
+  interval: number;
+  gameId: string;
 };
-
-export const clockRunning = (
-  start_time: number,
-  remaining_white: number,
-  remaining_black: number
-): ClockRunning => ({
-  _tag: "running",
-  start_time,
-  remaining_white,
-  remaining_black,
-});
-
-export type ClockFlag = {
-  readonly _tag: "flag";
-  color: Color; // fallen color
-  other: number; // other's time
-};
-
-export const clockFlag = (color: Color, other: number): ClockFlag => ({
-  _tag: "flag",
-  color,
-  other,
-});
-
-export type ClockState = ClockInitial | ClockRunning | ClockFlag;
 
 export type Position = {
   // turn: Color;
@@ -406,3 +409,8 @@ export type UserConfig_ = {
 };
 
 export type UserConfig = Omit<UserConfig_, "perfs">;
+
+export const stampEvent = <T>(event: T): T & { timestamp: number } => ({
+  ...event,
+  timestamp: Date.now(),
+});
