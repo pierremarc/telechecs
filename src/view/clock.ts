@@ -13,33 +13,31 @@ type ClockElements = {
 };
 
 const initClock = (updater: () => void) => {
-  const clock = get("clock");
   const info = get("lichess/game-info");
   const state = get("lichess/game-state");
+  stopClock();
+
   if (info && state && state.status === "started") {
-    if (!clock) {
-      const interval = window.setInterval(updater, 100);
-      assign("clock", { interval, gameId: info.gameId });
-    } else {
-      if (clock.gameId !== info.gameId) {
-        clearInterval(clock.interval);
-        const interval = window.setInterval(updater, 100);
-        assign("clock", { interval, gameId: info.gameId });
-      }
-    }
-  } else {
-    if (clock) {
-      clearInterval(clock.interval);
-      assign("clock", null);
-    }
+    const interval = window.setInterval(updater, 100);
+    assign("clock", { interval, gameId: info.gameId });
   }
 };
 
-const checkNeedClock = () => {
+export const stopClock = () => {
+  const clock = get("clock");
+  if (clock) {
+    clearInterval(clock.interval);
+    assign("clock", null);
+  }
+};
+
+const checkNeedClock = (updater: () => void) => {
   const clock = get("clock");
   const state = get("lichess/game-state");
   if (!state && clock) {
-    clearInterval(clock.interval);
+    stopClock();
+  } else if (state && state.status === "started" && !clock) {
+    initClock(updater);
   }
 };
 
@@ -50,10 +48,12 @@ export const mountClock = (root: Element) => {
   renderClockTime({ white, black });
   renderClockTurn({ white, black });
 
-  subscribe("lichess/game-state")(() => renderClockTurn({ white, black }));
+  subscribe("lichess/game-state")(() => {
+    checkNeedClock(() => renderClockTime({ white, black }));
+    renderClockTurn({ white, black });
+  });
 
   initClock(() => {
-    checkNeedClock();
     renderClockTime({ white, black });
   });
 };

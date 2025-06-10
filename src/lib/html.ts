@@ -175,10 +175,8 @@ export const replaceNodeContent =
 
 export const hasClass =
   (c: string) =>
-  <T extends Element>(node: T) => {
+  <T extends Element>(node: T) =>
     node.classList.contains(c);
-    return node;
-  };
 
 export const addClass =
   (...c: string[]) =>
