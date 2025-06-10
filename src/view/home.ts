@@ -44,6 +44,14 @@ const renderChallenge = (c: ChallengeJson) =>
     )
   );
 
+const renderChallenges = () => {
+  const challenges = get("lichess/challenges");
+  if (challenges.length > 0) {
+    return challenges.map(renderChallenge);
+  }
+  return [DIV("waiting", "Waiting for challenges̉…")];
+};
+
 export const mountHome = (root: HTMLElement) => {
   const footer = DIV(
     "footer",
@@ -62,14 +70,11 @@ export const mountHome = (root: HTMLElement) => {
     `
   );
 
-  const challenges = DIV(
-    "challenges",
-    ...get("lichess/challenges").map(renderChallenge)
-  );
+  const challenges = DIV("challenges", ...renderChallenges());
   const replaceCh = replaceNodeContent(challenges);
   const updateCh = subscribe("lichess/challenges");
   updateCh(() => {
-    replaceCh(...get("lichess/challenges").map(renderChallenge));
+    replaceCh(...renderChallenges());
   });
 
   const login = DIV("login");

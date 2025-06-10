@@ -1,11 +1,11 @@
 import { assign, dispatch, get, subscribe } from "../store";
 import { UserConfig } from "../lib/ucui/types";
 import { map, orElseL, pipe2 } from ".././lib/option";
-import { attrs, emptyElement, events } from ".././lib/dom";
-import { DIV, INPUT, replaceNodeContent } from ".././lib/html";
-import { getUserById, streamEvent } from "../api";
+import { emptyElement, events } from ".././lib/dom";
+import { ANCHOR, DIV } from ".././lib/html";
+import { streamEvent } from "../api";
 import { authObject } from "../auth";
-import { User } from "../lib/ucui/lichess-types";
+import { navigatePlayers } from "./buttons";
 
 let listening = false;
 
@@ -40,35 +40,6 @@ const buttonLogin = () =>
     })
   );
 
-const renderLookupUser = (user: User) =>
-  events(DIV("result", user.username), (add) =>
-    add("click", () => {
-      assign("lichess/opponent", user);
-      assign("screen", "challenge");
-    })
-  );
-
-const lookup = () => {
-  const input = attrs(INPUT("", "search"), (set) =>
-    set("placeholder", "username")
-  );
-  const results = DIV("results");
-  const submit = events(DIV("button submit", "search"), (add) =>
-    add("click", () => {
-      const username = input.value;
-      getUserById(username).then((users) =>
-        replaceNodeContent(results)(...users.map(renderLookupUser))
-      );
-    })
-  );
-  return DIV("lookup", DIV("search-block", input, submit), results);
-};
-
-const buttonFollow = () =>
-  events(DIV("button button-follow", "See Following"), (add) =>
-    add("click", () => assign("screen", "follow"))
-  );
-
 const logout = () =>
   events(DIV("button button-logout", "logout"), (add) =>
     add("click", () =>
@@ -82,11 +53,13 @@ const renderUser = (root: HTMLElement) => (user: UserConfig) => {
   root.append(
     DIV(
       "user",
-      DIV("username", user.username),
-      logout(),
-      buttonFollow(),
-      lookup()
-    )
+      DIV(
+        "username",
+        ANCHOR("", `${get("lichess/host")}/@/${user.id}`, user.username)
+      ),
+      logout()
+    ),
+    DIV("actions", navigatePlayers())
   );
 };
 

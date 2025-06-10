@@ -3,6 +3,7 @@ import { events } from "../lib/dom";
 import { DIV, replaceNodeContent } from "../lib/html";
 import { RequesChallengeCreate } from "../lib/ucui/lichess-types";
 import { assign, get, subscribe } from "../store";
+import { navigatePlayers } from "./buttons";
 
 const timeControls = [10, 20, 30, 40, 60];
 
@@ -36,12 +37,21 @@ const button = (
 const renderChallenge = (username: string, tc: number) =>
   DIV(
     "challenge-create",
-    DIV("time", tc),
+    DIV("time-control", DIV("time", tc), DIV("label", "minutes")),
     DIV(
       "actions",
-      button(username, tc, "black", false),
-      button(username, tc, "random", false),
-      button(username, tc, "white", false)
+      DIV(
+        "unrated",
+        button(username, tc, "black", false),
+        button(username, tc, "random", false),
+        button(username, tc, "white", false)
+      ),
+      DIV(
+        "rated",
+        button(username, tc, "black", true),
+        button(username, tc, "random", true),
+        button(username, tc, "white", true)
+      )
     )
   );
 export const mountChallenge = (root: HTMLElement) => {
@@ -54,7 +64,11 @@ export const mountChallenge = (root: HTMLElement) => {
     root.append(
       DIV(
         "challenge-page",
-        DIV("header", DIV("title", `Challenge ${opponent.username}`)),
+        DIV(
+          "header",
+          DIV("title", `Challenge ${opponent.username}`),
+          navigatePlayers()
+        ),
         choices
       )
     );

@@ -286,28 +286,30 @@
 .home .login .user {
   border-top: 1px solid;
   margin-top: 1em;
+  display: flex;
+  justify-content: space-around;
+  align-items: baseline;
 }
 .home .login .user .username {
   font-style: italic;
   text-align: left;
   font-size: small;
   font-weight: bold;
-  padding: 0.5em;
 }
-.home .login .user .search-block {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+.home .login .user .button-logout {
+  text-decoration: none;
+  font-size: small;
 }
-.home .login .user .results {
+.home .login .actions {
+  border-top: 1px solid;
   margin-top: 1em;
 }
-.home .login .user .results .result {
-  font-size: xx-large;
-  font-weight: bold;
-  text-decoration: underline;
+.home .challenges {
+  margin-top: 1em;
+  border-top: 1px solid;
+  padding-top: 1em;
 }
-.home .challenge {
+.home .challenges .challenge {
   margin: 1em;
   padding: 0.5em;
   border-top: 1px solid;
@@ -316,21 +318,21 @@
   justify-content: space-between;
   align-items: center;
 }
-.home .challenge .spec {
+.home .challenges .challenge .spec {
   text-align: left;
 }
-.home .challenge .spec .challenger {
+.home .challenges .challenge .spec .challenger {
   font-size: large;
   font-weight: bold;
 }
-.home .challenge .actions {
+.home .challenges .challenge .actions {
   text-align: right;
 }
-.home .challenge .actions .button {
+.home .challenges .challenge .actions .button {
   font-weight: normal;
   margin: auto;
 }
-.home .challenge .actions .button.button-decline {
+.home .challenges .challenge .actions .button.button-decline {
   color: #888;
 }
 .config {
@@ -662,22 +664,35 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 82px;
+  height: 100px;
   padding: 6px;
   margin: 6px;
-  border: 1px solid;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
 }
-.challenge-page .choices .challenge-create .time {
+.challenge-page .choices .challenge-create .time-control {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5em;
+}
+.challenge-page .choices .challenge-create .time-control .time {
   font-weight: bold;
   font-size: xx-large;
-  padding: 0.5em;
+}
+.challenge-page .choices .challenge-create .time-control .label {
+  font-size: x-small;
 }
 .challenge-page .choices .challenge-create .actions {
   display: flex;
   justify-content: flex-end;
 }
 .challenge-page .choices .challenge-create .actions .button {
-  margin-right: 12px;
+  margin: 10px;
+}
+.challenge-page .choices .challenge-create .actions .rated {
+  font-weight: bold;
 }
 .challenge-page .waiting {
   font-size: xx-large;
@@ -694,5 +709,38 @@
 }
 .follow .users .user {
   margin-bottom: 0.5em;
-  font-size: larger;
+  font-size: x-large;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.follow .users .user .activity {
+  width: 10px;
+  height: 10px;
+  border-radius: 6px;
+  border: 1px solid #888;
+}
+.follow .users .user.online .activity {
+  width: 10px;
+  height: 10px;
+  border-radius: 6px;
+  background-color: #888;
+}
+.follow .lookup {
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 1px solid;
+}
+.follow .lookup .search-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.follow .lookup .results {
+  margin-top: 1em;
+}
+.follow .lookup .results .result {
+  font-size: x-large;
+  font-weight: bold;
+  text-decoration: underline;
 }

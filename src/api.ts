@@ -1,4 +1,10 @@
-import { fetchWithClient, fetchZ, postWithClient, postZ } from "./lib/remote";
+import {
+  fetchWithClient,
+  fetchZ,
+  postWithClient,
+  postZ,
+  withQueryString,
+} from "./lib/remote";
 import {
   BoardEvent,
   BoardEventZ,
@@ -6,6 +12,7 @@ import {
   ChallengeJsonZ,
   ChallengeListZ,
   DeclineReason,
+  RealTimeUserStatusZ,
   RequesChallengeCreate,
   ResponseOk,
   ResponseOkZ,
@@ -56,11 +63,18 @@ export const streamBoard = (
  * doc: https://lichess.org/api#tag/Relations/operation/apiUserFollowing
  * path: /rel/following
  */
-export const streamFollowing = (handler: (e: User) => boolean) => {
+export const streamFollowing = (
+  handler: (e: User) => boolean,
+  then?: () => void
+) => {
   const config = getMutable("lichess/user");
   if (config) {
     const stream = config.streamer(UserZ, apiUrl(`/rel/following`));
     stream.onMessage(handler);
+    if (then) {
+      stream.onClose(then);
+    }
+
     return true;
   }
   return false;
@@ -213,9 +227,7 @@ export const boardDraw = (gameId: string, accept: "yes" | "no") => {
  */
 export const getUserById = (id: string) => {
   const post = getPoster();
-  return post(UserZ.array(), apiUrl(`/users`), id, {
-    "Content-Type": "text/plain",
-  });
+  return post(UserZ.array(), apiUrl(`/users`), id);
 };
 
 /**
@@ -229,4 +241,19 @@ export const challengeUser = (
 ) => {
   const post = getPoster();
   return post(ChallengeJsonZ, apiUrl(`/challenge/${username}`), request);
+};
+
+/**
+ * doc: https://lichess.org/api#tag/Users/operation/apiUsersStatus
+ * path: /users/status
+ *
+ */
+export const userStatus = (usernames: string[]) => {
+  const fetch = getFetch();
+  return fetch(
+    RealTimeUserStatusZ.array(),
+    withQueryString(apiUrl(`/users/status`), {
+      ids: usernames.join(","),
+    })
+  );
 };

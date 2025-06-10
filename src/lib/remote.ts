@@ -96,6 +96,7 @@ export const postWithClient =
     };
 
     if (typeof data === "string") {
+      options.headers["Content-Type"] = "text/plain";
       options.body = data;
     } else {
       options.body = encodeQueryString(data);

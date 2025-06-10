@@ -1,36 +1,88 @@
-import { streamFollowing } from "../api";
-import { events } from "../lib/dom";
-import { DIV, replaceNodeContent } from "../lib/html";
-import { User } from "../lib/ucui/lichess-types";
+import { getUserById, streamFollowing, userStatus } from "../api";
+import { attrs, events } from "../lib/dom";
+import { DIV, INPUT, replaceNodeContent } from "../lib/html";
+import { Perfs, User } from "../lib/ucui/lichess-types";
 import { assign, dispatch, get, subscribe } from "../store";
+import { navigateHome } from "./buttons";
 
-const getFollowing = () => {
-  streamFollowing((user) => {
-    dispatch("lichess/following", (fs) =>
-      fs.filter((f) => f.id !== user.id).concat(user)
-    );
-    return false;
-  });
+const getFollowing = (root: HTMLElement) => {
+  streamFollowing(
+    (user) => {
+      dispatch("lichess/following", (fs) =>
+        fs.filter((f) => f.id !== user.id).concat(user)
+      );
+      return false;
+    },
+    async () => {
+      const status = await userStatus(
+        get("lichess/following").map((u) => u.id)
+      );
+      for (const s of status) {
+        const userElement = root.querySelector(`[data-id="${s.id}"]`);
+        if (userElement) {
+          if (s.online) {
+            userElement.classList.add("online");
+          } else {
+            userElement.classList.remove("online");
+          }
+        }
+      }
+    }
+  );
+};
+
+const perfs = ({ classical, rapid }: Perfs) =>
+  `C: ${classical ? classical.rating : "?"}, R: ${rapid ? rapid.rating : "?"}`;
+
+const userWithRatings = (user: User) =>
+  user.perfs ? `${user.username} (${perfs(user.perfs)})` : user.username;
+
+const renderLookupUser = (user: User) =>
+  events(DIV("result", userWithRatings(user)), (add) =>
+    add("click", () => {
+      assign("lichess/opponent", user);
+      assign("screen", "challenge");
+    })
+  );
+
+const lookup = () => {
+  const input = attrs(INPUT("", "search"), (set) =>
+    set("placeholder", "username")
+  );
+  const results = DIV("results");
+  const submit = events(DIV("button submit", "search"), (add) =>
+    add("click", () => {
+      const username = input.value;
+      getUserById(username).then((users) =>
+        replaceNodeContent(results)(...users.map(renderLookupUser))
+      );
+    })
+  );
+  return DIV("lookup", DIV("search-block", input, submit), results);
 };
 
 const renderUser = (user: User) =>
-  DIV(
-    "user",
-    events(DIV("username", user.username), (add) =>
-      add("click", () => {
-        assign("lichess/opponent", user);
-        assign("screen", "challenge");
-      })
-    )
+  attrs(
+    DIV(
+      "user",
+      events(DIV("username", user.username), (add) =>
+        add("click", () => {
+          assign("lichess/opponent", user);
+          assign("screen", "challenge");
+        })
+      ),
+      DIV("activity")
+    ),
+    (set) => set("data-id", user.id)
   );
 
 export const mountFollowing = (root: HTMLElement) => {
-  getFollowing();
   const users = DIV("users", ...get("lichess/following").map(renderUser));
-  const header = DIV("header", DIV("title", `Following`));
-  root.append(DIV("follow", header, users));
+  const header = DIV("header", DIV("title", `Players`), navigateHome());
+  root.append(DIV("follow", header, users, lookup()));
 
   subscribe("lichess/following")(() => {
     replaceNodeContent(users)(...get("lichess/following").map(renderUser));
   });
+  getFollowing(users);
 };
