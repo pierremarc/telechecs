@@ -1,6 +1,7 @@
 import { map, Option } from "./lib/option";
 import {
   ChallengeJson,
+  ChatLineEvent,
   GameEventInfo,
   GameStateEvent,
   StreamEvent,
@@ -86,6 +87,7 @@ let state = {
   >,
   "lichess/opponent": null as Nullable<User>,
   "lichess/following": [] as User[],
+  "lichess/chat": null as Nullable<ChatLineEvent & { timestamp: number }>,
 };
 
 export type State = typeof state;

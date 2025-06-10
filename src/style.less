@@ -911,3 +911,32 @@
     }
   }
 }
+
+.chat-box {
+  &.hidden {
+    display: none;
+  }
+  position: absolute;
+  top: 3em;
+  left: 1em;
+  right: 1em;
+
+  background-color: white;
+  border-radius: 3px;
+  border: 1px solid black;
+  .message {
+    border-bottom: 1px solid;
+    padding-bottom: 0.5em;
+    margin: 1em;
+    margin-bottom: 0.2em;
+    .from {
+      font-size: small;
+      font-style: italic;
+    }
+  }
+  .button.button-close {
+    text-align: right;
+    margin: 0 1em 0.5em 0;
+    font-weight: bold;
+  }
+}

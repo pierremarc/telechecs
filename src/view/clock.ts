@@ -6,6 +6,7 @@ import {
   replaceNodeContent,
 } from "../lib/html";
 import { assign, get, getTurn, subscribe } from "../store";
+import { uciMoveList } from "../util";
 
 type ClockElements = {
   white: HTMLElement;
@@ -65,6 +66,10 @@ const currentTime = () => {
   const state = get("lichess/game-state");
   const turn = getTurn();
   if (state && info && turn) {
+    if (uciMoveList(state.moves).length < 2) {
+      // Weird, but it looks like a thing on lichess
+      return { white: formatTime(state.wtime), black: formatTime(state.btime) };
+    }
     const ellapsed = Date.now() - state.timestamp;
     const white_time = turn === "white" ? state.wtime - ellapsed : state.wtime;
     const black_time = turn === "black" ? state.btime - ellapsed : state.btime;

@@ -17,6 +17,7 @@ import { mountEvents } from "./view/events";
 import { connect } from "./play";
 import { mountChallenge } from "./view/challenge";
 import { mountFollowing } from "./view/follow";
+import { mountChat } from "./view/chat";
 
 const fullscreen = (elem: HTMLElement) => (toggle: boolean) =>
   toggle && document.location.hostname !== "localhost"
@@ -29,7 +30,7 @@ const fullscreen = (elem: HTMLElement) => (toggle: boolean) =>
         .then(() => console.log("exir fullscreen"))
         .catch((err) => console.warn("failed to exit fullscreen", err));
 
-const gameMonitor = () => {
+const monitorStream = () => {
   const onEvent = subscribe("lichess/stream-events");
   onEvent(() => {
     const events = get("lichess/stream-events");
@@ -64,15 +65,16 @@ const gameMonitor = () => {
 const main = (root: HTMLElement) => {
   screenLocker();
   mountHome(root);
-  gameMonitor();
+  mountChat(document.body);
+  monitorStream();
 
   const toggleFullscreen = fullscreen(root);
 
-  let keepSubs: StateKey[] = ["screen", "lockScreen"];
+  let keepSubs: StateKey[] = ["screen", "lockScreen", "lichess/chat"];
 
   subscribe("screen")(() => {
     clearSubscriptions((k) => keepSubs.includes(k));
-    gameMonitor();
+    monitorStream();
     emptyElement(root);
     switch (get("screen")) {
       case "home": {
