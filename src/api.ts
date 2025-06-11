@@ -14,6 +14,7 @@ import {
   DeclineReason,
   RealTimeUserStatusZ,
   RequesChallengeCreate,
+  RequesChallengeCreateAI,
   ResponseOk,
   ResponseOkZ,
   StreamEvent,
@@ -29,11 +30,15 @@ const apiUrl = (path: string) => [get("lichess/host"), path].join("/api");
  * doc: https://lichess.org/api#tag/Board/operation/apiStreamEvent
  * path: /stream/event
  */
-export const streamEvent = (handler: (e: StreamEvent) => boolean) => {
+export const streamEvent = (
+  handler: (e: StreamEvent) => boolean,
+  then: () => void
+) => {
   const config = getMutable("lichess/user");
   if (config) {
     const stream = config.streamer(StreamEventZ, apiUrl("/stream/event"));
     stream.onMessage(handler);
+    stream.onClose(then);
     return true;
   }
   return false;
@@ -244,6 +249,16 @@ export const challengeUser = (
 };
 
 /**
+ * doc: https://lichess.org/api#tag/Challenges/operation/challengeAi
+ * path: /challenge/ai
+ *
+ */
+export const challengeLichessAI = (request: RequesChallengeCreateAI) => {
+  const post = getPoster();
+  return post(ChallengeJsonZ, apiUrl(`/challenge/ai`), request);
+};
+
+/**
  * doc: https://lichess.org/api#tag/Users/operation/apiUsersStatus
  * path: /users/status
  *
@@ -256,4 +271,13 @@ export const userStatus = (usernames: string[]) => {
       ids: usernames.join(","),
     })
   );
+};
+
+export const __ping = () => {
+  return fetch([get("lichess/host"), "__ping"].join("/"), {
+    mode: "no-cors",
+    cache: "default",
+    redirect: "follow",
+    credentials: "same-origin",
+  });
 };

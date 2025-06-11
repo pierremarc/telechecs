@@ -21,6 +21,7 @@ import {
   LichessScreen,
   Move,
   ClockState,
+  LichessAI,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -75,6 +76,7 @@ let state = {
   input: defaultInput(),
   started: false,
   lockScreen: false,
+  online: false,
   "lichess/host": "https://lichess.org",
   "lichess/user": null as Nullable<UserConfig>,
   "lichess/stream-events": [] as StreamEvent[],
@@ -85,7 +87,7 @@ let state = {
   "lichess/game-state": null as Nullable<
     GameStateEvent & { timestamp: number }
   >,
-  "lichess/opponent": null as Nullable<User>,
+  "lichess/opponent": null as Nullable<User | LichessAI>,
   "lichess/following": [] as User[],
   "lichess/chat": null as Nullable<ChatLineEvent & { timestamp: number }>,
 };

@@ -1,9 +1,19 @@
-import { challengeUser } from "../api";
+import { challengeLichessAI, challengeUser } from "../api";
 import { events } from "../lib/dom";
 import { DIV, replaceNodeContent } from "../lib/html";
-import { RequesChallengeCreate } from "../lib/ucui/lichess-types";
+import {
+  RequesChallengeCreate,
+  RequesChallengeCreateAI,
+  User,
+} from "../lib/ucui/lichess-types";
+import { LichessAI } from "../lib/ucui/types";
 import { assign, get, subscribe } from "../store";
 import { navigatePlayers } from "./buttons";
+
+type Challenged = User | LichessAI;
+
+const isAI = (u: Challenged): u is LichessAI =>
+  "_tag" in u && u._tag === "lichess-ai";
 
 const timeControls = [10, 20, 30, 40, 60];
 
@@ -20,21 +30,42 @@ const challenge = (
   variant: "standard",
 });
 
+const challengeAI = (
+  tc: number,
+  color: RequesChallengeCreate["color"],
+  level: LichessAI["level"]
+): RequesChallengeCreateAI => ({
+  color,
+  "clock.increment": 0,
+  "clock.limit": tc * 60,
+  variant: "standard",
+  level,
+});
+
 const button = (
-  username: string,
+  user: Challenged,
   tc: number,
   color: RequesChallengeCreate["color"],
   rated: boolean
 ) =>
   events(DIV(`button button-create ${color} ${rated}`, color), (add) =>
     add("click", () => {
-      challengeUser(username, challenge(tc, color, rated)).then((challenge) =>
-        assign("lichess/my-challenge", challenge)
-      );
+      if (isAI(user)) {
+        challengeLichessAI(challengeAI(tc, color, user.level)).then(
+          (challenge) => assign("lichess/my-challenge", challenge)
+        );
+      } else {
+        challengeUser(user.username, challenge(tc, color, rated)).then(
+          (challenge) => assign("lichess/my-challenge", challenge)
+        );
+      }
     })
   );
 
-const renderChallenge = (username: string, tc: number) =>
+const username = (user: Challenged) =>
+  isAI(user) ? `LichessAI ${user.level}` : user.username;
+
+const renderChallenge = (user: Challenged, tc: number) =>
   DIV(
     "challenge-create",
     DIV("time-control", DIV("time", tc), DIV("label", "minutes")),
@@ -42,16 +73,18 @@ const renderChallenge = (username: string, tc: number) =>
       "actions",
       DIV(
         "unrated",
-        button(username, tc, "black", false),
-        button(username, tc, "random", false),
-        button(username, tc, "white", false)
+        button(user, tc, "black", false),
+        button(user, tc, "random", false),
+        button(user, tc, "white", false)
       ),
-      DIV(
-        "rated",
-        button(username, tc, "black", true),
-        button(username, tc, "random", true),
-        button(username, tc, "white", true)
-      )
+      isAI(user)
+        ? DIV("rated ")
+        : DIV(
+            "rated",
+            button(user, tc, "black", true),
+            button(user, tc, "random", true),
+            button(user, tc, "white", true)
+          )
     )
   );
 export const mountChallenge = (root: HTMLElement) => {
@@ -59,14 +92,14 @@ export const mountChallenge = (root: HTMLElement) => {
   if (opponent) {
     const choices = DIV(
       "choices",
-      ...timeControls.map((tc) => renderChallenge(opponent.username, tc))
+      ...timeControls.map((tc) => renderChallenge(opponent, tc))
     );
     root.append(
       DIV(
         "challenge-page",
         DIV(
           "header",
-          DIV("title", `Challenge ${opponent.username}`),
+          DIV("title", `Challenge ${username(opponent)}`),
           navigatePlayers()
         ),
         choices
@@ -75,7 +108,7 @@ export const mountChallenge = (root: HTMLElement) => {
 
     subscribe("lichess/my-challenge")(() => {
       replaceNodeContent(choices)(
-        DIV("waiting", `Waiting for ${opponent.username} answer.`)
+        DIV("waiting", `Waiting for ${username(opponent)} answer.`)
       );
     });
   }

@@ -3,6 +3,7 @@ import { attrs, events } from "../lib/dom";
 import { DIV, INPUT, replaceNodeContent } from "../lib/html";
 import { fromNullable, map } from "../lib/option";
 import { Perfs, User } from "../lib/ucui/lichess-types";
+import { LichessAI } from "../lib/ucui/types";
 import { assign, dispatch, get, subscribe } from "../store";
 import { navigateHome } from "./buttons";
 
@@ -85,10 +86,27 @@ const renderUser = (user: User) =>
     (set) => set("data-id", user.id)
   );
 
+const aiButton = (level: LichessAI["level"]) =>
+  events(DIV("level", `#${level}`), (add) =>
+    add("click", () => {
+      assign("lichess/opponent", { _tag: "lichess-ai", level });
+      assign("screen", "challenge");
+    })
+  );
+
+const levels: LichessAI["level"][] = [1, 2, 3, 4, 5, 6, 7, 8];
+
+const renderLichessAI = () =>
+  DIV(
+    "user lichess-ai",
+    DIV("username", "Lichess AI"),
+    DIV("levels", ...levels.map(aiButton))
+  );
+
 export const mountFollowing = (root: HTMLElement) => {
   const users = DIV("users", ...get("lichess/following").map(renderUser));
   const header = DIV("header", DIV("title", `Players`), navigateHome());
-  root.append(DIV("follow", header, users, lookup()));
+  root.append(DIV("players", header, users, renderLichessAI(), lookup()));
 
   subscribe("lichess/following")(() => {
     replaceNodeContent(users)(...get("lichess/following").map(renderUser));

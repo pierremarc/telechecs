@@ -16,8 +16,9 @@ import { map, fromNullable } from "./lib/option";
 import { mountEvents } from "./view/events";
 import { connect } from "./play";
 import { mountChallenge } from "./view/challenge";
-import { mountFollowing } from "./view/follow";
+import { mountFollowing } from "./view/players";
 import { mountChat } from "./view/chat";
+import { mountOnline } from "./online";
 
 const fullscreen = (elem: HTMLElement) => (toggle: boolean) =>
   toggle && document.location.hostname !== "localhost"
@@ -66,11 +67,12 @@ const main = (root: HTMLElement) => {
   screenLocker();
   mountHome(root);
   mountChat(document.body);
+  mountOnline(document.body);
   monitorStream();
 
   const toggleFullscreen = fullscreen(root);
 
-  let keepSubs: StateKey[] = ["screen", "lockScreen", "lichess/chat"];
+  let keepSubs: StateKey[] = ["screen", "lockScreen", "lichess/chat", "online"];
 
   subscribe("screen")(() => {
     clearSubscriptions((k) => keepSubs.includes(k));

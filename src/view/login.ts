@@ -14,10 +14,18 @@ const listenEvents = () => {
     listening = true;
     const user = get("lichess/user");
     if (user) {
-      streamEvent((event) => {
-        dispatch("lichess/stream-events", (events) => events.concat(event));
-        return true;
-      });
+      assign("online", true);
+      streamEvent(
+        (event) => {
+          dispatch("lichess/stream-events", (events) => events.concat(event));
+          return true;
+        },
+        () => {
+          listening = false;
+          assign("online", false);
+          window.setTimeout(listenEvents, 20000);
+        }
+      );
     } else {
       listening = false;
     }

@@ -48,6 +48,13 @@ export const GameEventOpponentZ = z.strictObject({
   rating: z.number(),
 });
 
+export const GameEventOpponentAIZ = z.strictObject({
+  id: z.string().nullable(),
+  username: z.string(),
+  rating: z.number().optional(),
+  ai: z.number(),
+});
+
 export const GameCompatZ = z.strictObject({
   bot: z.boolean(),
   board: z.boolean(),
@@ -85,7 +92,7 @@ export const GameEventInfoZ = z.strictObject({
   perf: z.string(),
   rated: z.boolean(),
   hasMoved: z.boolean(),
-  opponent: GameEventOpponentZ,
+  opponent: z.union([GameEventOpponentZ, GameEventOpponentAIZ]),
   isMyTurn: z.boolean(),
   secondsLeft: z.number().optional(),
   compat: GameCompatZ,
@@ -251,6 +258,23 @@ export const RequesChallengeCreateZ = z.union([
   RequesChallengeCreateCorrespondenceZ,
 ]);
 
+export const RequesChallengeCreateAIZ = z.strictObject({
+  "clock.limit": z.int(),
+  "clock.increment": z.int(),
+  color: z.union([ColorZ, z.literal("random")]),
+  variant: VariantKeyZ,
+  fen: z.string().optional(),
+  level: z.union([
+    z.literal(1),
+    z.literal(2),
+    z.literal(3),
+    z.literal(4),
+    z.literal(5),
+    z.literal(6),
+    z.literal(7),
+    z.literal(8),
+  ]),
+});
 export const ResponseOkZ = z.strictObject({
   ok: z.boolean(),
 });
@@ -277,14 +301,22 @@ export const TitleZ = z.union([
   z.literal("BOT"),
 ]);
 
-export const GameEventPlayerZ = z.strictObject({
-  aiLevel: z.int().optional(),
+export const GameEventPlayerNormalZ = z.strictObject({
   id: z.string(),
   name: z.string(),
   title: TitleZ.nullable(),
   rating: z.int().nullable(),
   provisional: z.boolean(),
 });
+
+export const GameEventPlayerAIZ = z.strictObject({
+  aiLevel: z.int(),
+});
+
+export const GameEventPlayerZ = z.union([
+  GameEventPlayerNormalZ,
+  GameEventPlayerAIZ,
+]);
 
 export const GameStatusNameZ = z.union([
   z.literal("created"),
@@ -476,6 +508,7 @@ export type RequesChallengeCreateCorrespondence = z.infer<
   typeof RequesChallengeCreateCorrespondenceZ
 >;
 export type RequesChallengeCreate = z.infer<typeof RequesChallengeCreateZ>;
+export type RequesChallengeCreateAI = z.infer<typeof RequesChallengeCreateAIZ>;
 export type ResponseOk = z.infer<typeof ResponseOkZ>;
 
 export type Clock = z.infer<typeof ClockZ>;

@@ -414,3 +414,8 @@ export const stampEvent = <T>(event: T): T & { timestamp: number } => ({
   ...event,
   timestamp: Date.now(),
 });
+
+export type LichessAI = {
+  readonly _tag: "lichess-ai";
+  level: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+};

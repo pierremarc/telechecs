@@ -697,54 +697,70 @@
 .challenge-page .waiting {
   font-size: xx-large;
 }
-.follow {
+.players {
   margin: 2em;
 }
-.follow .title {
+.players .title {
   font-size: large;
   font-weight: bold;
 }
-.follow .users {
+.players .users {
   margin-top: 2em;
 }
-.follow .users .user {
+.players .users .user {
   margin-bottom: 0.5em;
   font-size: x-large;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.follow .users .user .activity {
+.players .users .user .activity {
   width: 10px;
   height: 10px;
   border-radius: 6px;
   border: 1px solid #888;
 }
-.follow .users .user.online .activity {
+.players .users .user.online .activity {
   width: 10px;
   height: 10px;
   border-radius: 6px;
   background-color: #888;
 }
-.follow .lookup {
+.players .lichess-ai {
+  padding-top: 1em;
+  border-top: 1px solid;
+}
+.players .lichess-ai .username {
+  font-weight: bold;
+  color: #888;
+}
+.players .lichess-ai .levels {
+  display: flex;
+  justify-content: space-between;
+}
+.players .lichess-ai .levels .level {
+  padding: 0.5em;
+  font-weight: bold;
+}
+.players .lookup {
   margin-top: 1em;
   padding-top: 1em;
   border-top: 1px solid;
 }
-.follow .lookup .search-block {
+.players .lookup .search-block {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
-.follow .lookup .results {
+.players .lookup .results {
   margin-top: 1em;
 }
-.follow .lookup .results .result .username {
+.players .lookup .results .result .username {
   font-size: x-large;
   font-weight: bold;
   text-decoration: underline;
 }
-.follow .lookup .results .result .perfs {
+.players .lookup .results .result .perfs {
   font-size: small;
   font-weight: normal;
   font-style: italic;
@@ -776,4 +792,38 @@
   text-align: right;
   margin: 0 1em 0.5em 0;
   font-weight: bold;
+}
+.help {
+  text-align: left;
+  font-size: medium;
+  color: #888;
+  padding: 0.5em;
+  background-color: white;
+}
+.online-status {
+  position: absolute;
+  top: 40%;
+  left: 0.5em;
+  right: 0.5em;
+  margin: 0.5em;
+  padding: 0.5em;
+  color: white;
+  background-color: #888;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: x-large;
+  border: 1px solid;
+  border-radius: 6px;
+}
+.online-status .icon {
+  margin: 0.5em;
+  width: 20px;
+  height: 20px;
+  border-radius: 12px;
+  background-color: #ff5100;
+  border: 2px solid white;
+}
+.online-status.ok {
+  display: none;
 }

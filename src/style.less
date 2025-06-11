@@ -860,7 +860,7 @@
   }
 }
 
-.follow {
+.players {
   margin: @app-margin;
   .title {
     font-size: large;
@@ -888,6 +888,23 @@
           border-radius: 6px;
           background-color: @text-grey;
         }
+      }
+    }
+  }
+
+  .lichess-ai {
+    padding-top: 1em;
+    border-top: 1px solid;
+    .username {
+      font-weight: bold;
+      color: @text-grey;
+    }
+    .levels {
+      display: flex;
+      justify-content: space-between;
+      .level {
+        padding: 0.5em;
+        font-weight: bold;
       }
     }
   }
@@ -946,5 +963,43 @@
     text-align: right;
     margin: 0 1em 0.5em 0;
     font-weight: bold;
+  }
+}
+
+.help {
+  text-align: left;
+  font-size: medium;
+  color: @text-grey;
+  padding: 0.5em;
+  background-color: white;
+}
+
+.online-status {
+  position: absolute;
+  top: 40%;
+  left: 0.5em;
+  right: 0.5em;
+  margin: 0.5em;
+  padding: 0.5em;
+  color: white;
+  background-color: @text-grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: x-large;
+  border: 1px solid;
+  border-radius: 6px;
+
+  .icon {
+    margin: 0.5em;
+    width: 20px;
+    height: 20px;
+    border-radius: 12px;
+    background-color: rgb(255, 81, 0);
+    border: 2px solid white;
+  }
+
+  &.ok {
+    display: none;
   }
 }

@@ -80,14 +80,17 @@ export const streamWith =
 
     const readStream = (stream: ReadableStreamDefaultReader<T>) => {
       const readOne = () => {
-        stream.read().then(({ done, value }) => {
-          dispatchEvent(fromNullable(value));
-          if (!done) {
-            setTimeout(readOne, 0);
-          } else {
-            dispatchClose();
-          }
-        });
+        stream
+          .read()
+          .then(({ done, value }) => {
+            dispatchEvent(fromNullable(value));
+            if (!done) {
+              setTimeout(readOne, 0);
+            } else {
+              dispatchClose();
+            }
+          })
+          .catch(dispatchClose);
       };
 
       readOne();
@@ -118,7 +121,7 @@ export const streamWith =
 
     getJSONNDStream(client, zt, url, init)
       .then(readStream)
-      .catch(console.error);
+      .catch(() => setTimeout(dispatchClose, 200));
 
     return { onMessage, onClose }; // TODO: onError
   };
