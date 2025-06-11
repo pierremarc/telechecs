@@ -1,6 +1,7 @@
 import { getUserById, streamFollowing, userStatus } from "../api";
 import { attrs, events } from "../lib/dom";
 import { DIV, INPUT, replaceNodeContent } from "../lib/html";
+import { fromNullable, map } from "../lib/option";
 import { Perfs, User } from "../lib/ucui/lichess-types";
 import { assign, dispatch, get, subscribe } from "../store";
 import { navigateHome } from "./buttons";
@@ -31,18 +32,26 @@ const getFollowing = (root: HTMLElement) => {
   );
 };
 
-const perfs = ({ classical, rapid }: Perfs) =>
-  `C: ${classical ? classical.rating : "?"}, R: ${rapid ? rapid.rating : "?"}`;
-
-const userWithRatings = (user: User) =>
-  user.perfs ? `${user.username} (${perfs(user.perfs)})` : user.username;
+const perfs = map(({ classical, rapid }: Perfs) =>
+  DIV(
+    "perfs",
+    DIV("classical", `Classic: ${classical ? classical.rating : "?"}`),
+    DIV("rapid", `Rapid: ${rapid ? rapid.rating : "?"}`)
+  )
+);
 
 const renderLookupUser = (user: User) =>
-  events(DIV("result", userWithRatings(user)), (add) =>
-    add("click", () => {
-      assign("lichess/opponent", user);
-      assign("screen", "challenge");
-    })
+  events(
+    DIV(
+      "result",
+      DIV("username", user.username),
+      perfs(fromNullable(user.perfs))
+    ),
+    (add) =>
+      add("click", () => {
+        assign("lichess/opponent", user);
+        assign("screen", "challenge");
+      })
   );
 
 const lookup = () => {

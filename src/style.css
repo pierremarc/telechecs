@@ -739,10 +739,16 @@
 .follow .lookup .results {
   margin-top: 1em;
 }
-.follow .lookup .results .result {
+.follow .lookup .results .result .username {
   font-size: x-large;
   font-weight: bold;
   text-decoration: underline;
+}
+.follow .lookup .results .result .perfs {
+  font-size: small;
+  font-weight: normal;
+  font-style: italic;
+  text-decoration: none;
 }
 .chat-box {
   position: absolute;
