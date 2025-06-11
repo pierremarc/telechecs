@@ -12,6 +12,14 @@ I find playing online an exciting idea but a very frustrating experience. Being 
 
 The state of the application is at the level of a proof of concept, but already functional enough to make it enjoyable to play with.
 
+Made a lil video to demonstrate how it's supposed to work.
+
+
+
+https://github.com/user-attachments/assets/d421356c-0898-4b62-8dbc-56b4bf455c94
+
+
+
 ### Publish
 
 _rather a note for myself though_
