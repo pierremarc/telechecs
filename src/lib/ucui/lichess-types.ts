@@ -306,7 +306,7 @@ export const GameEventPlayerNormalZ = z.strictObject({
   name: z.string(),
   title: TitleZ.nullable(),
   rating: z.int().nullable(),
-  provisional: z.boolean(),
+  provisional: z.boolean().optional(),
 });
 
 export const GameEventPlayerAIZ = z.strictObject({
