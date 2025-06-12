@@ -32,7 +32,7 @@ const listenEvents = () => {
 };
 
 const buttonLogin = () =>
-  events(DIV("button button-login", "login"), (add) =>
+  events(DIV("button button-login", "connect"), (add) =>
     add("click", async () => {
       const notLogged = orElseL(() => {
         authObject.login().then(() => {
