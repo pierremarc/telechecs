@@ -14,11 +14,13 @@ The state of the application is at the level of a proof of concept, but already 
 
 Made a lil video to demonstrate how it's supposed to work.
 
-
-
 https://github.com/user-attachments/assets/d421356c-0898-4b62-8dbc-56b4bf455c94
 
+## The program
 
+The program is just a Javascript bundle out of Typescript [source code](./src/) . It does mean that you don't need much to get it running anywhere.
+
+If you want to experiment with it (or even fix things 😉), a simple `npm install && npm run dev` will do to have it running locally and watching.
 
 ### Publish
 
