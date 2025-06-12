@@ -3,7 +3,7 @@ import { DIV } from "./lib/html";
 import { assign, get, subscribe } from "./store";
 
 // There's still some experiment to be made here
-const timeout = 6000;
+const timeout = 3000;
 const maxTime = 3000;
 let interval: null | number = null;
 
@@ -43,7 +43,7 @@ export const mountOnline = (root: HTMLElement) => {
   startMonitor(updateStatus);
 
   const elem = DIV(
-    "online-status nok",
+    "online-status ok",
     DIV("icon"),
     DIV("label", "Currently offline...")
   );

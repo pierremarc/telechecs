@@ -76,7 +76,7 @@ let state = {
   input: defaultInput(),
   started: false,
   lockScreen: false,
-  online: false,
+  online: true,
   "lichess/host": "https://lichess.org",
   "lichess/user": null as Nullable<UserConfig>,
   "lichess/stream-events": [] as StreamEvent[],

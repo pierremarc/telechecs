@@ -8,7 +8,7 @@ import {
 } from "../lib/ucui/lichess-types";
 import { LichessAI } from "../lib/ucui/types";
 import { assign, get, subscribe } from "../store";
-import { navigatePlayers } from "./buttons";
+import { navigateHome } from "./buttons";
 
 type Challenged = User | LichessAI;
 
@@ -100,7 +100,7 @@ export const mountChallenge = (root: HTMLElement) => {
         DIV(
           "header",
           DIV("title", `Challenge ${username(opponent)}`),
-          navigatePlayers()
+          navigateHome()
         ),
         choices
       )

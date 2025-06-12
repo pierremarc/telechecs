@@ -214,6 +214,8 @@ const createWithChildren = <T extends keyof HTMLTags>(
 export const DIV = (className: string, ...ns: AcNode[]) =>
   createWithChildren("div", className, ns);
 
+export const PARA = (...ns: AcNode[]) => createWithChildren("p", "", ns);
+
 export const SPAN = (className: string, ...ns: AcNode[]) =>
   createWithChildren("span", className, ns);
 

@@ -1,9 +1,17 @@
 import { events } from ".././lib/dom";
-import { DIV, ANCHOR, SPAN, replaceNodeContent } from ".././lib/html";
+import {
+  DIV,
+  ANCHOR,
+  SPAN,
+  replaceNodeContent,
+  PARA,
+  IMG,
+} from ".././lib/html";
 import { ChallengeJson, TimeControl } from ".././lib/ucui/lichess-types";
 import { declineChallenge, startNewGame } from "../game";
 import { assign, get, subscribe } from "../store";
 import { mountLogin } from "./login";
+import { mountFollowing } from "./players";
 
 // const buttonPlay = events(DIV("button button-play", "play"), (add) =>
 //   add("click", () => assign("screen", "seek"))
@@ -49,11 +57,11 @@ const renderChallenges = () => {
   if (challenges.length > 0) {
     return challenges.map(renderChallenge);
   }
-  return [DIV("waiting", "Waiting for challenges̉…")];
+  return [DIV("waiting", "Waiting to be challenged…")];
 };
 
-export const mountHome = (root: HTMLElement) => {
-  const footer = DIV(
+const footer = () =>
+  DIV(
     "footer",
     ANCHOR(
       "link",
@@ -61,15 +69,33 @@ export const mountHome = (root: HTMLElement) => {
       "Source code & feedback"
     )
   );
-
-  const intro = DIV(
-    "intro",
+const intro = DIV(
+  "intro",
+  PARA(
     SPAN("ucui", "Téléchecs "),
-    `
-  is a Lichess client for OTB maniacs. Enjoy! 
-    `
-  );
+    "is a ",
+    ANCHOR("", get("lichess/host"), " Lichess"),
+    " client for players who prefer to play over the board."
+  ),
+  IMG(
+    "board-image",
+    "https://github.com/pierremarc/telechecs/raw/main/picture.jpg"
+  ),
+  PARA(`
+    Once you connect this page with your Lichess account, 
+    you'll be presented with players you follow. 
+    Click on a username to challenge them, 
+    or wait for someone to send you a challenge. 
+    `),
+  PARA(`
+    When the game start, you'll be presented with a black 
+    screen where you'll see your opponent moves when they play, 
+    and an input widget to enter your moves when it's your turn. 
+    `),
+  PARA("Enjoy!")
+);
 
+export const challengeBlock = () => {
   const challenges = DIV("challenges", ...renderChallenges());
   const replaceCh = replaceNodeContent(challenges);
   const updateCh = subscribe("lichess/challenges");
@@ -77,8 +103,30 @@ export const mountHome = (root: HTMLElement) => {
     replaceCh(...renderChallenges());
   });
 
-  const login = DIV("login");
-  mountLogin(login);
+  return DIV(
+    "challenge-block",
+    DIV("section", DIV("title", "Challenges")),
+    challenges
+  );
+};
 
-  root.append(DIV("home", intro, login, challenges, footer));
+export const mountHome = (root: HTMLElement) => {
+  const replaceRoot = replaceNodeContent(root);
+  const updateAll = () => {
+    const login = DIV("login");
+    mountLogin(login);
+
+    const header = DIV("header", DIV("title", "Téléchecs"), login);
+
+    if (get("lichess/user")) {
+      const players = DIV("players");
+      mountFollowing(players);
+      replaceRoot(DIV("home", header, players, challengeBlock(), footer()));
+    } else {
+      replaceRoot(DIV("home", header, intro, footer()));
+    }
+  };
+
+  updateAll();
+  subscribe("lichess/user")(updateAll);
 };

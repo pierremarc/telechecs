@@ -5,7 +5,6 @@ import { emptyElement, events } from ".././lib/dom";
 import { ANCHOR, DIV } from ".././lib/html";
 import { streamEvent } from "../api";
 import { authObject } from "../auth";
-import { navigatePlayers } from "./buttons";
 
 let listening = false;
 
@@ -49,7 +48,7 @@ const buttonLogin = () =>
   );
 
 const logout = () =>
-  events(DIV("button button-logout", "logout"), (add) =>
+  events(DIV("button button-logout", "×"), (add) =>
     add("click", () =>
       authObject.logout().then(() => assign("lichess/user", null))
     )
@@ -66,8 +65,7 @@ const renderUser = (root: HTMLElement) => (user: UserConfig) => {
         ANCHOR("", `${get("lichess/host")}/@/${user.id}`, user.username)
       ),
       logout()
-    ),
-    DIV("actions", navigatePlayers())
+    )
   );
 };
 

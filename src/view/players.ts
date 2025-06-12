@@ -5,7 +5,7 @@ import { fromNullable, map } from "../lib/option";
 import { Perfs, User } from "../lib/ucui/lichess-types";
 import { LichessAI } from "../lib/ucui/types";
 import { assign, dispatch, get, subscribe } from "../store";
-import { navigateHome } from "./buttons";
+import { button } from "./buttons";
 
 const getFollowing = (root: HTMLElement) => {
   streamFollowing(
@@ -68,7 +68,12 @@ const lookup = () => {
       );
     })
   );
-  return DIV("lookup", DIV("search-block", input, submit), results);
+  return DIV(
+    "lookup",
+    DIV("section", DIV("title", "Find player")),
+    DIV("search-block", input, submit),
+    results
+  );
 };
 
 const renderUser = (user: User) =>
@@ -99,13 +104,18 @@ const levels: LichessAI["level"][] = [1, 2, 3, 4, 5, 6, 7, 8];
 const renderLichessAI = () =>
   DIV(
     "user lichess-ai",
-    DIV("username", "Lichess AI"),
+    DIV("section", "Challenge Lichess AI"),
     DIV("levels", ...levels.map(aiButton))
   );
 
 export const mountFollowing = (root: HTMLElement) => {
   const users = DIV("users", ...get("lichess/following").map(renderUser));
-  const header = DIV("header", DIV("title", `Players`), navigateHome());
+
+  const refresh = button("refresh", () => {
+    getFollowing(users);
+  });
+
+  const header = DIV("section", DIV("title", `Players you follow`), refresh);
   root.append(DIV("players", header, users, renderLichessAI(), lookup()));
 
   subscribe("lichess/following")(() => {

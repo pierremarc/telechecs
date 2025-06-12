@@ -78,11 +78,6 @@
   background-size: contain;
 }
 
-.help {
-  font-size: small;
-  font-style: italic;
-}
-
 .to-button {
   position: absolute;
   top: @to-top;
@@ -326,18 +321,32 @@
 
 .home {
   margin: @app-margin;
-  text-align: center;
+  // text-align: center;
+  .header {
+    .title {
+      font-size: large;
+      font-weight: bold;
+    }
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid;
+  }
+
   .intro {
     .ucui {
       // font-weight: bold;
       font-style: italic;
+    }
+
+    .board-image {
+      width: 100%;
     }
   }
 
   .button {
     font-weight: bold;
     text-decoration: underline;
-    margin-top: 1em;
+    // margin-top: 1em;
 
     &-play {
       font-size: xxx-large;
@@ -356,29 +365,37 @@
     position: absolute;
     width: 100%;
     bottom: 1em;
+    text-align: center;
     .link {
+      font-size: small;
       color: @text-high;
     }
   }
 
   .login {
     .user {
-      border-top: 1px solid;
-      margin-top: 1em;
+      // border-top: 1px solid;
+      // margin-top: 1em;
       display: flex;
-      justify-content: space-around;
-      align-items: baseline;
+      justify-content: flex-end;
+      align-items: center;
+
       .username {
-        font-style: italic;
-        text-align: left;
+        // font-style: italic;
+        // text-align: left;
         font-size: small;
-        font-weight: bold;
+        // font-weight: bold;
         // padding: 0.5em;
+        a {
+          color: black;
+        }
       }
 
       .button-logout {
         text-decoration: none;
-        font-size: small;
+        font-size: large;
+        margin-left: 0.5em;
+        font-weight: normal;
       }
     }
     .actions {
@@ -386,12 +403,19 @@
       margin-top: 1em;
     }
   }
-  .challenges {
+  .challenge-block {
+    .section {
+      margin-bottom: 0.5em;
+      .title {
+        font-size: large;
+        color: @text-grey;
+      }
+    }
     margin-top: 1em;
     border-top: 1px solid;
     padding-top: 1em;
     .challenge {
-      margin: 1em;
+      margin: 1em 0;
       padding: 0.5em;
       border-top: 1px solid;
       border-bottom: 1px solid;
@@ -861,16 +885,28 @@
 }
 
 .players {
-  margin: @app-margin;
-  .title {
-    font-size: large;
-    font-weight: bold;
+  // margin: @app-margin;
+  .section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title {
+      font-size: large;
+      color: @text-grey;
+      // font-weight: bold;
+    }
+    .button-refresh {
+      font-weight: normal;
+      text-align: right;
+      font-size: small;
+      color: @text-grey;
+    }
   }
   .users {
-    margin-top: 2em;
+    margin: 1em 0;
     .user {
-      margin-bottom: 0.5em;
-      font-size: x-large;
+      // margin-bottom: 0.5em;
+      font-size: large;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -895,8 +931,9 @@
   .lichess-ai {
     padding-top: 1em;
     border-top: 1px solid;
-    .username {
-      font-weight: bold;
+    .section {
+      // font-weight: bold;
+      font-size: large;
       color: @text-grey;
     }
     .levels {
@@ -904,7 +941,7 @@
       justify-content: space-between;
       .level {
         padding: 0.5em;
-        font-weight: bold;
+        // font-weight: bold;
       }
     }
   }
@@ -914,6 +951,7 @@
     padding-top: 1em;
     border-top: 1px solid;
     .search-block {
+      margin-top: 1em;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -995,7 +1033,8 @@
     width: 20px;
     height: 20px;
     border-radius: 12px;
-    background-color: rgb(255, 81, 0);
+    background-color: @text-grey;
+    // background-color: rgb(255, 81, 0);
     border: 2px solid white;
   }
 
