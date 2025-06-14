@@ -84,15 +84,14 @@ const intro = () =>
       "https://raw.githubusercontent.com/pierremarc/telechecs/main/picture.jpg"
     ),
     PARA(`
-    Once you connect this page with your Lichess account, 
-    you'll be presented with players you follow. 
-    Click on a username to challenge them, 
-    or wait for someone to send you a challenge. 
+    Connect this page with your Lichess account to create games or challenge players 
+    from here.  
     `),
     PARA(`
-    When the game start, you'll be presented with a black 
+    Once a game starts, you'll be presented with a black 
     screen where you'll see your opponent moves when they play, 
-    and an input widget to enter your moves when it's your turn. 
+    and an input widget to enter your moves when it's your turn.
+    And that will be all of it. 
     `),
     PARA("Enjoy!")
   );
