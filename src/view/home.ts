@@ -10,6 +10,7 @@ import {
 import { ChallengeJson, TimeControl } from ".././lib/ucui/lichess-types";
 import { declineChallenge, startNewGame } from "../game";
 import { assign, get, subscribe } from "../store";
+import { navigateSeek } from "./buttons";
 import { mountLogin } from "./login";
 import { mountFollowing } from "./players";
 
@@ -111,6 +112,8 @@ export const challengeBlock = () => {
   );
 };
 
+const createGame = () => DIV("section", navigateSeek());
+
 export const mountHome = (root: HTMLElement) => {
   const replaceRoot = replaceNodeContent(root);
   const updateAll = () => {
@@ -122,7 +125,9 @@ export const mountHome = (root: HTMLElement) => {
     if (get("lichess/user")) {
       const players = DIV("players");
       mountFollowing(players);
-      replaceRoot(DIV("home", header, players, challengeBlock(), footer()));
+      replaceRoot(
+        DIV("home", header, players, challengeBlock(), createGame(), footer())
+      );
     } else {
       replaceRoot(DIV("home", header, intro(), footer()));
     }

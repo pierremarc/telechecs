@@ -7,6 +7,7 @@ import {
   User,
 } from "../lib/ucui/lichess-types";
 import { LichessAI } from "../lib/ucui/types";
+import { defaultTimeControls } from "../lib/util";
 import { assign, get, subscribe } from "../store";
 import { navigateHome } from "./buttons";
 
@@ -14,8 +15,6 @@ type Challenged = User | LichessAI;
 
 const isAI = (u: Challenged): u is LichessAI =>
   "_tag" in u && u._tag === "lichess-ai";
-
-const timeControls = [10, 20, 30, 40, 60];
 
 const challenge = (
   tc: number,
@@ -65,25 +64,28 @@ const button = (
 const username = (user: Challenged) =>
   isAI(user) ? `LichessAI ${user.level}` : user.username;
 
-const renderChallenge = (user: Challenged, tc: number) =>
+const renderChallenge = (
+  user: Challenged,
+  [time, _increment]: [number, number]
+) =>
   DIV(
     "challenge-create",
-    DIV("time-control", DIV("time", tc), DIV("label", "minutes")),
+    DIV("time-control", DIV("time", time), DIV("label", "minutes")),
     DIV(
       "actions",
       DIV(
         "unrated",
-        button(user, tc, "black", false),
-        button(user, tc, "random", false),
-        button(user, tc, "white", false)
+        button(user, time, "black", false),
+        button(user, time, "random", false),
+        button(user, time, "white", false)
       ),
       isAI(user)
         ? DIV("rated ")
         : DIV(
             "rated",
-            button(user, tc, "black", true),
-            button(user, tc, "random", true),
-            button(user, tc, "white", true)
+            button(user, time, "black", true),
+            button(user, time, "random", true),
+            button(user, time, "white", true)
           )
     )
   );
@@ -92,7 +94,7 @@ export const mountChallenge = (root: HTMLElement) => {
   if (opponent) {
     const choices = DIV(
       "choices",
-      ...timeControls.map((tc) => renderChallenge(opponent, tc))
+      ...defaultTimeControls.map((tc) => renderChallenge(opponent, tc))
     );
     root.append(
       DIV(

@@ -1,4 +1,6 @@
 import {
+  defaultPostOptions,
+  encodeQueryString,
   fetchWithClient,
   fetchZ,
   postWithClient,
@@ -15,6 +17,9 @@ import {
   RealTimeUserStatusZ,
   RequesChallengeCreate,
   RequesChallengeCreateAI,
+  RequestSeekClock,
+  ResponseId,
+  ResponseIdZ,
   ResponseOk,
   ResponseOkZ,
   StreamEvent,
@@ -280,4 +285,26 @@ export const __ping = () => {
     redirect: "follow",
     credentials: "same-origin",
   });
+};
+
+/**
+ * doc: https://lichess.org/api#tag/Board/operation/apiBoardSeek
+ * path: /board/seek
+ */
+export const postSeek = (
+  seek: RequestSeekClock,
+  handler: (e: ResponseId) => boolean,
+  then: () => void
+) => {
+  const config = getMutable("lichess/user");
+  if (config) {
+    const stream = config.streamer(ResponseIdZ, apiUrl("/board/seek"), {
+      ...defaultPostOptions(),
+      body: encodeQueryString(seek),
+    });
+    stream.onMessage(handler);
+    stream.onClose(then);
+    return true;
+  }
+  return false;
 };

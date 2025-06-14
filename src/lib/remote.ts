@@ -63,7 +63,7 @@ export const fetchWithClient =
 
 export const fetchZ = fetchWithClient(fetch);
 
-const defaultPostOptions = (
+export const defaultPostOptions = (
   contentType = "application/x-www-form-urlencoded" as ContentType
 ): any => {
   const headers: Record<string, string> = {};

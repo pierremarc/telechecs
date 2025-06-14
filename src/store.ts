@@ -90,6 +90,7 @@ let state = {
   "lichess/opponent": null as Nullable<User | LichessAI>,
   "lichess/following": [] as User[],
   "lichess/chat": null as Nullable<ChatLineEvent & { timestamp: number }>,
+  "lichess/seek": null as Nullable<string>,
 };
 
 export type State = typeof state;

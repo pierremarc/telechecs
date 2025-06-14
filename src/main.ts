@@ -19,6 +19,7 @@ import { mountChallenge } from "./view/challenge";
 import { mountFollowing } from "./view/players";
 import { mountChat } from "./view/chat";
 import { mountOnline } from "./online";
+import { mountSeek } from "./view/seek";
 
 const fullscreen = (elem: HTMLElement) => (toggle: boolean) =>
   toggle && document.location.hostname !== "localhost"
@@ -98,6 +99,10 @@ const main = (root: HTMLElement) => {
       case "challenge": {
         toggleFullscreen(false);
         return mountChallenge(root);
+      }
+      case "seek": {
+        toggleFullscreen(false);
+        return mountSeek(root);
       }
       case "follow": {
         toggleFullscreen(false);

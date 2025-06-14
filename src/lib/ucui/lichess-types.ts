@@ -221,7 +221,7 @@ export const RulesZ = z.union([
   z.literal("noEarlyDraw"),
 ]);
 
-export const RequesChallengeCreateClockZ = z.strictObject({
+export const RequestChallengeCreateClockZ = z.strictObject({
   rated: z.boolean(),
   "clock.limit": z.int(),
   "clock.increment": z.int(),
@@ -231,6 +231,17 @@ export const RequesChallengeCreateClockZ = z.strictObject({
   keepAliveStream: z.boolean(),
   rules: RulesZ.optional(),
 });
+
+export const RequestSeekClockZ = z.strictObject({
+  limit: z.int(),
+  increment: z.int(),
+  rated: z.boolean().optional(),
+  color: z.union([ColorZ, z.literal("random")]),
+  variant: VariantKeyZ,
+  ratingRange: z.string().optional(),
+});
+
+export const ResponseIdZ = z.strictObject({ id: z.string() });
 
 export const CorrespondenceDaysZ = z.union([
   z.literal(1),
@@ -254,7 +265,7 @@ export const RequesChallengeCreateCorrespondenceZ = z.strictObject({
 });
 
 export const RequesChallengeCreateZ = z.union([
-  RequesChallengeCreateClockZ,
+  RequestChallengeCreateClockZ,
   RequesChallengeCreateCorrespondenceZ,
 ]);
 
@@ -501,7 +512,7 @@ export type StreamEvent = z.infer<typeof StreamEventZ>;
 export type ChallengeList = z.infer<typeof ChallengeListZ>;
 export type Rules = z.infer<typeof RulesZ>;
 export type RequesChallengeCreateClock = z.infer<
-  typeof RequesChallengeCreateClockZ
+  typeof RequestChallengeCreateClockZ
 >;
 export type CorrespondenceDays = z.infer<typeof CorrespondenceDaysZ>;
 export type RequesChallengeCreateCorrespondence = z.infer<
@@ -510,6 +521,8 @@ export type RequesChallengeCreateCorrespondence = z.infer<
 export type RequesChallengeCreate = z.infer<typeof RequesChallengeCreateZ>;
 export type RequesChallengeCreateAI = z.infer<typeof RequesChallengeCreateAIZ>;
 export type ResponseOk = z.infer<typeof ResponseOkZ>;
+export type RequestSeekClock = z.infer<typeof RequestSeekClockZ>;
+export type ResponseId = z.infer<typeof ResponseIdZ>;
 
 export type Clock = z.infer<typeof ClockZ>;
 export type PerfName = z.infer<typeof PerfNameZ>;

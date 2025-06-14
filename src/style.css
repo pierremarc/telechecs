@@ -280,6 +280,15 @@
 .home .button-history {
   font-size: medium;
 }
+.home .button-create-a-game {
+  width: 100%;
+  text-align: center;
+  padding: 0.5em;
+  margin-top: 3em;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  text-decoration: none;
+}
 .home .footer {
   left: 0;
   position: absolute;
@@ -349,125 +358,6 @@
 }
 .home .challenge-block .challenge .actions .button.button-decline {
   color: #888;
-}
-.config {
-  margin: 2em;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  height: calc(100% - 4em);
-  justify-content: space-between;
-}
-.config .engine-color {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-.config .engine-color div {
-  margin: 0 1em;
-}
-.config .engine-color .color {
-  font-weight: bold;
-  border: 2px solid black;
-  padding: 4px 8px;
-  border-radius: 3px;
-}
-.config .engine-color .color.black {
-  color: white;
-  border: 2px solid white;
-  background-color: black;
-}
-.config .times {
-  display: flex;
-}
-.config .times .time {
-  margin: 1em auto;
-  display: flex;
-  flex-direction: column;
-}
-.config .position {
-  border-top: 1px solid;
-  padding-top: 1em;
-  bottom: 0;
-  left: 2em;
-  right: 2em;
-  background-color: white;
-}
-.config .position .input-fen {
-  width: 96%;
-}
-.config .position .ok-button {
-  margin-top: 1em;
-  font-size: large;
-  font-weight: bold;
-  text-decoration: underline;
-}
-.config .button-play {
-  font-size: xxx-large;
-  font-weight: bold;
-  text-decoration: underline;
-  text-align: center;
-  padding-top: 0em;
-  border-bottom: 1px solid;
-  padding-bottom: 0.5em;
-  border-top: 1px solid;
-}
-.config .eco {
-  padding-top: 0.5em;
-  flex-grow: 3;
-  overflow-y: auto;
-}
-.config .eco .lookup {
-  padding-bottom: 0.5em;
-  display: flex;
-  justify-content: space-evenly;
-  align-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-  padding-top: 0.5em;
-}
-.config .eco .lookup input.i {
-  line-height: 22px;
-  text-align: left;
-}
-.config .eco .lookup .go-button {
-  font-weight: bold;
-  text-decoration: underline;
-  line-height: 22px;
-}
-.config .eco .listing {
-  text-align: left;
-}
-.config .eco .listing .item {
-  justify-content: space-between;
-  font-size: small;
-  padding: 3px 0;
-  border-bottom: 1px solid gray;
-}
-.config .eco .listing .item .names {
-  display: flex;
-  justify-content: flex-start;
-}
-.config .eco .listing .item .names .name {
-  font-style: italic;
-}
-.config .eco .listing .item .names .code {
-  font-weight: bold;
-  padding-right: 1em;
-}
-.config .eco .listing .item .actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding-top: 0.5em;
-}
-.config .eco .listing .item .actions .moves {
-  margin-right: 1em;
-  font-size: smaller;
-  font-family: "Courier New", Courier, monospace;
-}
-.config .eco .listing .item .actions .play {
-  margin-left: 3px;
 }
 .movelist {
   display: flex;
@@ -764,6 +654,7 @@
   padding: 0.5em;
 }
 .players .lookup {
+  display: none;
   margin-top: 1em;
   padding-top: 1em;
   border-top: 1px solid;
