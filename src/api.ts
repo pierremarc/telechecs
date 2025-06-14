@@ -237,7 +237,13 @@ export const boardDraw = (gameId: string, accept: "yes" | "no") => {
  */
 export const getUserById = (id: string) => {
   const post = getPoster();
-  return post(UserZ.array(), apiUrl(`/users`), id);
+  return post(UserZ.array(), apiUrl(`/users`), id).then((users) => {
+    if (users.length > 1) {
+      return users[0];
+    } else {
+      throw new Error("Failed to get a user with id: " + id);
+    }
+  });
 };
 
 /**

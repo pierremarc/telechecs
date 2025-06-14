@@ -20,6 +20,7 @@ import { mountFollowing } from "./view/players";
 import { mountChat } from "./view/chat";
 import { mountOnline } from "./online";
 import { mountSeek } from "./view/seek";
+import { mountEnd } from "./view/end";
 
 const fullscreen = (elem: HTMLElement) => (toggle: boolean) =>
   toggle && document.location.hostname !== "localhost"
@@ -46,9 +47,9 @@ const monitorStream = () => {
         connect(lastEvent.game.gameId);
       } else if (lastEvent.type === "gameFinish") {
         assign("lichess/current-challenge", null);
-        assign("lichess/game-info", null);
+        assign("lichess/game-info", lastEvent.game);
         assign("lichess/game-state", null);
-        assign("screen", "home");
+        assign("screen", "end-game");
       } else if (lastEvent.type === "challenge") {
         if (lastEvent.challenge.status === "created") {
           dispatch("lichess/challenges", (cs) =>
@@ -107,6 +108,10 @@ const main = (root: HTMLElement) => {
       case "follow": {
         toggleFullscreen(false);
         return mountFollowing(root);
+      }
+      case "end-game": {
+        toggleFullscreen(false);
+        return mountEnd(root);
       }
     }
   });

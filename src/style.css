@@ -740,3 +740,27 @@
 .online-status.ok {
   display: none;
 }
+.end {
+  margin: 2em;
+}
+.end .header .title {
+  font-weight: bold;
+  font-size: large;
+}
+.end .info .result {
+  margin: 1em 0;
+  padding: 0.5em 0;
+  font-size: xx-large;
+}
+.end .info .status {
+  font-style: italic;
+  font-size: small;
+}
+.end .section {
+  margin: 1em 0;
+  padding-top: 1em;
+  border-top: 1px solid;
+}
+.end .button-rematch {
+  text-decoration: underline;
+}

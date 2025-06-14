@@ -63,8 +63,8 @@ const lookup = () => {
   const submit = events(DIV("button submit", "search"), (add) =>
     add("click", () => {
       const username = input.value;
-      getUserById(username).then((users) =>
-        replaceNodeContent(results)(...users.map(renderLookupUser))
+      getUserById(username).then((user) =>
+        replaceNodeContent(results)(renderLookupUser(user))
       );
     })
   );

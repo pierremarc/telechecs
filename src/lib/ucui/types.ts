@@ -15,7 +15,8 @@ export type LichessScreen =
   | "seek"
   | "movelist"
   | "challenge"
-  | "follow";
+  | "follow"
+  | "end-game";
 
 export type Role = "Pawn" | "Knight" | "Bishop" | "Rook" | "Queen" | "King";
 
