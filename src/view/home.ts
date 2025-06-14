@@ -81,7 +81,7 @@ const intro = () =>
     ),
     IMG(
       "board-image",
-      "https://github.com/pierremarc/telechecs/raw/main/picture.jpg"
+      "https://raw.githubusercontent.com/pierremarc/telechecs/main/picture.jpg"
     ),
     PARA(`
     Once you connect this page with your Lichess account, 

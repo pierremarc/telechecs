@@ -5,6 +5,7 @@
 
 import { HttpClient } from "@bity/oauth2-auth-code-pkce";
 import { Streamer } from "../stream";
+import { RequestSeekClock } from "./lichess-types";
 
 export type Screen = "home" | "game" | "movelist" | "config" | "history";
 export type LichessScreen =
@@ -418,4 +419,10 @@ export const stampEvent = <T>(event: T): T & { timestamp: number } => ({
 export type LichessAI = {
   readonly _tag: "lichess-ai";
   level: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+};
+
+export type SeekRequest = {
+  readonly _tag: "seek-req";
+  since: number;
+  request: RequestSeekClock;
 };

@@ -4,7 +4,7 @@ import { DIV, replaceNodeContent } from "../lib/html";
 import { RequestSeekClock, ResponseId } from "../lib/ucui/lichess-types";
 import { defaultTimeControls } from "../lib/util";
 import { assign, subscribe } from "../store";
-import { navigateHome } from "./buttons";
+import { navigateHome, button as actionButton } from "./buttons";
 
 const seek = (
   tc: number,
@@ -23,9 +23,15 @@ const connectionClose = () => assign("lichess/seek", null);
 
 const button = (tc: number, color: RequestSeekClock["color"], rated: boolean) =>
   events(DIV(`button button-create ${color} ${rated}`, color), (add) =>
-    add("click", () =>
-      postSeek(seek(tc, color, rated), seekHandler, connectionClose)
-    )
+    add("click", () => {
+      const request = seek(tc, color, rated);
+      assign("lichess/seek", {
+        request,
+        _tag: "seek-req",
+        since: Date.now(),
+      });
+      postSeek(request, seekHandler, connectionClose);
+    })
   );
 
 const renderSeek = ([time, _increment]: [number, number]) =>
@@ -62,6 +68,11 @@ export const mountSeek = (root: HTMLElement) => {
   );
 
   subscribe("lichess/seek")(() => {
-    replaceNodeContent(choices)(DIV("waiting", `Waiting for someone, anyone.`));
+    replaceNodeContent(choices)(
+      DIV("waiting", `Waiting for someone, anyone.`),
+      actionButton("Stop waiting", () => {
+        window.location.assign("/");
+      })
+    );
   });
 };

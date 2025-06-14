@@ -22,6 +22,7 @@ import {
   Move,
   ClockState,
   LichessAI,
+  SeekRequest,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -90,7 +91,7 @@ let state = {
   "lichess/opponent": null as Nullable<User | LichessAI>,
   "lichess/following": [] as User[],
   "lichess/chat": null as Nullable<ChatLineEvent & { timestamp: number }>,
-  "lichess/seek": null as Nullable<string>,
+  "lichess/seek": null as Nullable<string | SeekRequest>,
 };
 
 export type State = typeof state;
