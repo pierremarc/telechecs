@@ -2,7 +2,7 @@ import { boardDraw, boardResign } from "./api";
 import { events } from "./lib/dom";
 import { DIV, replaceNodeContent, H2, SPAN } from "./lib/html";
 import { fromNullable, map, orElse, pipe2 } from "./lib/option";
-import { GameStateEvent } from "./lib/ucui/lichess-types";
+import { GameEventInfo, GameStateEvent } from "./lib/ucui/lichess-types";
 import { Move } from "./lib/ucui/types";
 import { group } from "./lib/util";
 import { defaultFormatSymbol, formatMove } from "./san";
@@ -15,6 +15,8 @@ import {
   subscribe,
 } from "./store";
 import { legalMoves } from "./util";
+import { navigateHome } from "./view/buttons";
+import { renderWinner } from "./view/end";
 
 const pendingMove = { _tag: "pending" as const };
 type PendingMove = typeof pendingMove;
@@ -37,7 +39,8 @@ const renderNonPendingMove = (
     "  "
   );
 
-const renderPending = () => DIV("pending");
+const renderPending = () =>
+  withFinishedGame(() => DIV("hidden"), DIV("pending"));
 
 const renderMove = (
   state: GameStateEvent,
@@ -78,38 +81,51 @@ const makeMoves = map((state: GameStateEvent) =>
   })
 );
 
-const renderResign = () =>
+const renderResign = (info: GameEventInfo) =>
   events(DIV("button", "Resign"), (add) =>
-    add("click", () => {
-      const info = get("lichess/game-info");
-      if (info) {
-        boardResign(info.gameId);
-      }
-    })
+    add("click", () => boardResign(info.gameId))
   );
 
-const renderDraw = () =>
+const renderDraw = (info: GameEventInfo) =>
   events(DIV("button", "Draw"), (add) =>
-    add("click", () => {
-      const info = get("lichess/game-info");
-      if (info) {
-        boardDraw(info.gameId, "yes");
-      }
-    })
+    add("click", () => boardDraw(info.gameId, "yes"))
   );
 
-const renderActions = () => [renderDraw(), renderResign()];
+const withStartedGame = <T>(fn: (i: GameEventInfo) => T, dflt: T) => {
+  const info = get("lichess/game-info");
+  if (info && info.status.name === "started") {
+    return fn(info);
+  }
+  return dflt;
+};
 
-// const renderOutcome = () => get("outcome") ?? "...";
+const withFinishedGame = <T>(fn: (i: GameEventInfo) => T, dflt: T) => {
+  const info = get("lichess/game-info");
+  if (
+    info &&
+    info.status.name !== "created" &&
+    info.status.name !== "started"
+  ) {
+    return fn(info);
+  }
+  return dflt;
+};
 
-const header = () =>
-  DIV(
-    "header",
-    H2("title", "Moves"),
-    events(DIV("to-game  to-button", "↩"), (add) =>
-      add("click", () => assign("screen", "game"))
-    )
-  );
+const renderActions = () =>
+  withStartedGame((info) => [renderDraw(info), renderResign(info)], []);
+
+const renderOutcome = () => withFinishedGame(renderWinner, DIV("no-outcome"));
+
+const renderHeader = () => [
+  H2("title", "Moves"),
+  withStartedGame(
+    () =>
+      events(DIV("to-game  to-button", "↩"), (add) =>
+        add("click", () => assign("screen", "game"))
+      ),
+    navigateHome()
+  ),
+];
 
 export const mountMoveList = (root: HTMLElement) => {
   const moves = DIV(
@@ -120,16 +136,18 @@ export const mountMoveList = (root: HTMLElement) => {
       orElse([DIV("no-moves")])
     )
   );
+  const header = DIV("header", ...renderHeader());
   const actions = DIV("actions", ...renderActions());
-  // const outcome = DIV("outcome", renderOutcome());
-  root.append(DIV("movelist", header(), DIV("listing", moves), actions));
+  const outcome = DIV("outcome", renderOutcome());
+  root.append(DIV("movelist", header, DIV("listing", moves), outcome, actions));
 
   const replaceMoves = replaceNodeContent(moves);
-  // const replaceOutcome = replaceNodeContent(outcome);
-  // const replaceActions = replaceNodeContent(actions);
+  const replaceOutcome = replaceNodeContent(outcome);
+  const replaceActions = replaceNodeContent(actions);
+  const replaceHeader = replaceNodeContent(header);
   const subList = subscribe("lichess/game-state");
-  // const subAction = subscribe("started", "savedGames");
-  // const subOuctome = subscribe("outcome");
+  const onInfoChanged = subscribe("started", "lichess/game-info");
+
   subList(() => {
     replaceMoves(
       ...pipe2(
@@ -139,10 +157,9 @@ export const mountMoveList = (root: HTMLElement) => {
       )
     );
   });
-  // subAction(() => {
-  //   replaceActions(...renderActions());
-  // });
-  // subOuctome(() => {
-  //   replaceOutcome(renderOutcome());
-  // });
+  onInfoChanged(() => {
+    replaceHeader(...renderHeader());
+    replaceActions(...renderActions());
+    replaceOutcome(renderOutcome());
+  });
 };

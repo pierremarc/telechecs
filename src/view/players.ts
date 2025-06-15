@@ -92,7 +92,7 @@ const renderUser = (user: User) =>
   );
 
 const aiButton = (level: LichessAI["level"]) =>
-  events(DIV("level", `#${level}`), (add) =>
+  events(DIV(`level level-${level}`, `${level}`), (add) =>
     add("click", () => {
       assign("lichess/opponent", { _tag: "lichess-ai", level });
       assign("screen", "challenge");
@@ -104,8 +104,8 @@ const levels: LichessAI["level"][] = [1, 2, 3, 4, 5, 6, 7, 8];
 const renderLichessAI = () =>
   DIV(
     "user lichess-ai",
-    DIV("section", "Challenge Lichess AI"),
-    DIV("levels", ...levels.map(aiButton))
+    DIV("section", "Play with Lichess AI"),
+    DIV("levels", DIV("label", "Level"), ...levels.map(aiButton))
   );
 
 export const mountFollowing = (root: HTMLElement) => {

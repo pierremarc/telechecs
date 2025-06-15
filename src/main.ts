@@ -48,7 +48,7 @@ const monitorStream = () => {
       } else if (lastEvent.type === "gameFinish") {
         assign("lichess/current-challenge", null);
         assign("lichess/game-info", lastEvent.game);
-        assign("lichess/game-state", null);
+        // assign("lichess/game-state", null);
         assign("screen", "end-game");
       } else if (lastEvent.type === "challenge") {
         if (lastEvent.challenge.status === "created") {

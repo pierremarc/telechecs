@@ -5,7 +5,7 @@ import { fromNullable, map } from "../lib/option";
 import { GameEventInfo, Status } from "../lib/ucui/lichess-types";
 import { otherColor } from "../lib/ucui/types";
 import { assign, get, subscribe } from "../store";
-import { button, navigateHome } from "./buttons";
+import { button, navigate, navigateHome } from "./buttons";
 
 const renderStatusString = (status: Status) => {
   switch (status.name) {
@@ -41,10 +41,10 @@ const renderStatusString = (status: Status) => {
 const renderStatus = (info: GameEventInfo) =>
   DIV("status", renderStatusString(info.status));
 
-const resultString = ({ winner }: GameEventInfo) =>
+export const resultString = ({ winner }: GameEventInfo) =>
   winner === undefined ? "½ - ½" : winner === "white" ? " 1 - 0" : "0 - 1";
 
-const renderWinner = (info: GameEventInfo) =>
+export const renderWinner = (info: GameEventInfo) =>
   info.color === info.winner
     ? DIV("result won", resultString(info))
     : otherColor(info.color) === info.winner
@@ -66,11 +66,12 @@ const renderRematch = map((userId: string) =>
 const renderLink = (info: GameEventInfo) =>
   DIV(
     "section",
+    navigate("movelist", "Review the game"),
     attrs(
       ANCHOR(
         "link",
         `${get("lichess/host")}/${info.gameId}`,
-        "The game on Lichess"
+        "Review the game on Lichess"
       ),
       (set) => set("target", "_blank")
     )

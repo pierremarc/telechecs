@@ -32,7 +32,7 @@
 
 @piece-size: 32pt;
 @square-size: 10vw;
-@move-size: 14pt;
+@move-size: 22pt;
 
 @clock-height: 24pt;
 
@@ -260,8 +260,8 @@
         color: white;
         font-size: @move-size;
         font-weight: bold;
-        margin: 6pt;
-        padding: 5px 0.3em;
+        margin: 4pt;
+        padding: 4pt;
         min-width: 32pt;
         border: 2px solid black;
         background: black;
@@ -451,6 +451,11 @@
         }
       }
     }
+  }
+
+  .waiting {
+    font-size: small;
+    font-style: italic;
   }
 }
 
@@ -751,9 +756,6 @@
       }
     }
   }
-  .waiting {
-    font-size: xx-large;
-  }
 }
 
 .players {
@@ -809,11 +811,40 @@
       color: @text-grey;
     }
     .levels {
+      margin-top: 0.5em;
       display: flex;
       justify-content: space-between;
+      align-items: baseline;
       .level {
-        padding: 0.5em;
-        // font-weight: bold;
+        // padding: 0.5em;
+        text-align: center;
+        width: 1em;
+        font-weight: bold;
+
+        &-1 {
+          font-weight: 100;
+        }
+        &-2 {
+          font-weight: 200;
+        }
+        &-3 {
+          font-weight: 300;
+        }
+        &-4 {
+          font-weight: 400;
+        }
+        &-5 {
+          font-weight: 500;
+        }
+        &-6 {
+          font-weight: 600;
+        }
+        &-7 {
+          font-weight: 700;
+        }
+        &-8 {
+          font-weight: 800;
+        }
       }
     }
   }

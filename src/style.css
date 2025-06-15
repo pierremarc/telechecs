@@ -200,10 +200,10 @@
 }
 .input .moves .select .move {
   color: white;
-  font-size: 14pt;
+  font-size: 22pt;
   font-weight: bold;
-  margin: 6pt;
-  padding: 5px 0.3em;
+  margin: 4pt;
+  padding: 4pt;
   min-width: 32pt;
   border: 2px solid black;
   background: black;
@@ -358,6 +358,10 @@
 }
 .home .challenge-block .challenge .actions .button.button-decline {
   color: #888;
+}
+.home .waiting {
+  font-size: small;
+  font-style: italic;
 }
 .movelist {
   display: flex;
@@ -599,9 +603,6 @@
 .challenge-page .choices .challenge-create .actions .rated {
   font-weight: bold;
 }
-.challenge-page .waiting {
-  font-size: xx-large;
-}
 .players .section {
   display: flex;
   justify-content: space-between;
@@ -647,11 +648,39 @@
   color: #888;
 }
 .players .lichess-ai .levels {
+  margin-top: 0.5em;
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
 }
 .players .lichess-ai .levels .level {
-  padding: 0.5em;
+  text-align: center;
+  width: 1em;
+  font-weight: bold;
+}
+.players .lichess-ai .levels .level-1 {
+  font-weight: 100;
+}
+.players .lichess-ai .levels .level-2 {
+  font-weight: 200;
+}
+.players .lichess-ai .levels .level-3 {
+  font-weight: 300;
+}
+.players .lichess-ai .levels .level-4 {
+  font-weight: 400;
+}
+.players .lichess-ai .levels .level-5 {
+  font-weight: 500;
+}
+.players .lichess-ai .levels .level-6 {
+  font-weight: 600;
+}
+.players .lichess-ai .levels .level-7 {
+  font-weight: 700;
+}
+.players .lichess-ai .levels .level-8 {
+  font-weight: 800;
 }
 .players .lookup {
   display: none;
