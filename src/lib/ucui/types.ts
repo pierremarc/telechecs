@@ -6,6 +6,10 @@
 import { HttpClient } from "@bity/oauth2-auth-code-pkce";
 import { Streamer } from "../stream";
 import { RequestSeekClock } from "./lichess-types";
+import { z } from "zod/v4";
+
+export const LangZ = z.union([z.literal("en"), z.literal("fr")]);
+export type Lang = z.infer<typeof LangZ>;
 
 export type Screen = "home" | "game" | "movelist" | "config" | "history";
 export type LichessScreen =

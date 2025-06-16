@@ -1,22 +1,12 @@
 import { events } from ".././lib/dom";
-import {
-  DIV,
-  ANCHOR,
-  SPAN,
-  replaceNodeContent,
-  PARA,
-  IMG,
-} from ".././lib/html";
+import { DIV, ANCHOR, replaceNodeContent, IMG } from ".././lib/html";
 import { ChallengeJson, TimeControl } from ".././lib/ucui/lichess-types";
 import { declineChallenge, startNewGame } from "../game";
+import tr from "../locale";
 import { assign, get, subscribe } from "../store";
 import { navigateSeek } from "./buttons";
 import { mountLogin } from "./login";
 import { mountFollowing } from "./players";
-
-// const buttonPlay = events(DIV("button button-play", "play"), (add) =>
-//   add("click", () => assign("screen", "seek"))
-// );
 
 const rtc = (tc: TimeControl) => {
   switch (tc.type) {
@@ -39,16 +29,18 @@ const renderChallenge = (c: ChallengeJson) =>
     ),
     DIV(
       "actions",
-      events(DIV("button button-accept", "Accept"), (add) =>
+      events(DIV("button button-accept", tr("home/challenge-accept")), (add) =>
         add("click", () => {
           startNewGame(c);
           assign("screen", "game");
         })
       ),
-      events(DIV("button button-decline", "Decline"), (add) =>
-        add("click", () => {
-          declineChallenge(c);
-        })
+      events(
+        DIV("button button-decline", tr("home/challenge-decline")),
+        (add) =>
+          add("click", () => {
+            declineChallenge(c);
+          })
       )
     )
   );
@@ -58,7 +50,7 @@ const renderChallenges = () => {
   if (challenges.length > 0) {
     return challenges.map(renderChallenge);
   }
-  return [DIV("waiting", "Waiting to be challenged…")];
+  return [DIV("waiting", tr("home/challenge-wait"))];
 };
 
 const footer = () =>
@@ -67,33 +59,18 @@ const footer = () =>
     ANCHOR(
       "link",
       "https://github.com/pierremarc/telechecs",
-      "Source code & feedback"
+      tr("home/link-git")
     )
   );
 const intro = () =>
   DIV(
     "intro",
-    PARA(
-      SPAN("ucui", "Téléchecs "),
-      "is a ",
-      ANCHOR("", get("lichess/host"), " Lichess"),
-      " client for players who prefer to play over the board."
-    ),
+    tr("home/tagline"),
     IMG(
       "board-image",
       "https://raw.githubusercontent.com/pierremarc/telechecs/main/picture.jpg"
     ),
-    PARA(`
-    Connect this page with your Lichess account to create games or challenge players 
-    from here.  
-    `),
-    PARA(`
-    Once a game starts, you'll be presented with a black 
-    screen where you'll see your opponent moves when they play, 
-    and an input widget to enter your moves when it's your turn.
-    And that will be all of it. 
-    `),
-    PARA("Enjoy!")
+    tr("home/description")
   );
 
 export const challengeBlock = () => {
@@ -106,12 +83,12 @@ export const challengeBlock = () => {
 
   return DIV(
     "challenge-block",
-    DIV("section", DIV("title", "Challenges")),
+    DIV("section", DIV("title", tr("home/challenges"))),
     challenges
   );
 };
 
-const createGame = () => DIV("section", navigateSeek());
+const createGame = () => DIV("section create-game", navigateSeek());
 
 export const mountHome = (root: HTMLElement) => {
   const replaceRoot = replaceNodeContent(root);

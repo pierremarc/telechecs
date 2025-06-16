@@ -4,8 +4,9 @@ import { DIV, INPUT, replaceNodeContent } from "../lib/html";
 import { fromNullable, map } from "../lib/option";
 import { Perfs, User } from "../lib/ucui/lichess-types";
 import { LichessAI } from "../lib/ucui/types";
+import tr from "../locale";
 import { assign, dispatch, get, subscribe } from "../store";
-import { button } from "./buttons";
+import { button, name } from "./buttons";
 
 const getFollowing = (root: HTMLElement) => {
   streamFollowing(
@@ -36,8 +37,11 @@ const getFollowing = (root: HTMLElement) => {
 const perfs = map(({ classical, rapid }: Perfs) =>
   DIV(
     "perfs",
-    DIV("classical", `Classic: ${classical ? classical.rating : "?"}`),
-    DIV("rapid", `Rapid: ${rapid ? rapid.rating : "?"}`)
+    DIV(
+      "classical",
+      `${tr("players/classic")}: ${classical ? classical.rating : "?"}`
+    ),
+    DIV("rapid", `${tr("players/rapid")}: ${rapid ? rapid.rating : "?"}`)
   )
 );
 
@@ -57,10 +61,10 @@ const renderLookupUser = (user: User) =>
 
 const lookup = () => {
   const input = attrs(INPUT("", "search"), (set) =>
-    set("placeholder", "username")
+    set("placeholder", tr("players/username"))
   );
   const results = DIV("results");
-  const submit = events(DIV("button submit", "search"), (add) =>
+  const submit = events(DIV("button submit", tr("players/search")), (add) =>
     add("click", () => {
       const username = input.value;
       getUserById(username).then((user) =>
@@ -70,7 +74,7 @@ const lookup = () => {
   );
   return DIV(
     "lookup",
-    DIV("section", DIV("title", "Find player")),
+    DIV("section", DIV("title", tr("players/find"))),
     DIV("search-block", input, submit),
     results
   );
@@ -104,18 +108,18 @@ const levels: LichessAI["level"][] = [1, 2, 3, 4, 5, 6, 7, 8];
 const renderLichessAI = () =>
   DIV(
     "user lichess-ai",
-    DIV("section", "Play with Lichess AI"),
-    DIV("levels", DIV("label", "Level"), ...levels.map(aiButton))
+    DIV("section", tr("players/ai")),
+    DIV("levels", DIV("label", tr("players/ai-level")), ...levels.map(aiButton))
   );
 
 export const mountFollowing = (root: HTMLElement) => {
   const users = DIV("users", ...get("lichess/following").map(renderUser));
 
-  const refresh = button("refresh", () => {
+  const refresh = button(name("↻", "refresh"), () => {
     getFollowing(users);
   });
 
-  const header = DIV("section", DIV("title", `Players you follow`), refresh);
+  const header = DIV("section", DIV("title", tr("players/following")), refresh);
   root.append(DIV("players", header, users, renderLichessAI(), lookup()));
 
   subscribe("lichess/following")(() => {

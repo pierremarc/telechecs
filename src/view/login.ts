@@ -5,6 +5,7 @@ import { emptyElement, events } from ".././lib/dom";
 import { ANCHOR, DIV } from ".././lib/html";
 import { streamEvent } from "../api";
 import { authObject } from "../auth";
+import tr from "../locale";
 
 let listening = false;
 
@@ -32,7 +33,7 @@ const listenEvents = () => {
 };
 
 const buttonLogin = () =>
-  events(DIV("button button-login", "connect"), (add) =>
+  events(DIV("button button-login", tr("home/connect")), (add) =>
     add("click", async () => {
       const notLogged = orElseL(() => {
         authObject.login().then(() => {

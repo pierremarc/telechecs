@@ -23,6 +23,7 @@ import {
   ClockState,
   LichessAI,
   SeekRequest,
+  Lang,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -62,6 +63,8 @@ export const getMoveList = (): Move[] => {
   return [];
 };
 
+export const getLang = () => get("lang") ?? "en";
+
 export const defaultGameConfig = () =>
   gameConfig(10 * 60 * 1000, 60 * 1000, "black");
 export const defaultInput = (): Input => inputNone();
@@ -72,6 +75,7 @@ export const defaultMoveList = (): MoveHist[] => [];
 export const defaultEcoList = (): Eco[] => [];
 
 let state = {
+  lang: null as Nullable<Lang>,
   screen: defaultScreen(),
   clock: null as Nullable<ClockState>,
   input: defaultInput(),
@@ -98,7 +102,7 @@ let state = {
 export type State = typeof state;
 export type StateKey = keyof State;
 
-const storedKeys: StateKey[] = [];
+const storedKeys: StateKey[] = ["lang"];
 
 const loadFromStorage = () =>
   storedKeys.map(<K extends StateKey>(key: K) => {
