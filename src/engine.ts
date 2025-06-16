@@ -1,7 +1,6 @@
-import { events } from "./lib/dom";
 import { replaceNodeContent, SPAN, DIV } from "./lib/html";
 import { defaultFormatSymbol, formatMove } from "./san";
-import { assign, get, getPlayerColor, getTurn, subscribe } from "./store";
+import { get, getPlayerColor, getTurn, subscribe } from "./store";
 import { getMoveListFromMoveString, legalMoves } from "./util";
 
 const render = (engineInfo: HTMLElement, engineState: HTMLElement) => {
@@ -39,12 +38,12 @@ export const mountOpponent = (root: HTMLElement) => {
   const engineInfo = DIV("info");
   const engineState = DIV("state");
 
-  const toListButton = events(DIV("to-list to-button", "↪"), (add) =>
-    add("click", () => assign("screen", "movelist"))
-  );
+  // const toListButton = events(DIV("to-list to-button", "↪"), (add) =>
+  //   add("click", () => assign("screen", "movelist"))
+  // );
 
   render(engineInfo, engineState);
-  const engine = DIV("engine", engineInfo, engineState, toListButton);
+  const engine = DIV("engine", engineInfo, engineState);
 
   root.append(engine);
 

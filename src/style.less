@@ -29,6 +29,7 @@
 @text-normal: black;
 @text-grey: #888;
 @text-high: #12488b;
+@text-alert: #eb0a0a;
 
 @piece-size: 32pt;
 @square-size: 10vw;
@@ -532,6 +533,7 @@
   }
   .actions {
     display: flex;
+    display: none;
     margin-top: 1em;
     justify-content: space-around;
     width: 100%;
@@ -975,5 +977,53 @@
 
   .button-rematch {
     text-decoration: underline;
+  }
+}
+.game-actions {
+  position: absolute;
+  top: @to-top;
+  top: 33%;
+  right: 0;
+  font-size: x-large;
+  font-weight: bold;
+  padding: 0.5em;
+  margin: 0.5em;
+  border: 2px solid;
+  border-radius: 6px;
+  border-color: @text-grey;
+  color: white;
+
+  .view {
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+    border-color: @text-grey;
+    border-bottom: 1px solid;
+
+    .button-fullscreen-on {
+      color: white;
+    }
+
+    .button-fullscreen-off {
+      color: @text-grey;
+    }
+  }
+
+  .anti-slip {
+    color: @text-alert;
+    &.on {
+      // filter: blur(5%);
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+  }
+
+  .draw-answer {
+    display: flex;
+    align-items: center;
+    .button {
+      // margin-right: 0.5em;
+      margin-left: 1em;
+      font-size: medium;
+    }
   }
 }

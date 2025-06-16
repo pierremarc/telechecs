@@ -78,6 +78,7 @@ let state = {
   started: false,
   lockScreen: false,
   online: true,
+  fullscreen: false,
   "lichess/host": "https://lichess.org",
   "lichess/user": null as Nullable<UserConfig>,
   "lichess/stream-events": [] as StreamEvent[],

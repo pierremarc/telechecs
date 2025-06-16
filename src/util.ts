@@ -165,3 +165,5 @@ export const getMoveListFromMoveString = (gameMoves: string): Move[] => {
   uciMoveList(gameMoves).forEach((uci) => game.move(uciToObj(uci)));
   return game.history({ verbose: true }).map(chessjsMoveToMove);
 };
+
+export const noop = () => void 0;

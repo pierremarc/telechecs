@@ -3,10 +3,20 @@ import { DIV } from "../lib/html";
 import { LichessScreen } from "../lib/ucui/types";
 import { assign } from "../store";
 
-export const button = (name: string, action: () => void) =>
-  events(
-    DIV(`button button-${name.toLowerCase().split(" ").join("-")}`, name),
-    (add) => add("click", action)
+type NameOrFullName = string | { className: string; name: string };
+
+export const name = (name: string, className?: string): NameOrFullName => ({
+  name,
+  className: className ?? name,
+});
+
+const className = (n: NameOrFullName) =>
+  (typeof n === "string" ? n : n.className).toLowerCase().split(" ").join("-");
+const displayName = (n: NameOrFullName) => (typeof n === "string" ? n : n.name);
+
+export const button = (name: NameOrFullName, action: () => void) =>
+  events(DIV(`button button-${className(name)}`, displayName(name)), (add) =>
+    add("click", action)
   );
 
 export const navigate = (screen: LichessScreen, name: string) =>

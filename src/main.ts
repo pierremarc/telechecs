@@ -21,17 +21,7 @@ import { mountChat } from "./view/chat";
 import { mountOnline } from "./online";
 import { mountSeek } from "./view/seek";
 import { mountEnd } from "./view/end";
-
-const fullscreen = (elem: HTMLElement) => (toggle: boolean) =>
-  toggle && document.location.hostname !== "localhost"
-    ? elem
-        .requestFullscreen()
-        .then(() => console.log("enter fullscreen"))
-        .catch((err) => console.warn("failed to enter fullscreen", err))
-    : document
-        .exitFullscreen()
-        .then(() => console.log("exir fullscreen"))
-        .catch((err) => console.warn("failed to exit fullscreen", err));
+import { setFullScreenRoot } from "./fullscreen";
 
 const monitorStream = () => {
   const onEvent = subscribe("lichess/stream-events");
@@ -66,13 +56,12 @@ const monitorStream = () => {
 };
 
 const main = (root: HTMLElement) => {
+  setFullScreenRoot(root);
   screenLocker();
   mountHome(root);
   mountChat(document.body);
   mountOnline(document.body);
   monitorStream();
-
-  const toggleFullscreen = fullscreen(root);
 
   let keepSubs: StateKey[] = ["screen", "lockScreen", "lichess/chat", "online"];
 
@@ -82,35 +71,27 @@ const main = (root: HTMLElement) => {
     emptyElement(root);
     switch (get("screen")) {
       case "home": {
-        toggleFullscreen(false);
         return mountHome(root);
       }
       case "events": {
-        toggleFullscreen(false);
         return mountEvents(root);
       }
       case "game": {
-        toggleFullscreen(true);
         return mountGame(root);
       }
       case "movelist": {
-        toggleFullscreen(false);
         return mountMoveList(root);
       }
       case "challenge": {
-        toggleFullscreen(false);
         return mountChallenge(root);
       }
       case "seek": {
-        toggleFullscreen(false);
         return mountSeek(root);
       }
       case "follow": {
-        toggleFullscreen(false);
         return mountFollowing(root);
       }
       case "end-game": {
-        toggleFullscreen(false);
         return mountEnd(root);
       }
     }

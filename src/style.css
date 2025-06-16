@@ -413,6 +413,7 @@
 }
 .movelist .actions {
   display: flex;
+  display: none;
   margin-top: 1em;
   justify-content: space-around;
   width: 100%;
@@ -792,4 +793,45 @@
 }
 .end .button-rematch {
   text-decoration: underline;
+}
+.game-actions {
+  position: absolute;
+  top: 45%;
+  top: 33%;
+  right: 0;
+  font-size: x-large;
+  font-weight: bold;
+  padding: 0.5em;
+  margin: 0.5em;
+  border: 2px solid;
+  border-radius: 6px;
+  border-color: #888;
+  color: white;
+}
+.game-actions .view {
+  margin-bottom: 0.5em;
+  padding-bottom: 0.5em;
+  border-color: #888;
+  border-bottom: 1px solid;
+}
+.game-actions .view .button-fullscreen-on {
+  color: white;
+}
+.game-actions .view .button-fullscreen-off {
+  color: #888;
+}
+.game-actions .anti-slip {
+  color: #eb0a0a;
+}
+.game-actions .anti-slip.on {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+.game-actions .draw-answer {
+  display: flex;
+  align-items: center;
+}
+.game-actions .draw-answer .button {
+  margin-left: 1em;
+  font-size: medium;
 }
