@@ -3,11 +3,13 @@ import { assign, get, getLang } from "../store";
 import home from "./home";
 import buttons from "./buttons";
 import players from "./players";
+import end from "./end";
 
 const messages = {
   ...home,
   ...buttons,
   ...players,
+  ...end,
 };
 
 export type LocaleMessages = typeof messages;

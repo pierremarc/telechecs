@@ -4,37 +4,35 @@ import { ANCHOR, DIV, replaceNodeContent } from "../lib/html";
 import { fromNullable, map } from "../lib/option";
 import { GameEventInfo, Status } from "../lib/ucui/lichess-types";
 import { otherColor } from "../lib/ucui/types";
+import tr from "../locale";
 import { assign, get, subscribe } from "../store";
 import { button, navigate, navigateHome } from "./buttons";
 
 const renderStatusString = (status: Status) => {
   switch (status.name) {
-    case "created":
-      return "??";
-    case "started":
-      return "??";
     case "aborted":
-      return "Aborted";
+      return tr("end/aborted");
     case "mate":
-      return "Mate";
+      return tr("end/mate");
     case "resign":
-      return "Resigned";
+      return tr("end/resign");
     case "stalemate":
-      return "Stalemate";
+      return tr("end/stalemate");
     case "timeout":
-      return "Timeout";
+      return tr("end/timeout");
     case "draw":
-      return "Draw";
+      return tr("end/draw");
     case "outoftime":
-      return "Flagged";
+      return tr("end/outoftime");
     case "cheat":
-      return "Someone cheated";
+      return tr("end/cheat");
     case "noStart":
-      return "It didn't start";
+      return tr("end/noStart");
+    case "created":
+    case "started":
     case "unknownFinish":
-      return "Don't know...";
     case "variantEnd":
-      return "End by variant rules"; // ??? dont know what it means, actually just playing standard here
+      return "Don't know...";
   }
 };
 
