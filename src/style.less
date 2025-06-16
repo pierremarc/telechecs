@@ -981,10 +981,9 @@
 }
 .game-actions {
   position: absolute;
-  top: @to-top;
-  top: 33%;
-  right: 0;
-  font-size: x-large;
+  // top: @to-top;
+  bottom: 102px;
+  font-size: xx-large;
   font-weight: bold;
   padding: 0.5em;
   margin: 0.5em;
@@ -993,27 +992,30 @@
   border-color: @text-grey;
   color: white;
 
-  .view {
-    margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
-    border-color: @text-grey;
-    border-bottom: 1px solid;
+  &.actions-view {
+    left: 0;
+  }
 
-    .button-fullscreen-on {
-      color: white;
-    }
+  &.actions-game {
+    right: 0;
+  }
 
-    .button-fullscreen-off {
-      color: @text-grey;
-    }
+  .button-fullscreen-on {
+    color: white;
+  }
+
+  .button-fullscreen-off {
+    color: @text-grey;
   }
 
   .anti-slip {
     color: @text-alert;
     &.on {
-      // filter: blur(5%);
       background-color: rgba(255, 255, 255, 0.1);
       color: white;
+      > div {
+        pointer-events: none;
+      }
     }
   }
 

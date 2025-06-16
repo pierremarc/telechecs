@@ -25,7 +25,7 @@ const renderMessage = (root: HTMLElement, event: ChatLineEvent) => {
     assign("lichess/chat", null);
     root.classList.add("hidden");
     timeoutRef = null;
-  }, 6000);
+  }, 4000);
 };
 
 export const mountChat = (root: HTMLElement) => {

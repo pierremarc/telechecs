@@ -796,10 +796,8 @@
 }
 .game-actions {
   position: absolute;
-  top: 45%;
-  top: 33%;
-  right: 0;
-  font-size: x-large;
+  bottom: 102px;
+  font-size: xx-large;
   font-weight: bold;
   padding: 0.5em;
   margin: 0.5em;
@@ -808,16 +806,16 @@
   border-color: #888;
   color: white;
 }
-.game-actions .view {
-  margin-bottom: 0.5em;
-  padding-bottom: 0.5em;
-  border-color: #888;
-  border-bottom: 1px solid;
+.game-actions.actions-view {
+  left: 0;
 }
-.game-actions .view .button-fullscreen-on {
+.game-actions.actions-game {
+  right: 0;
+}
+.game-actions .button-fullscreen-on {
   color: white;
 }
-.game-actions .view .button-fullscreen-off {
+.game-actions .button-fullscreen-off {
   color: #888;
 }
 .game-actions .anti-slip {
@@ -826,6 +824,9 @@
 .game-actions .anti-slip.on {
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
+}
+.game-actions .anti-slip.on > div {
+  pointer-events: none;
 }
 .game-actions .draw-answer {
   display: flex;

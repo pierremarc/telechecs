@@ -25,6 +25,7 @@ import {
 import { button, name, navigate } from "./view/buttons";
 import { toggleFullscreen } from "./fullscreen";
 import { noop } from "./util";
+import { emptyElement } from "./lib/dom";
 
 export const startNewGame = (challenge: ChallengeJson) => {
   assign("lichess/current-challenge", challenge);
@@ -115,12 +116,11 @@ const resign = (info: GameEventInfo) =>
 const antiSlip = (...nodes: HTMLElement[]) => {
   const root = DIV("anti-slip on", ...nodes);
   let antiSlipTimeout: Nullable<number> = null;
-  root.addEventListener("click", (e) => {
+  root.addEventListener("click", () => {
     if (antiSlipTimeout) {
       return;
     }
-    e.preventDefault();
-    e.stopPropagation();
+
     root.classList.remove("on");
     antiSlipTimeout = window.setTimeout(() => {
       antiSlipTimeout = null;
@@ -131,23 +131,23 @@ const antiSlip = (...nodes: HTMLElement[]) => {
 };
 
 const mountActions = (root: HTMLElement) => {
-  const actions = DIV("game-actions");
+  const viewActions = DIV("game-actions actions-view");
+  const gameActions = DIV("game-actions actions-game");
   const update = () => {
     const state = get("lichess/game-state");
     const info = get("lichess/game-info");
-    const replace = replaceNodeContent(actions);
+    const replaceView = replaceNodeContent(viewActions);
+    replaceView(fullscreen(), navigate("movelist", MOVELIST_CHAR));
     if (state && info) {
-      replace(
-        DIV("view", fullscreen(), navigate("movelist", MOVELIST_CHAR)),
-        antiSlip(draw(state, info), resign(info))
-      );
+      const replaceGame = replaceNodeContent(gameActions);
+      replaceGame(antiSlip(draw(state, info), resign(info)));
     } else {
-      replace(DIV("view", fullscreen(), navigate("movelist", MOVELIST_CHAR)));
+      emptyElement(gameActions);
     }
   };
 
   update();
-  root.append(actions);
+  root.append(viewActions, gameActions);
   subscribe("lichess/game-info", "lichess/game-state", "fullscreen")(update);
 };
 
