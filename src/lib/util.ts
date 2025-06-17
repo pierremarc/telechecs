@@ -130,8 +130,10 @@ export const once = (f: () => void) => {
 };
 
 export const defaultTimeControls: [number, number][] = [
+  [10, 0],
   [20, 0],
   [30, 0],
   [40, 0],
+  [50, 0],
   [60, 0],
 ];

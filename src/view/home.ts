@@ -2,7 +2,7 @@ import { events } from ".././lib/dom";
 import { DIV, ANCHOR, replaceNodeContent, IMG } from ".././lib/html";
 import { ChallengeJson, TimeControl } from ".././lib/ucui/lichess-types";
 import { declineChallenge, startNewGame } from "../game";
-import tr from "../locale";
+import { tr, trf } from "../locale";
 import { assign, get, subscribe } from "../store";
 import { navigateSeek } from "./buttons";
 import { mountLogin } from "./login";
@@ -65,12 +65,12 @@ const footer = () =>
 const intro = () =>
   DIV(
     "intro",
-    tr("home/tagline"),
+    trf("home/tagline"),
     IMG(
       "board-image",
       "https://raw.githubusercontent.com/pierremarc/telechecs/main/picture.jpg"
     ),
-    tr("home/description")
+    trf("home/description")
   );
 
 export const challengeBlock = () => {

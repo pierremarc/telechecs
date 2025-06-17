@@ -24,6 +24,7 @@ import {
   LichessAI,
   SeekRequest,
   Lang,
+  ChallengeColor,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -83,6 +84,8 @@ let state = {
   lockScreen: false,
   online: true,
   fullscreen: false,
+  ratedChallenge: false,
+  challengeColor: "random" as ChallengeColor,
   "lichess/host": "https://lichess.org",
   "lichess/user": null as Nullable<UserConfig>,
   "lichess/stream-events": [] as StreamEvent[],

@@ -716,17 +716,69 @@
     font-size: large;
     font-weight: bold;
   }
-  .choices {
+
+  .config {
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid;
     // display: flex;
-    // flex-wrap: wrap;
-    // justify-content: space-around;
-    // align-items: center;
+    // align-items: baseline;
+    // justify-content: space-between;
+    .color-selector {
+      .select {
+        display: flex;
+        justify-content: center;
+        font-size: xx-large;
+        // border-bottom: 1px solid;
+        > div {
+          color: @text-grey;
+          margin: 0 0.6em;
+
+          &.selected {
+            color: black;
+            border-bottom: 1px solid;
+          }
+        }
+      }
+    }
+    .rated-selector {
+      // width: 100%;
+      margin-top: 1em;
+      .toggle {
+        display: flex;
+        justify-content: center;
+        align-items: baseline;
+        > div {
+          font-size: large;
+          font-weight: bold;
+          color: @text-grey;
+          margin: 0 1em;
+          padding: 0.3em;
+          // border: 1px solid;
+          // border-radius: 3px;
+          &.selected {
+            color: black;
+            // font-size: large;
+            border-bottom: 1px solid;
+            // border-bottom: 1px solid;
+            // border: none;
+          }
+        }
+      }
+    }
+  }
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
     margin-top: 2em;
     .challenge-create {
+      width: 20%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 100px;
+      height: 80px;
       padding: 6px;
       margin: 6px;
       border-top: 1px solid;
@@ -745,17 +797,14 @@
           font-size: x-small;
         }
       }
-      .actions {
-        display: flex;
-        justify-content: flex-end;
-
-        .button {
-          margin: 10px;
-        }
-        .rated {
-          font-weight: bold;
-        }
-      }
+      // .actions {
+      //   display: flex;
+      //   justify-content: flex-end;
+      //   font-size: xx-large;
+      //   .button {
+      //     margin: 10px;
+      //   }
+      // }
     }
   }
 }

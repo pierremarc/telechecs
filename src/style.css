@@ -567,14 +567,56 @@
   font-size: large;
   font-weight: bold;
 }
+.challenge-page .config {
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 1px solid;
+}
+.challenge-page .config .color-selector .select {
+  display: flex;
+  justify-content: center;
+  font-size: xx-large;
+}
+.challenge-page .config .color-selector .select > div {
+  color: #888;
+  margin: 0 0.6em;
+}
+.challenge-page .config .color-selector .select > div.selected {
+  color: black;
+  border-bottom: 1px solid;
+}
+.challenge-page .config .rated-selector {
+  margin-top: 1em;
+}
+.challenge-page .config .rated-selector .toggle {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+.challenge-page .config .rated-selector .toggle > div {
+  font-size: large;
+  font-weight: bold;
+  color: #888;
+  margin: 0 1em;
+  padding: 0.3em;
+}
+.challenge-page .config .rated-selector .toggle > div.selected {
+  color: black;
+  border-bottom: 1px solid;
+}
 .challenge-page .choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
   margin-top: 2em;
 }
 .challenge-page .choices .challenge-create {
+  width: 20%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100px;
+  height: 80px;
   padding: 6px;
   margin: 6px;
   border-top: 1px solid;
@@ -593,16 +635,6 @@
 }
 .challenge-page .choices .challenge-create .time-control .label {
   font-size: x-small;
-}
-.challenge-page .choices .challenge-create .actions {
-  display: flex;
-  justify-content: flex-end;
-}
-.challenge-page .choices .challenge-create .actions .button {
-  margin: 10px;
-}
-.challenge-page .choices .challenge-create .actions .rated {
-  font-weight: bold;
 }
 .players .section {
   display: flex;

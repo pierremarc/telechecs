@@ -6,10 +6,12 @@ import {
   RequesChallengeCreateAI,
   User,
 } from "../lib/ucui/lichess-types";
-import { LichessAI } from "../lib/ucui/types";
+import { ChallengeColor, LichessAI } from "../lib/ucui/types";
 import { defaultTimeControls } from "../lib/util";
+import tr from "../locale";
 import { assign, get, subscribe } from "../store";
-import { navigateHome } from "./buttons";
+import { BLACK_KING, WHITE_KING } from "../util";
+import { button, name, navigateHome } from "./buttons";
 
 type Challenged = User | LichessAI;
 
@@ -18,14 +20,13 @@ const isAI = (u: Challenged): u is LichessAI =>
 
 const challenge = (
   tc: number,
-  color: RequesChallengeCreate["color"],
-  rated: boolean
+  color: RequesChallengeCreate["color"]
 ): RequesChallengeCreate => ({
   color,
   "clock.increment": 0,
   "clock.limit": tc * 60,
   keepAliveStream: false,
-  rated,
+  rated: get("ratedChallenge"),
   variant: "standard",
 });
 
@@ -41,20 +42,27 @@ const challengeAI = (
   level,
 });
 
-const button = (
-  user: Challenged,
-  tc: number,
-  color: RequesChallengeCreate["color"],
-  rated: boolean
-) =>
-  events(DIV(`button button-create ${color} ${rated}`, color), (add) =>
+const colorString = (color: RequesChallengeCreate["color"]) => {
+  switch (color) {
+    case "white":
+      return WHITE_KING;
+    case "black":
+      return BLACK_KING;
+    case "random":
+      return "⚄";
+    // return WHITE_KING + BLACK_KING;
+  }
+};
+
+const challengeButton = (user: Challenged, tc: number, node: HTMLElement) =>
+  events(node, (add) =>
     add("click", () => {
       if (isAI(user)) {
-        challengeLichessAI(challengeAI(tc, color, user.level)).then(
-          (challenge) => assign("lichess/my-challenge", challenge)
-        );
+        challengeLichessAI(
+          challengeAI(tc, get("challengeColor"), user.level)
+        ).then((challenge) => assign("lichess/my-challenge", challenge));
       } else {
-        challengeUser(user.username, challenge(tc, color, rated)).then(
+        challengeUser(user.username, challenge(tc, get("challengeColor"))).then(
           (challenge) => assign("lichess/my-challenge", challenge)
         );
       }
@@ -70,25 +78,45 @@ const renderChallenge = (
 ) =>
   DIV(
     "challenge-create",
-    DIV("time-control", DIV("time", time), DIV("label", "minutes")),
-    DIV(
-      "actions",
-      DIV(
-        "unrated",
-        button(user, time, "black", false),
-        button(user, time, "random", false),
-        button(user, time, "white", false)
-      ),
-      isAI(user)
-        ? DIV("rated ")
-        : DIV(
-            "rated",
-            button(user, time, "black", true),
-            button(user, time, "random", true),
-            button(user, time, "white", true)
-          )
+    challengeButton(
+      user,
+      time,
+      DIV("time-control", DIV("time", time), DIV("label", "minutes"))
     )
   );
+
+const renderRated = () =>
+  get("ratedChallenge")
+    ? DIV(
+        "toggle",
+        DIV("selected", tr("challenge/rated")),
+        button(name(tr("challenge/casual"), "casual"), () =>
+          assign("ratedChallenge", false)
+        )
+      )
+    : DIV(
+        "toggle",
+        button(name(tr("challenge/rated"), "rated"), () =>
+          assign("ratedChallenge", true)
+        ),
+        DIV("selected", tr("challenge/casual"))
+      );
+
+const renderAColor = (color: ChallengeColor, selected: boolean) =>
+  selected
+    ? DIV("selected", colorString(color))
+    : button(name(colorString(color), color), () =>
+        assign("challengeColor", color)
+      );
+
+const renderColor = () =>
+  DIV(
+    "select",
+    renderAColor("white", get("challengeColor") === "white"),
+    renderAColor("random", get("challengeColor") === "random"),
+    renderAColor("black", get("challengeColor") === "black")
+  );
+
 export const mountChallenge = (root: HTMLElement) => {
   const opponent = get("lichess/opponent");
   if (opponent) {
@@ -96,6 +124,11 @@ export const mountChallenge = (root: HTMLElement) => {
       "choices",
       ...defaultTimeControls.map((tc) => renderChallenge(opponent, tc))
     );
+
+    const rated = DIV("rated-selector", renderRated());
+
+    const color = DIV("color-selector", renderColor());
+
     root.append(
       DIV(
         "challenge-page",
@@ -104,6 +137,7 @@ export const mountChallenge = (root: HTMLElement) => {
           DIV("title", `Challenge ${username(opponent)}`),
           navigateHome()
         ),
+        isAI(opponent) ? DIV("config", color) : DIV("config", color, rated),
         choices
       )
     );
@@ -112,6 +146,14 @@ export const mountChallenge = (root: HTMLElement) => {
       replaceNodeContent(choices)(
         DIV("waiting", `Waiting for ${username(opponent)} answer.`)
       );
+    });
+
+    subscribe("ratedChallenge")(() => {
+      replaceNodeContent(rated)(renderRated());
+    });
+
+    subscribe("challengeColor")(() => {
+      replaceNodeContent(color)(renderColor());
     });
   }
 };

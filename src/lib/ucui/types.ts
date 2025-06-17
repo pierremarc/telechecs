@@ -198,6 +198,8 @@ export type Color = "black" | "white";
 export const otherColor = (color: Color): Color =>
   color === "black" ? "white" : "black";
 
+export type ChallengeColor = Color | "random";
+
 // export type ClockInitial = { readonly _tag: "initial" };
 
 // export const clockInitial = (): ClockInitial => ({ _tag: "initial" });

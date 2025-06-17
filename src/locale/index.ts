@@ -4,12 +4,19 @@ import home from "./home";
 import buttons from "./buttons";
 import players from "./players";
 import end from "./end";
+import challenge from "./challenge";
+import formated from "./formated";
 
 const messages = {
   ...home,
   ...buttons,
   ...players,
   ...end,
+  ...challenge,
+};
+
+const formatedMessages = {
+  ...formated,
 };
 
 export type LocaleMessages = typeof messages;
@@ -17,6 +24,12 @@ export type LocaleMessageKey = keyof LocaleMessages;
 
 export const tr = (key: LocaleMessageKey) => messages[key][getLang()];
 export default tr;
+
+export type LocaleFormatedMessages = typeof formatedMessages;
+export type LocaleFormatedMessageKey = keyof LocaleFormatedMessages;
+
+export const trf = (key: LocaleFormatedMessageKey) =>
+  formatedMessages[key][getLang()];
 
 export const initLang = () => {
   const loc = document.location;

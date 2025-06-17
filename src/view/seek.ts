@@ -3,28 +3,25 @@ import { events } from "../lib/dom";
 import { DIV, replaceNodeContent } from "../lib/html";
 import { RequestSeekClock, ResponseId } from "../lib/ucui/lichess-types";
 import { defaultTimeControls } from "../lib/util";
-import { assign, subscribe } from "../store";
-import { navigateHome, button as actionButton } from "./buttons";
+import tr from "../locale";
+import { assign, get, subscribe } from "../store";
+import { navigateHome, button, name } from "./buttons";
 
-const seek = (
-  tc: number,
-  color: RequestSeekClock["color"],
-  rated: boolean
-): RequestSeekClock => ({
-  color,
+const seek = (tc: number): RequestSeekClock => ({
+  color: "random",
   increment: 0,
   limit: tc * 60,
-  rated,
+  rated: get("ratedChallenge"),
   variant: "standard",
 });
 
 const seekHandler = ({ id }: ResponseId) => !!assign("lichess/seek", id);
 const connectionClose = () => assign("lichess/seek", null);
 
-const button = (tc: number, color: RequestSeekClock["color"], rated: boolean) =>
-  events(DIV(`button button-create ${color} ${rated}`, color), (add) =>
+const wrapTime = (tc: number, node: HTMLElement) =>
+  events(node, (add) =>
     add("click", () => {
-      const request = seek(tc, color, rated);
+      const request = seek(tc);
       assign("lichess/seek", {
         request,
         _tag: "seek-req",
@@ -37,32 +34,41 @@ const button = (tc: number, color: RequestSeekClock["color"], rated: boolean) =>
 const renderSeek = ([time, _increment]: [number, number]) =>
   DIV(
     "challenge-create",
-    DIV("time-control", DIV("time", time), DIV("label", "minutes")),
-    DIV(
-      "actions",
-      DIV(
-        "unrated",
-        button(time, "black", false),
-        button(time, "random", false),
-        button(time, "white", false)
-      ),
-      DIV(
-        "rated",
-        button(time, "black", true),
-        button(time, "random", true),
-        button(time, "white", true)
-      )
+    wrapTime(
+      time,
+      DIV("time-control", DIV("time", time), DIV("label", "minutes"))
     )
   );
+
+const renderRated = () =>
+  get("ratedChallenge")
+    ? DIV(
+        "toggle",
+        DIV("selected", tr("challenge/rated")),
+        button(name(tr("challenge/casual"), "casual"), () =>
+          assign("ratedChallenge", false)
+        )
+      )
+    : DIV(
+        "toggle",
+        button(name(tr("challenge/rated"), "rated"), () =>
+          assign("ratedChallenge", true)
+        ),
+        DIV("selected", tr("challenge/casual"))
+      );
+
 export const mountSeek = (root: HTMLElement) => {
   const choices = DIV(
     "choices",
     ...defaultTimeControls.map((tc) => renderSeek(tc))
   );
+
+  const rated = DIV("rated-selector", renderRated());
   root.append(
     DIV(
       "challenge-page",
       DIV("header", DIV("title", `Create game`), navigateHome()),
+      DIV("config", rated),
       choices
     )
   );
@@ -70,9 +76,13 @@ export const mountSeek = (root: HTMLElement) => {
   subscribe("lichess/seek")(() => {
     replaceNodeContent(choices)(
       DIV("waiting", `Waiting for someone, anyone.`),
-      actionButton("Stop waiting", () => {
+      button("Stop waiting", () => {
         window.location.assign("/");
       })
     );
+  });
+
+  subscribe("ratedChallenge")(() => {
+    replaceNodeContent(rated)(renderRated());
   });
 };
