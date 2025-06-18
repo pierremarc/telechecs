@@ -635,6 +635,10 @@
 .challenge-page .choices .challenge-create .time-control .label {
   font-size: x-small;
 }
+.challenge-page .choices .waiting {
+  font-size: xx-large;
+  font-style: italic;
+}
 .players .section {
   display: flex;
   justify-content: space-between;

@@ -315,3 +315,12 @@ export const postSeek = (
   }
   return false;
 };
+
+/**
+ * doc: https://lichess.org/api#tag/Board/operation/boardGameAbort
+ * path: /board/game/{gameId}/abort
+ */
+export const postAbort = (gameId: string) => {
+  const post = getPoster();
+  return post(ResponseOkZ, apiUrl(`/board/game/${gameId}/abort`), {});
+};
