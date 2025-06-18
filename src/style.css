@@ -70,8 +70,8 @@
   width: 100%;
   justify-content: center;
   border-bottom: 5px solid white;
-  font-size: 12pt;
-  line-height: 24pt;
+  font-size: calc(48pt / 2);
+  line-height: 48pt;
 }
 .clock .time {
   width: 50%;
@@ -89,9 +89,9 @@
 .clock .time.active.black {
   border-right: 0.5em solid black;
 }
-.clock .time.active.flag {
+.clock .time.active .flag {
   background-color: black;
-  color: white;
+  color: #eb0a0a;
 }
 .engine {
   position: absolute;
@@ -110,7 +110,7 @@
 .engine .info {
   font-size: small;
   position: absolute;
-  top: calc(24pt + 1em);
+  top: calc(48pt + 1em);
   width: 100%;
 }
 .engine .score {

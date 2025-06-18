@@ -5,6 +5,7 @@ import {
   removeClass,
   replaceNodeContent,
 } from "../lib/html";
+import tr from "../locale";
 import { assign, get, getTurn, subscribe } from "../store";
 import { uciMoveList } from "../util";
 
@@ -60,6 +61,7 @@ export const mountClock = (root: Element) => {
 };
 
 const nullTime = "--:--";
+const flag = () => DIV("flag", tr("clock/flagged"));
 
 const currentTime = () => {
   const info = get("lichess/game-info");
@@ -90,6 +92,9 @@ const renderClockTime = ({ white, black }: ClockElements) => {
 
 const { floor } = Math;
 const formatTime = (millis: number) => {
+  if (millis <= 0) {
+    return flag();
+  }
   const seconds = millis / 1000;
   const sec = floor(seconds % 60);
   const minutes = floor((seconds / 60) % 60);

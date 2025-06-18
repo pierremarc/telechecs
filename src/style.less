@@ -35,7 +35,7 @@
 @square-size: 10vw;
 @move-size: 22pt;
 
-@clock-height: 24pt;
+@clock-height: 48pt;
 
 @score-cp-size: 3em;
 @score-cp-size-half: calc(3em / 2);
@@ -98,7 +98,7 @@
   width: 100%;
   justify-content: center;
   border-bottom: 5px solid white;
-  font-size: 12pt;
+  font-size: calc(@clock-height / 2);
   line-height: @clock-height;
   .time {
     width: 50%;
@@ -117,9 +117,9 @@
         border-right: 0.5em solid black;
       }
 
-      &.flag {
+      .flag {
         background-color: black;
-        color: white;
+        color: @text-alert;
       }
     }
   }

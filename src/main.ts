@@ -21,7 +21,7 @@ import { mountChat } from "./view/chat";
 import { mountOnline } from "./online";
 import { mountSeek } from "./view/seek";
 import { mountEnd } from "./view/end";
-import { setFullScreenRoot } from "./fullscreen";
+import { setFullScreenRoot, toggleFullscreen } from "./fullscreen";
 import { initLang } from "./locale";
 
 const monitorStream = () => {
@@ -82,6 +82,7 @@ const main = (root: HTMLElement) => {
         return mountGame(root);
       }
       case "movelist": {
+        toggleFullscreen(false);
         return mountMoveList(root);
       }
       case "challenge": {
@@ -94,6 +95,7 @@ const main = (root: HTMLElement) => {
         return mountFollowing(root);
       }
       case "end-game": {
+        toggleFullscreen(false);
         return mountEnd(root);
       }
     }

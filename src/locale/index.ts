@@ -6,6 +6,7 @@ import players from "./players";
 import end from "./end";
 import challenge from "./challenge";
 import formated from "./formated";
+import clock from "./clock";
 
 const messages = {
   ...home,
@@ -13,6 +14,7 @@ const messages = {
   ...players,
   ...end,
   ...challenge,
+  ...clock,
 };
 
 const formatedMessages = {
