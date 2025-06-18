@@ -10,6 +10,7 @@ import { defaultTimeControls } from "../lib/util";
 import tr from "../locale";
 import { connect } from "../play";
 import { assign, get, subscribe } from "../store";
+import { noop } from "../util";
 import { navigateHome, button, name } from "./buttons";
 
 const seek = (tc: number): RequestSeekClock => ({
@@ -21,7 +22,7 @@ const seek = (tc: number): RequestSeekClock => ({
 });
 
 const seekHandler = ({ id }: ResponseId) => !!assign("lichess/seek", id);
-const connectionClose = () => assign("lichess/seek", null);
+// const connectionClose = () => assign("lichess/seek", null);
 
 const wrapTime = (tc: number, node: HTMLElement) =>
   events(node, (add) =>
@@ -32,7 +33,7 @@ const wrapTime = (tc: number, node: HTMLElement) =>
       //   _tag: "seek-req",
       //   since: Date.now(),
       // });
-      postSeek(request, seekHandler, connectionClose);
+      postSeek(request, seekHandler, noop);
     })
   );
 
