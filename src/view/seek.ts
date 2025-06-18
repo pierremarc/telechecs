@@ -58,10 +58,7 @@ const renderRated = () =>
       );
 
 export const mountSeek = (root: HTMLElement) => {
-  const choices = DIV(
-    "choices",
-    ...defaultTimeControls.map((tc) => renderSeek(tc))
-  );
+  const choices = DIV("choices", ...defaultTimeControls.map(renderSeek));
 
   const rated = DIV("rated-selector", renderRated());
   root.append(

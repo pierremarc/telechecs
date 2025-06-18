@@ -614,7 +614,7 @@
 .challenge-page .choices .challenge-create {
   width: 20%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   height: 80px;
   padding: 6px;
@@ -627,7 +627,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0.5em;
 }
 .challenge-page .choices .challenge-create .time-control .time {
   font-weight: bold;
