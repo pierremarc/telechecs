@@ -131,11 +131,30 @@ export const once = (f: () => void) => {
 
 export const defaultTimeControls: [number, number][] = [
   // [10, 0],
-  [20, 0],
-  [30, 0],
-  [40, 0],
+  [20, 5],
+  [30, 5],
+  [40, 5],
   // [50, 0],
-  [60, 0],
-  [90, 0],
-  [120, 0],
+  [60, 10],
+  [90, 10],
+  [120, 10],
 ];
+
+// from https://github.com/behnammodi/polyfill/blob/master/string.polyfill.js
+export const padStart = (
+  source: string,
+  targetLength: number,
+  padString = " "
+) => {
+  targetLength = targetLength >> 0; // floor if number or convert non-number to 0;
+  padString = String(typeof padString !== "undefined" ? padString : " ");
+  if (source.length > targetLength) {
+    return String(source);
+  } else {
+    targetLength = targetLength - source.length;
+    if (targetLength > padString.length) {
+      padString += padString.repeat(targetLength / padString.length); // append to original to ensure we are longer than needed
+    }
+    return padString.slice(0, targetLength) + String(source);
+  }
+};

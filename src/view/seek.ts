@@ -6,17 +6,17 @@ import {
   RequestSeekClock,
   ResponseId,
 } from "../lib/ucui/lichess-types";
-import { defaultTimeControls } from "../lib/util";
+import { defaultTimeControls, padStart } from "../lib/util";
 import tr from "../locale";
 import { connect } from "../play";
 import { assign, get, subscribe } from "../store";
 import { noop } from "../util";
 import { navigateHome, button, name } from "./buttons";
 
-const seek = (tc: number): RequestSeekClock => ({
+const seek = (time: number, increment: number): RequestSeekClock => ({
   color: "random",
-  increment: 0,
-  limit: tc * 60,
+  increment,
+  limit: time * 60,
   rated: get("ratedChallenge"),
   variant: "standard",
 });
@@ -24,10 +24,10 @@ const seek = (tc: number): RequestSeekClock => ({
 const seekHandler = ({ id }: ResponseId) => !!assign("lichess/seek", id);
 // const connectionClose = () => assign("lichess/seek", null);
 
-const wrapTime = (tc: number, node: HTMLElement) =>
+const wrapTime = (tc: number, increment: number, node: HTMLElement) =>
   events(node, (add) =>
     add("click", () => {
-      const request = seek(tc);
+      const request = seek(tc, increment);
       // assign("lichess/seek", {
       //   request,
       //   _tag: "seek-req",
@@ -37,12 +37,18 @@ const wrapTime = (tc: number, node: HTMLElement) =>
     })
   );
 
-const renderSeek = ([time, _increment]: [number, number]) =>
+const renderSeek = ([time, increment]: [number, number]) =>
   DIV(
     "challenge-create",
     wrapTime(
       time,
-      DIV("time-control", DIV("time", time), DIV("label", "minutes"))
+      increment,
+      DIV(
+        "time-control",
+        DIV("time", time),
+        DIV("label", "minutes"),
+        DIV("increment", "+ .", padStart(increment.toString(), 2, "0"))
+      )
     )
   );
 

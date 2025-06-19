@@ -632,6 +632,10 @@
   font-weight: bold;
   font-size: xx-large;
 }
+.challenge-page .choices .challenge-create .time-control .increment {
+  font-weight: bold;
+  font-size: xx-small;
+}
 .challenge-page .choices .challenge-create .time-control .label {
   font-size: x-small;
 }

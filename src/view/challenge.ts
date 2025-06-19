@@ -7,7 +7,7 @@ import {
   User,
 } from "../lib/ucui/lichess-types";
 import { ChallengeColor, LichessAI } from "../lib/ucui/types";
-import { defaultTimeControls } from "../lib/util";
+import { defaultTimeControls, padStart } from "../lib/util";
 import tr from "../locale";
 import { assign, get, subscribe } from "../store";
 import { BLACK_KING, WHITE_KING } from "../util";
@@ -20,10 +20,11 @@ const isAI = (u: Challenged): u is LichessAI =>
 
 const challenge = (
   tc: number,
+  increment: number,
   color: RequesChallengeCreate["color"]
 ): RequesChallengeCreate => ({
   color,
-  "clock.increment": 0,
+  "clock.increment": increment,
   "clock.limit": tc * 60,
   keepAliveStream: false,
   rated: get("ratedChallenge"),
@@ -32,11 +33,12 @@ const challenge = (
 
 const challengeAI = (
   tc: number,
+  increment: number,
   color: RequesChallengeCreate["color"],
   level: LichessAI["level"]
 ): RequesChallengeCreateAI => ({
   color,
-  "clock.increment": 0,
+  "clock.increment": increment,
   "clock.limit": tc * 60,
   variant: "standard",
   level,
@@ -54,17 +56,23 @@ const colorString = (color: RequesChallengeCreate["color"]) => {
   }
 };
 
-const challengeButton = (user: Challenged, tc: number, node: HTMLElement) =>
+const challengeButton = (
+  user: Challenged,
+  tc: number,
+  increment: number,
+  node: HTMLElement
+) =>
   events(node, (add) =>
     add("click", () => {
       if (isAI(user)) {
         challengeLichessAI(
-          challengeAI(tc, get("challengeColor"), user.level)
+          challengeAI(tc, increment, get("challengeColor"), user.level)
         ).then((challenge) => assign("lichess/my-challenge", challenge));
       } else {
-        challengeUser(user.username, challenge(tc, get("challengeColor"))).then(
-          (challenge) => assign("lichess/my-challenge", challenge)
-        );
+        challengeUser(
+          user.username,
+          challenge(tc, increment, get("challengeColor"))
+        ).then((challenge) => assign("lichess/my-challenge", challenge));
       }
     })
   );
@@ -74,14 +82,20 @@ const username = (user: Challenged) =>
 
 const renderChallenge = (
   user: Challenged,
-  [time, _increment]: [number, number]
+  [time, increment]: [number, number]
 ) =>
   DIV(
     "challenge-create",
     challengeButton(
       user,
       time,
-      DIV("time-control", DIV("time", time), DIV("label", "minutes"))
+      increment,
+      DIV(
+        "time-control",
+        DIV("time", time),
+        DIV("label", "minutes"),
+        DIV("increment", "+ .", padStart(increment.toString(), 2, "0"))
+      )
     )
   );
 
