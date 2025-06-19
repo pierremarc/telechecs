@@ -24,6 +24,7 @@ import {
   LichessAI,
   Lang,
   ChallengeColor,
+  SquareFile,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -79,6 +80,7 @@ let state = {
   screen: defaultScreen(),
   clock: null as Nullable<ClockState>,
   input: defaultInput(),
+  "input-san/file": null as Nullable<SquareFile>,
   started: false,
   lockScreen: false,
   online: true,
