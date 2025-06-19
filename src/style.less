@@ -240,6 +240,33 @@
       }
     }
   }
+
+  &.input-san {
+    .square-select {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-evenly;
+      width: 100%;
+      border-bottom: 1px solid @text-grey;
+      margin-bottom: 2em;
+      padding-bottom: 2em;
+      .button-select {
+        font-size: x-large;
+        color: @text-grey;
+        width: 38px;
+        &.candidate {
+          font-weight: bold;
+          color: black;
+        }
+        &.selected {
+          font-weight: bold;
+          color: white;
+          background-color: black;
+          border-radius: 3px;
+        }
+      }
+    }
+  }
   .moves {
     width: 100%;
     bottom: 2 * @piece-size;
@@ -254,9 +281,11 @@
       flex-wrap: wrap;
       width: 100%;
       justify-content: flex-start;
-      margin-bottom: 1em;
-      margin-left: 1em;
-      margin-top: -1em;
+      margin-bottom: 2em;
+      padding-bottom: 2em;
+      padding-left: 1em;
+      // margin-top: -1em;
+      border-bottom: 1px solid;
       .move {
         color: white;
         font-size: @move-size;

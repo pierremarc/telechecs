@@ -14,10 +14,11 @@ import {
   makeSquare,
   getInputRole,
   getFile,
-  //   getRank,
   Input,
   getMoveTo,
   SquareFile,
+  SquareRank,
+  inputCandidates,
 } from "./lib/ucui/types";
 import { sendMove } from "./play";
 import { formatMove } from "./san";
@@ -49,6 +50,12 @@ import {
   legalMoves,
 } from "./util";
 
+const setFile = (file: SquareFile) => assign("input-san/file", file);
+const setRank = (rank: SquareRank) => assign("input-san/rank", rank);
+const clearSan = () => {
+  assign("input-san/file", null);
+  assign("input-san/rank", null);
+};
 const symbol = (role: Role, color: Color) => {
   switch (role) {
     case "Pawn":
@@ -80,8 +87,6 @@ const hasMoves = (role: Role, moveList: Move[]) =>
 
 const selClass = (s: boolean) => (s ? "selected" : "");
 
-// const hasMovesClass = (s: boolean) => (s ? "has-moves" : "has-no-moves");
-
 const renderPieces = (selected: Nullable<Role>, moveList: Move[]) =>
   ROLE_LIST.map((role) =>
     hasMoves(role, moveList)
@@ -91,11 +96,12 @@ const renderPieces = (selected: Nullable<Role>, moveList: Move[]) =>
             symbol(role, "black")
           ),
           (add) =>
-            add("click", () =>
+            add("click", () => {
+              clearSan();
               selected === role
                 ? assign("input", defaultInput())
-                : assign("input", inputRole(role))
-            )
+                : assign("input", inputRole(role));
+            })
         )
       : DIV(
           `piece ${role}  ${selClass(selected === role)}`,
@@ -104,8 +110,8 @@ const renderPieces = (selected: Nullable<Role>, moveList: Move[]) =>
   );
 
 const playMove = (move: Move) => {
+  clearSan();
   assign("input", inputMove(move));
-
   sendMove(move);
 };
 
@@ -132,90 +138,50 @@ const makeFinder = (candidates: Move[]) => (s: Square) =>
     }
   });
 
-const makeSelect = (selectElement: HTMLDivElement, moveList: Move[]) => {
-  const replaceSelect = replaceNodeContent(selectElement);
+const renderSelect = (legalMoves: Move[], moves: Move[]) =>
+  moves.map((move) =>
+    events(
+      DIV(
+        "move",
+        formatMove(move, legalMoves, { symbol: true, color: "black" })
+      ),
+      (add) =>
+        add("click", () => {
+          assign("input-san/file", null);
+          playMove(move);
+        })
+    )
+  );
 
-  return (moves: Move[]) => {
-    replaceSelect(
-      ...moves.map((move) =>
-        events(
-          DIV(
-            "move",
-            formatMove(move, moveList, { symbol: true, color: "black" })
-          ),
-          (add) => add("click", () => playMove(move))
-        )
-      )
-    );
-    show(selectElement);
-  };
-};
-
-// const highlight = (destSquare: Square, rankElements: HTMLDivElement[]) => {
-//   const setSelectedFile = addClass("selected-file");
-//   const setSelectedRank = addClass("selected-rank");
-//   const setDimmed = addClass("dim");
-//   const setSelected = addClass("selected");
-//   const reset = removeClass(
-//     "selected-file",
-//     "selected-rank",
-//     "selected",
-//     "dim"
-//   );
-//   const destFile = getFile(destSquare);
-//   const destRank = getRank(destSquare);
-
-//   rankElements.map((rank) => {
-//     rank.querySelectorAll(".square").forEach((square) => {
-//       reset(square);
-//       const attrFile = square.getAttribute("data-file");
-//       const attrRank = square.getAttribute("data-rank");
-//       const file = destFile === attrFile;
-//       const rank = destRank === attrRank;
-//       if (!file && !rank) {
-//         setDimmed(square);
-//       } else if (file && rank) {
-//         setSelected(square);
-//       } else if (file) {
-//         setSelectedFile(square);
-//       } else if (rank) {
-//         setSelectedRank(square);
-//       }
-//     });
-
-//     rank.querySelectorAll(".ord").forEach((ord) => {
-//       const attrFile = ord.getAttribute("data-file");
-//       const attrRank = ord.getAttribute("data-rank");
-//       const file = destFile === attrFile;
-//       const rank = destRank === attrRank;
-//       if (file || rank) {
-//         setSelected(ord);
-//       } else {
-//         reset(ord);
-//       }
-//     });
-//   });
-// };
-
-const renderFiles = (selectedFile: Nullable<SquareFile>, moveList: Move[]) => {
+const renderFiles = (
+  input: Input,
+  selectedFile: Nullable<SquareFile>,
+  moveList: Move[]
+) => {
   const candidateFiles = new Set(moveList.map(getMoveTo).map(getFile));
   return squareFiles.map((file) => {
     if (file === selectedFile) {
-      return DIV(`file file-${file} selected`, file.toLowerCase());
+      return DIV(
+        `button-select file file-${file} selected`,
+        file.toLowerCase()
+      );
     } else if (candidateFiles.has(file)) {
       return events(
-        DIV(`file file-${file} candidate`, file.toLowerCase()),
-        (add) => add("click", () => assign("input-san/file", file))
+        DIV(`button-select file file-${file} candidate`, file.toLowerCase()),
+        (add) =>
+          add("click", () => {
+            assign("input", input);
+            setFile(file);
+          })
       );
     } else {
-      return DIV(`file file-${file} nothing`, file.toLowerCase());
+      return DIV(`button-select file file-${file} nothing`, file.toLowerCase());
     }
   });
 };
 const renderRanks = (
   input: Input,
-  selectedFile: SquareFile,
-  select: (moves: Move[]) => void,
+  selectedFile: Nullable<SquareFile>,
   moveList: Move[]
 ) => {
   const findMoves = makeFinder(
@@ -223,33 +189,53 @@ const renderRanks = (
   );
 
   return squareRanks.map((rank) => {
+    if (selectedFile === null) {
+      return DIV(`button-select rank rank-${rank} nothing`, rank.toLowerCase());
+    }
     const square = makeSquare(selectedFile, rank);
     const moves = findMoves(square);
     if (moves.length === 0) {
-      return DIV(`rank rank-${rank} nothing`, rank.toLowerCase());
+      return DIV(`button-select rank rank-${rank} nothing`, rank.toLowerCase());
+    }
+
+    if (rank === get("input-san/rank")) {
+      return DIV(
+        `button-select rank rank-${rank} selected`,
+        rank.toLowerCase()
+      );
     }
     return events(
-      DIV(`rank rank-${rank} candidate`, rank.toLowerCase()),
+      DIV(`button-select rank rank-${rank} candidate`, rank.toLowerCase()),
       (add) =>
         add("click", () => {
-          select(moves);
+          setRank(rank);
+          const role = getInputRole(input);
+          if (role) {
+            assign("input", inputCandidates(role, moves));
+          }
         })
     );
   });
 };
 
 const renderMoves = (input: Input, moveList: Move[]) => {
-  const selectElement = DIV("select hidden");
-  const select = makeSelect(selectElement, moveList);
+  const candidates = input._tag === "candidates" ? input.candidates : [];
+  const selectElement =
+    candidates.length === 0
+      ? DIV("select hidden")
+      : DIV("select", ...renderSelect(moveList, candidates));
   const selectedFile = get("input-san/file");
 
-  const files = DIV("files", ...renderFiles(selectedFile, moveList));
-  const ranks =
-    selectedFile === null
-      ? DIV("ranks")
-      : DIV("ranks", ...renderRanks(input, selectedFile, select, moveList));
+  const files = DIV(
+    "square-select files",
+    ...renderFiles(input, selectedFile, moveList)
+  );
+  const ranks = DIV(
+    "square-select ranks",
+    ...renderRanks(input, selectedFile, moveList)
+  );
 
-  return [selectElement].concat(files, ranks);
+  return [selectElement, ranks, files];
 };
 
 export const mountInput = (root: HTMLElement) => {
@@ -267,10 +253,18 @@ export const mountInput = (root: HTMLElement) => {
       const selectedRole = getInputRole(input);
       const lgs = legalMoves(state.moves);
       replacePieces(...renderPieces(selectedRole, lgs));
-      if (input._tag === "role" && lgs.length > 0) {
+      if (
+        (input._tag === "role" || input._tag === "candidates") &&
+        lgs.length > 0
+      ) {
         // replaceMoves(...renderMoves(input.role, pos.legalMoves));
         show(moves);
-        replaceMoves(...renderMoves(input, lgs));
+        replaceMoves(
+          ...renderMoves(
+            input,
+            lgs.filter((m) => getMoveRole(m) === input.role)
+          )
+        );
       } else {
         hide(moves);
         emptyElement(moves);
@@ -280,7 +274,13 @@ export const mountInput = (root: HTMLElement) => {
       emptyElement(pieces);
     }
   };
-  subscribe("lichess/game-state", "lichess/game-info", "input")(update);
+  subscribe(
+    "lichess/game-state",
+    "lichess/game-info",
+    "input",
+    "input-san/file",
+    "input-san/rank"
+  )(update);
 
   update();
 };

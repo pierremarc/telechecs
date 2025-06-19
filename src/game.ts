@@ -13,7 +13,7 @@ import {
 } from "./api";
 import { mountClock } from "./view/clock";
 import { mountOpponent } from "./engine";
-import { mountInput } from "./input";
+import { mountInput } from "./input-san";
 import {
   assign,
   dispatch,

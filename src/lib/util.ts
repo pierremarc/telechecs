@@ -131,13 +131,13 @@ export const once = (f: () => void) => {
 
 export const defaultTimeControls: [number, number][] = [
   // [10, 0],
-  [20, 5],
-  [30, 5],
-  [40, 5],
+  [15, 10],
+  [30, 20],
+  [40, 30],
   // [50, 0],
-  [60, 10],
-  [90, 10],
-  [120, 10],
+  [60, 60],
+  [90, 60],
+  [120, 60],
 ];
 
 // from https://github.com/behnammodi/polyfill/blob/master/string.polyfill.js

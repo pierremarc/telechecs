@@ -25,6 +25,7 @@ import {
   Lang,
   ChallengeColor,
   SquareFile,
+  SquareRank,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -81,6 +82,7 @@ let state = {
   clock: null as Nullable<ClockState>,
   input: defaultInput(),
   "input-san/file": null as Nullable<SquareFile>,
+  "input-san/rank": null as Nullable<SquareRank>,
   started: false,
   lockScreen: false,
   online: true,

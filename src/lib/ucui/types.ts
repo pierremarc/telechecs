@@ -271,6 +271,21 @@ export const inputRole = (role: Role): InputRole => ({
   role,
 });
 
+export type InputCandidates = {
+  readonly _tag: "candidates";
+  role: Role;
+  candidates: Move[];
+};
+
+export const inputCandidates = (
+  role: Role,
+  candidates: Move[]
+): InputCandidates => ({
+  _tag: "candidates",
+  role,
+  candidates,
+});
+
 export type InputMove = {
   readonly _tag: "move";
   move: Move;
@@ -281,13 +296,14 @@ export const inputMove = (move: Move): InputMove => ({
   move,
 });
 
-export type Input = InputNone | InputRole | InputMove;
+export type Input = InputNone | InputRole | InputCandidates | InputMove;
 
 export const getInputRole = (input: Input): Nullable<Role> => {
   switch (input._tag) {
     case "none":
       return null;
     case "role":
+    case "candidates":
       return input.role;
     case "move":
       return getMoveRole(input.move);
@@ -298,6 +314,7 @@ export const getInputMove = (input: Input): Nullable<Move> => {
   switch (input._tag) {
     case "none":
     case "role":
+    case "candidates":
       return null;
     case "move":
       return input.move;

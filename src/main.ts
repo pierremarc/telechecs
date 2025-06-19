@@ -33,11 +33,9 @@ const monitorStream = () => {
 
       if (lastEvent.type === "gameStart") {
         assign("lichess/game-info", lastEvent.game);
-        if (get("lichess/seek") !== null) {
-          assign("lichess/challenges", []);
-          assign("screen", "game");
-          connect(lastEvent.game.gameId);
-        }
+        assign("lichess/challenges", []);
+        assign("screen", "game");
+        connect(lastEvent.game.gameId);
       } else if (lastEvent.type === "gameFinish") {
         assign("lichess/current-challenge", null);
         assign("lichess/game-info", lastEvent.game);

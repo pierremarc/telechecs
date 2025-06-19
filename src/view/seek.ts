@@ -1,14 +1,9 @@
-import { postAbort, postSeek } from "../api";
+import { postSeek } from "../api";
 import { events } from "../lib/dom";
 import { DIV, replaceNodeContent } from "../lib/html";
-import {
-  GameEventInfo,
-  RequestSeekClock,
-  ResponseId,
-} from "../lib/ucui/lichess-types";
+import { RequestSeekClock, ResponseId } from "../lib/ucui/lichess-types";
 import { defaultTimeControls, padStart } from "../lib/util";
 import tr from "../locale";
-import { connect } from "../play";
 import { assign, get, subscribe } from "../store";
 import { noop } from "../util";
 import { navigateHome, button, name } from "./buttons";
@@ -69,39 +64,38 @@ const renderRated = () =>
         DIV("selected", tr("challenge/casual"))
       );
 
-const renderStartedGame = (info: GameEventInfo) =>
-  DIV(
-    "game-start",
-    DIV("player", DIV("name", info.opponent.username)),
-    DIV("speed", info.speed),
-    button(name(tr("home/challenge-accept"), "accept"), () => {
-      assign("screen", "game");
-      assign("lichess/challenges", []);
-      assign("lichess/seek", null);
-      connect(info.gameId);
-    }),
-    button(name(tr("home/challenge-decline"), "decline"), () => {
-      postAbort(info.gameId).then(() => {
-        assign("lichess/seek", null);
-        assign("lichess/game-info", null);
-      });
-    })
-  );
+// const renderStartedGame = (info: GameEventInfo) =>
+//   DIV(
+//     "game-start",
+//     DIV("player", DIV("name", info.opponent.username)),
+//     DIV("speed", info.speed),
+//     DIV("color", info.color),
+//     button(name(tr("home/challenge-accept"), "accept"), () => {
+//       assign("screen", "game");
+//       assign("lichess/challenges", []);
+//       assign("lichess/seek", null);
+//       connect(info.gameId);
+//     }),
+//     button(name(tr("home/challenge-decline"), "decline"), () => {
+//       postAbort(info.gameId).then(() => {
+//         assign("lichess/seek", null);
+//         assign("lichess/game-info", null);
+//       });
+//     })
+//   );
 
 const update = (replace: ReturnType<typeof replaceNodeContent>) => {
   const seek = get("lichess/seek");
-  const info = get("lichess/game-info");
+  // const info = get("lichess/game-info");
   if (seek === null) {
     replace(...defaultTimeControls.map(renderSeek));
-  } else if (info === null) {
+  } else {
     replace(
       DIV("waiting", `Waiting for someone, anyone.`),
       button("Stop waiting", () => {
         window.location.assign("/");
       })
     );
-  } else {
-    replace(renderStartedGame(info));
   }
 };
 

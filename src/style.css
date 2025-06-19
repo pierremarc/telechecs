@@ -180,6 +180,30 @@
 .input .pieces .piece.selected {
   color: black;
 }
+.input.input-san .square-select {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-evenly;
+  width: 100%;
+  border-bottom: 1px solid #888;
+  margin-bottom: 2em;
+  padding-bottom: 2em;
+}
+.input.input-san .square-select .button-select {
+  font-size: x-large;
+  color: #888;
+  width: 38px;
+}
+.input.input-san .square-select .button-select.candidate {
+  font-weight: bold;
+  color: black;
+}
+.input.input-san .square-select .button-select.selected {
+  font-weight: bold;
+  color: white;
+  background-color: black;
+  border-radius: 3px;
+}
 .input .moves {
   width: 100%;
   bottom: 64pt;
@@ -194,9 +218,10 @@
   flex-wrap: wrap;
   width: 100%;
   justify-content: flex-start;
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-top: -1em;
+  margin-bottom: 2em;
+  padding-bottom: 2em;
+  padding-left: 1em;
+  border-bottom: 1px solid;
 }
 .input .moves .select .move {
   color: white;
