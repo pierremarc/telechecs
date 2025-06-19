@@ -33,6 +33,14 @@ npm run build \
     && git subtree push --prefix www/telechecs origin pages
 ```
 
+And if pushing doesn't work, as per [this gist](https://gist.github.com/tduarte/eac064b4778711b116bb827f8c9bef7b)
+
+```
+git subtree split --prefix  www/telechecs -b  pages
+git push -f origin pages:pages
+git branch -D pages
+```
+
 ## License
 
 This "work" is written by Pierre Marchand and licensed under the [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.en.html) version 3.
