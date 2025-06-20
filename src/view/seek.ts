@@ -11,23 +11,17 @@ import { navigateHome, button, name } from "./buttons";
 const seek = (time: number, increment: number): RequestSeekClock => ({
   color: "random",
   increment,
-  limit: time * 60,
+  limit: time,
   rated: get("ratedChallenge"),
   variant: "standard",
 });
 
 const seekHandler = ({ id }: ResponseId) => !!assign("lichess/seek", id);
-// const connectionClose = () => assign("lichess/seek", null);
 
 const wrapTime = (tc: number, increment: number, node: HTMLElement) =>
   events(node, (add) =>
     add("click", () => {
       const request = seek(tc, increment);
-      // assign("lichess/seek", {
-      //   request,
-      //   _tag: "seek-req",
-      //   since: Date.now(),
-      // });
       postSeek(request, seekHandler, noop);
     })
   );
@@ -63,26 +57,6 @@ const renderRated = () =>
         ),
         DIV("selected", tr("challenge/casual"))
       );
-
-// const renderStartedGame = (info: GameEventInfo) =>
-//   DIV(
-//     "game-start",
-//     DIV("player", DIV("name", info.opponent.username)),
-//     DIV("speed", info.speed),
-//     DIV("color", info.color),
-//     button(name(tr("home/challenge-accept"), "accept"), () => {
-//       assign("screen", "game");
-//       assign("lichess/challenges", []);
-//       assign("lichess/seek", null);
-//       connect(info.gameId);
-//     }),
-//     button(name(tr("home/challenge-decline"), "decline"), () => {
-//       postAbort(info.gameId).then(() => {
-//         assign("lichess/seek", null);
-//         assign("lichess/game-info", null);
-//       });
-//     })
-//   );
 
 const update = (replace: ReturnType<typeof replaceNodeContent>) => {
   const seek = get("lichess/seek");
