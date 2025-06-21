@@ -163,6 +163,55 @@ export const ChallengeJsonZ = z.strictObject({
   initialFen: z.string().optional(),
 });
 
+export const PerfTypeZ = z.union([
+  z.literal("ultraBullet"),
+  z.literal("bullet"),
+  z.literal("blitz"),
+  z.literal("rapid"),
+  z.literal("classical"),
+  z.literal("correspondence"),
+  z.literal("chess960"),
+  z.literal("crazyhouse"),
+  z.literal("antichess"),
+  z.literal("atomic"),
+  z.literal("horde"),
+  z.literal("kingOfTheHill"),
+  z.literal("racingKings"),
+  z.literal("threeCheck"),
+]);
+
+export const GameStatusNameZ = z.union([
+  z.literal("created"),
+  z.literal("started"),
+  z.literal("aborted"),
+  z.literal("mate"),
+  z.literal("resign"),
+  z.literal("stalemate"),
+  z.literal("timeout"),
+  z.literal("draw"),
+  z.literal("outoftime"),
+  z.literal("cheat"),
+  z.literal("noStart"),
+  z.literal("unknownFinish"),
+  z.literal("variantEnd"),
+]);
+
+export const ChallengeAIJsonZ = z.strictObject({
+  id: z.string(),
+  fullId: z.string(),
+  status: z.strictObject({ id: z.int(), name: GameStatusNameZ }),
+  variant: VariantZ,
+  rated: z.boolean(),
+  speed: SpeedZ,
+  perf: PerfTypeZ,
+  direction: z.union([z.literal("in"), z.literal("out")]).optional(),
+  fen: z.string().optional(),
+  turns: z.int().optional(),
+  source: SourceZ.optional(),
+  createdAt: z.number().optional(),
+  player: ColorZ.optional(),
+});
+
 export const ChallengeEventZ = z.strictObject({
   type: z.literal("challenge"),
   challenge: ChallengeJsonZ,
@@ -233,7 +282,7 @@ export const RequestChallengeCreateClockZ = z.strictObject({
 });
 
 export const RequestSeekClockZ = z.strictObject({
-  limit: z.int(),
+  time: z.int(),
   increment: z.int(),
   rated: z.boolean().optional(),
   color: z.union([ColorZ, z.literal("random")]),
@@ -327,22 +376,6 @@ export const GameEventPlayerAIZ = z.strictObject({
 export const GameEventPlayerZ = z.union([
   GameEventPlayerNormalZ,
   GameEventPlayerAIZ,
-]);
-
-export const GameStatusNameZ = z.union([
-  z.literal("created"),
-  z.literal("started"),
-  z.literal("aborted"),
-  z.literal("mate"),
-  z.literal("resign"),
-  z.literal("stalemate"),
-  z.literal("timeout"),
-  z.literal("draw"),
-  z.literal("outoftime"),
-  z.literal("cheat"),
-  z.literal("noStart"),
-  z.literal("unknownFinish"),
-  z.literal("variantEnd"),
 ]);
 
 export const GameStateEventZ = z.strictObject({
@@ -502,6 +535,7 @@ export type Correspondence = z.infer<typeof CorrespondenceZ>;
 export type Unlimited = z.infer<typeof UnlimitedZ>;
 export type TimeControl = z.infer<typeof TimeControlZ>;
 export type ChallengeJson = z.infer<typeof ChallengeJsonZ>;
+export type ChallengeAIJson = z.infer<typeof ChallengeAIJsonZ>;
 export type ChallengeEvent = z.infer<typeof ChallengeEventZ>;
 export type ChallengeCanceledEvent = z.infer<typeof ChallengeCanceledEventZ>;
 export type DeclineReason = z.infer<typeof DeclineReasonZ>;
@@ -544,3 +578,25 @@ export type RealTimeUserStatus = z.infer<typeof RealTimeUserStatusZ>;
 export type RealTimeUserStatusRequest = z.infer<
   typeof RealTimeUserStatusRequestZ
 >;
+
+export const t: ChallengeAIJson = {
+  id: "y7d8rU5F",
+  variant: {
+    key: "standard",
+    name: "Standard",
+    short: "Std",
+  },
+  speed: "classical",
+  perf: "classical",
+  rated: false,
+  fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+  turns: 0,
+  source: "ai",
+  status: {
+    id: 20,
+    name: "started",
+  },
+  createdAt: 1750461204340,
+  player: "white",
+  fullId: "y7d8rU5Fk0mx",
+};

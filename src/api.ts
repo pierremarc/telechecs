@@ -18,7 +18,6 @@ import {
   RequesChallengeCreate,
   RequesChallengeCreateAI,
   RequestSeekClock,
-  ResponseId,
   ResponseIdZ,
   ResponseOk,
   ResponseOkZ,
@@ -298,22 +297,25 @@ export const __ping = () => {
  * doc: https://lichess.org/api#tag/Board/operation/apiBoardSeek
  * path: /board/seek
  */
-export const postSeek = (
-  seek: RequestSeekClock,
-  handler: (e: ResponseId) => boolean,
-  then: () => void
-) => {
+export const postSeek = (seek: RequestSeekClock, onClose: () => void) => {
   const config = getMutable("lichess/user");
   if (config) {
-    const stream = config.streamer(ResponseIdZ, apiUrl("/board/seek"), {
-      ...defaultPostOptions(),
-      body: encodeQueryString(seek),
+    return new Promise<() => void>((resolve, _reject) => {
+      const stream = config.streamer(
+        ResponseIdZ,
+        apiUrl("/board/seek"),
+        (cancel) => {
+          resolve(cancel);
+        },
+        {
+          ...defaultPostOptions(),
+          body: encodeQueryString(seek),
+        }
+      );
+      stream.onClose(onClose);
     });
-    stream.onMessage(handler);
-    stream.onClose(then);
-    return true;
   }
-  return false;
+  return Promise.reject("no-config");
 };
 
 /**

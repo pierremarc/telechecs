@@ -4,10 +4,13 @@ import { z } from "zod/v4";
 const newLine = new RegExp("\n");
 type HttpClient = typeof fetch;
 
+export type Cancel = (c: () => void) => void;
+
 const getJSONNDStream = <T>(
   client: HttpClient,
   zt: z.ZodType<T>,
   url: string,
+  cancel?: Cancel,
   init?: RequestInit
 ): Promise<ReadableStreamDefaultReader<T>> =>
   client(url, init)
@@ -18,6 +21,11 @@ const getJSONNDStream = <T>(
       }
       const reader = responseBody.getReader();
 
+      if (cancel) {
+        cancel(() => {
+          reader.cancel();
+        });
+      }
       return new ReadableStream({
         start(controller) {
           const decoder = new TextDecoder();
@@ -44,7 +52,7 @@ const getJSONNDStream = <T>(
                     controller.enqueue(tdata);
                   } catch (err) {
                     console.error(
-                      "Failed to make an object out of chunk:",
+                      `[${url}] Failed to make an object out of chunk:`,
                       chunk
                     );
                   }
@@ -71,7 +79,7 @@ const getJSONNDStream = <T>(
 
 export const streamWith =
   (client: HttpClient) =>
-  <T>(zt: z.ZodType<T>, url: string, init?: RequestInit) => {
+  <T>(zt: z.ZodType<T>, url: string, cancel?: Cancel, init?: RequestInit) => {
     type HandlerMessage = (e: T) => boolean;
     type HandlerClose = () => void;
     const onMessageListeners: HandlerMessage[] = [];
@@ -119,7 +127,7 @@ export const streamWith =
       onCloseListeners.forEach((handler) => handler());
     };
 
-    getJSONNDStream(client, zt, url, init)
+    getJSONNDStream(client, zt, url, cancel, init)
       .then(readStream)
       .catch(() => setTimeout(dispatchClose, 200));
 

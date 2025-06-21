@@ -668,106 +668,114 @@
   font-size: xx-large;
   font-style: italic;
 }
-.players .section {
+.challenge-page .choices .button-stop-waiting {
+  margin-top: 2em;
+  text-align: left;
+  width: 100%;
+  text-decoration: underline;
+}
+.players-inner .section {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.players .section .title {
+.players-inner .section .title {
   font-size: large;
   color: #888;
 }
-.players .section .button-refresh {
+.players-inner .section .button-refresh {
   font-weight: normal;
   text-align: right;
   font-size: small;
   color: #888;
 }
-.players .users {
-  margin: 1em 0;
+.players-inner .users {
+  max-height: 24vh;
+  overflow-y: auto;
+  margin-top: 1em;
 }
-.players .users .user {
+.players-inner .users .user {
   font-size: large;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.players .users .user .activity {
+.players-inner .users .user .activity {
   width: 10px;
   height: 10px;
   border-radius: 6px;
   border: 1px solid #888;
 }
-.players .users .user.online .activity {
+.players-inner .users .user.online .activity {
   width: 10px;
   height: 10px;
   border-radius: 6px;
   background-color: #888;
 }
-.players .lichess-ai {
+.players-inner .lichess-ai {
   padding-top: 1em;
   border-top: 1px solid;
 }
-.players .lichess-ai .section {
+.players-inner .lichess-ai .section {
   font-size: large;
   color: #888;
 }
-.players .lichess-ai .levels {
+.players-inner .lichess-ai .levels {
   margin-top: 0.5em;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
-.players .lichess-ai .levels .level {
+.players-inner .lichess-ai .levels .level {
   text-align: center;
   width: 1em;
   font-weight: bold;
 }
-.players .lichess-ai .levels .level-1 {
+.players-inner .lichess-ai .levels .level-1 {
   font-weight: 100;
 }
-.players .lichess-ai .levels .level-2 {
+.players-inner .lichess-ai .levels .level-2 {
   font-weight: 200;
 }
-.players .lichess-ai .levels .level-3 {
+.players-inner .lichess-ai .levels .level-3 {
   font-weight: 300;
 }
-.players .lichess-ai .levels .level-4 {
+.players-inner .lichess-ai .levels .level-4 {
   font-weight: 400;
 }
-.players .lichess-ai .levels .level-5 {
+.players-inner .lichess-ai .levels .level-5 {
   font-weight: 500;
 }
-.players .lichess-ai .levels .level-6 {
+.players-inner .lichess-ai .levels .level-6 {
   font-weight: 600;
 }
-.players .lichess-ai .levels .level-7 {
+.players-inner .lichess-ai .levels .level-7 {
   font-weight: 700;
 }
-.players .lichess-ai .levels .level-8 {
+.players-inner .lichess-ai .levels .level-8 {
   font-weight: 800;
 }
-.players .lookup {
+.players-inner .lookup {
   display: none;
   margin-top: 1em;
   padding-top: 1em;
   border-top: 1px solid;
 }
-.players .lookup .search-block {
+.players-inner .lookup .search-block {
   margin-top: 1em;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
-.players .lookup .results {
+.players-inner .lookup .results {
   margin-top: 1em;
 }
-.players .lookup .results .result .username {
+.players-inner .lookup .results .result .username {
   font-size: x-large;
   font-weight: bold;
   text-decoration: underline;
 }
-.players .lookup .results .result .perfs {
+.players-inner .lookup .results .result .perfs {
   font-size: small;
   font-weight: normal;
   font-style: italic;

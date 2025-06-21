@@ -1,28 +1,34 @@
 import { postSeek } from "../api";
 import { events } from "../lib/dom";
 import { DIV, replaceNodeContent } from "../lib/html";
-import { RequestSeekClock, ResponseId } from "../lib/ucui/lichess-types";
+import { RequestSeekClock } from "../lib/ucui/lichess-types";
 import { defaultTimeControls, padStart } from "../lib/util";
 import tr from "../locale";
-import { assign, get, subscribe } from "../store";
-import { noop } from "../util";
+import { assign, get, getMutable, subscribe } from "../store";
 import { navigateHome, button, name } from "./buttons";
 
 const seek = (time: number, increment: number): RequestSeekClock => ({
   color: "random",
   increment,
-  limit: time,
+  time,
   rated: get("ratedChallenge"),
   variant: "standard",
 });
 
-const seekHandler = ({ id }: ResponseId) => !!assign("lichess/seek", id);
+const onSeekClose = () => assign("lichess/seek", null);
 
 const wrapTime = (tc: number, increment: number, node: HTMLElement) =>
   events(node, (add) =>
     add("click", () => {
       const request = seek(tc, increment);
-      postSeek(request, seekHandler, noop);
+
+      postSeek(request, onSeekClose).then((cancel) =>
+        assign("lichess/seek", {
+          since: Date.now(),
+          request,
+          cancel,
+        })
+      );
     })
   );
 
@@ -59,15 +65,14 @@ const renderRated = () =>
       );
 
 const update = (replace: ReturnType<typeof replaceNodeContent>) => {
-  const seek = get("lichess/seek");
-  // const info = get("lichess/game-info");
+  const seek = getMutable("lichess/seek");
   if (seek === null) {
     replace(...defaultTimeControls.map(renderSeek));
   } else {
     replace(
       DIV("waiting", `Waiting for someone, anyone.`),
-      button("Stop waiting", () => {
-        window.location.assign("/");
+      button(name("Stop waiting", "stop-waiting"), () => {
+        seek.cancel();
       })
     );
   }

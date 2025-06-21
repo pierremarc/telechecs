@@ -446,7 +446,7 @@ export type LichessAI = {
 };
 
 export type SeekRequest = {
-  readonly _tag: "seek-req";
   since: number;
   request: RequestSeekClock;
+  cancel: () => void;
 };

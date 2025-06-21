@@ -58,7 +58,15 @@ export const fetchWithClient =
         }
         throw response;
       })
-      .then((obj) => zt.parse(obj));
+      .then((obj) => {
+        try {
+          return zt.parse(obj);
+        } catch (err) {
+          console.error("Failed to parse obj from", url);
+          console.error("=>", obj);
+          throw err;
+        }
+      });
   };
 
 export const fetchZ = fetchWithClient(fetch);
@@ -109,7 +117,15 @@ export const postWithClient =
         }
         throw response;
       })
-      .then((obj) => zt.parse(obj));
+      .then((obj) => {
+        try {
+          return zt.parse(obj);
+        } catch (err) {
+          console.error("Failed to parse obj from", url);
+          console.error("=>", obj);
+          throw err;
+        }
+      });
   };
 
 export const postZ = postWithClient(fetch);

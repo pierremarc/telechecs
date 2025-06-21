@@ -844,10 +844,16 @@
       font-size: xx-large;
       font-style: italic;
     }
+    .button-stop-waiting {
+      margin-top: 2em;
+      text-align: left;
+      width: 100%;
+      text-decoration: underline;
+    }
   }
 }
 
-.players {
+.players-inner {
   // margin: @app-margin;
   .section {
     display: flex;
@@ -866,7 +872,10 @@
     }
   }
   .users {
-    margin: 1em 0;
+    max-height: 24vh;
+    overflow-y: auto;
+    margin-top: 1em;
+    // max-height: 30%;
     .user {
       // margin-bottom: 0.5em;
       font-size: large;

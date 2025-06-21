@@ -120,7 +120,7 @@ export const mountFollowing = (root: HTMLElement) => {
   });
 
   const header = DIV("section", DIV("title", tr("players/following")), refresh);
-  root.append(DIV("players", header, users, renderLichessAI(), lookup()));
+  root.append(DIV("players-inner", header, users, renderLichessAI(), lookup()));
 
   subscribe("lichess/following")(() => {
     replaceNodeContent(users)(...get("lichess/following").map(renderUser));
