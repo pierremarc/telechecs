@@ -46,6 +46,7 @@ export const GameEventOpponentZ = z.strictObject({
   id: z.string(),
   username: z.string(),
   rating: z.number(),
+  ratingDiff: z.number().optional(),
 });
 
 export const GameEventOpponentAIZ = z.strictObject({
@@ -97,6 +98,7 @@ export const GameEventInfoZ = z.strictObject({
   secondsLeft: z.number().optional(),
   compat: GameCompatZ,
   winner: ColorZ.optional(), // not documented
+  ratingDiff: z.number().optional(), // not documented
 });
 
 export const GameStartEventZ = z.strictObject({
@@ -578,25 +580,3 @@ export type RealTimeUserStatus = z.infer<typeof RealTimeUserStatusZ>;
 export type RealTimeUserStatusRequest = z.infer<
   typeof RealTimeUserStatusRequestZ
 >;
-
-export const t: ChallengeAIJson = {
-  id: "y7d8rU5F",
-  variant: {
-    key: "standard",
-    name: "Standard",
-    short: "Std",
-  },
-  speed: "classical",
-  perf: "classical",
-  rated: false,
-  fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-  turns: 0,
-  source: "ai",
-  status: {
-    id: 20,
-    name: "started",
-  },
-  createdAt: 1750461204340,
-  player: "white",
-  fullId: "y7d8rU5Fk0mx",
-};
