@@ -315,12 +315,11 @@ export const inputMove = (move: Move): InputMove => ({
   move,
 });
 
-export type Input = InputNone | InputRole | InputCandidates | InputMove;
+export type SomeInput = InputRole | InputCandidates | InputMove;
+export type Input = InputNone | SomeInput;
 
-export const getInputRole = (input: Input): Nullable<Role> => {
+export const getInputRole = (input: SomeInput): Role => {
   switch (input._tag) {
-    case "none":
-      return null;
     case "role":
     case "candidates":
       return input.role;

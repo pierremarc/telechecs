@@ -15,12 +15,11 @@ import {
   makeSquare,
   getInputRole,
   getFile,
-  Input,
   getMoveTo,
   SquareFile,
   SquareRank,
   inputCandidates,
-  moveToUCI,
+  SomeInput,
 } from "./lib/ucui/types";
 import { sendMove } from "./play";
 import { formatMove } from "./san";
@@ -144,7 +143,7 @@ const selectableMove = (game: GameStateEvent) => (move: Move) =>
   events(
     DIV(
       "move",
-      formatMove(move, legalMoves([game.moves, moveToUCI(move)].join(" ")), {
+      formatMove(move, legalMoves(game.moves), {
         symbol: true,
         color: "black",
       })
@@ -165,7 +164,7 @@ const renderSelect = (moves: Move[]) => {
   }
 };
 const renderFiles = (
-  input: Input,
+  input: SomeInput,
   selectedFile: Nullable<SquareFile>,
   moveList: Move[]
 ) => {
@@ -181,7 +180,11 @@ const renderFiles = (
         DIV(`button-select file file-${file} candidate`, file.toLowerCase()),
         (add) =>
           add("click", () => {
-            assign("input", input);
+            clearSan();
+            assign("input", {
+              _tag: "role",
+              role: getInputRole(input),
+            });
             setFile(file);
           })
       );
@@ -191,7 +194,7 @@ const renderFiles = (
   });
 };
 const renderRanks = (
-  input: Input,
+  input: SomeInput,
   selectedFile: Nullable<SquareFile>,
   moveList: Move[]
 ) => {
@@ -229,7 +232,7 @@ const renderRanks = (
   });
 };
 
-const renderMoves = (input: Input, moveList: Move[]) => {
+const renderMoves = (input: SomeInput, moveList: Move[]) => {
   const candidates = input._tag === "candidates" ? input.candidates : [];
   const selectElement =
     candidates.length === 0
@@ -261,24 +264,41 @@ export const mountInput = (root: HTMLElement) => {
       const replacePieces = replaceNodeContent(pieces);
       const replaceMoves = replaceNodeContent(moves);
       const input = get("input");
-      const selectedRole = getInputRole(input);
       const lgs = legalMoves(state.moves);
-      replacePieces(...renderPieces(selectedRole, lgs));
-      if (
-        (input._tag === "role" || input._tag === "candidates") &&
-        lgs.length > 0
-      ) {
-        show(moves);
+
+      if (input._tag !== "none" && lgs.length > 0) {
+        const selectedRole = getInputRole(input);
+        replacePieces(...renderPieces(selectedRole, lgs));
         replaceMoves(
           ...renderMoves(
             input,
-            lgs.filter((m) => getMoveRole(m) === input.role)
+            lgs.filter((m) => getMoveRole(m) === selectedRole)
           )
         );
+        show(moves);
       } else {
-        hide(moves);
+        replacePieces(...renderPieces(null, lgs));
         emptyElement(moves);
+        hide(moves);
       }
+
+      // const selectedRole = getInputRole(input);
+      //   replacePieces(...renderPieces(selectedRole, lgs));
+      //   if (
+      //     (input._tag === "role" || input._tag === "candidates") &&
+      //     lgs.length > 0
+      //   ) {
+      //     show(moves);
+      //     replaceMoves(
+      //       ...renderMoves(
+      //         input,
+      //         lgs.filter((m) => getMoveRole(m) === input.role)
+      //       )
+      //     );
+      //   } else {
+      //     hide(moves);
+      //     emptyElement(moves);
+      //   }
     } else {
       emptyElement(moves);
       emptyElement(pieces);

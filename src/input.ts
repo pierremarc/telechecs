@@ -15,7 +15,7 @@ import {
   getInputRole,
   getFile,
   getRank,
-  Input,
+  SomeInput,
 } from "./lib/ucui/types";
 import { sendMove } from "./play";
 import { formatMove } from "./san";
@@ -195,7 +195,7 @@ const highlight = (destSquare: Square, rankElements: HTMLDivElement[]) => {
   });
 };
 
-const renderMoves = (input: Input, moveList: Move[]) => {
+const renderMoves = (input: SomeInput, moveList: Move[]) => {
   const findMoves = makeFinder(
     moveList.filter((m) => getMoveRole(m) === getInputRole(input))
   );
@@ -271,16 +271,16 @@ export const mountInput = (root: HTMLElement) => {
       const replacePieces = replaceNodeContent(pieces);
       const replaceMoves = replaceNodeContent(moves);
       const input = get("input");
-      const selectedRole = getInputRole(input);
       const lgs = legalMoves(state.moves);
-      replacePieces(...renderPieces(selectedRole, lgs));
-      if (input._tag === "role" && lgs.length > 0) {
-        // replaceMoves(...renderMoves(input.role, pos.legalMoves));
-        show(moves);
+      if (input._tag !== "none" && lgs.length > 0) {
+        const selectedRole = getInputRole(input);
+        replacePieces(...renderPieces(selectedRole, lgs));
         replaceMoves(...renderMoves(input, lgs));
+        show(moves);
       } else {
-        hide(moves);
+        replacePieces(...renderPieces(null, lgs));
         emptyElement(moves);
+        hide(moves);
       }
     } else {
       emptyElement(moves);
