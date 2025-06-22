@@ -29,7 +29,7 @@ const render = (engineInfo: HTMLElement, engineState: HTMLElement) => {
         setEngine(DIV("idle", `Your turn to play ${turn}`));
       }
     } else {
-      setEngine(DIV("compute"));
+      setEngine(DIV("opponent-think", "…"));
     }
   }
 };

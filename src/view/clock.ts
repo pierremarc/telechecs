@@ -20,7 +20,7 @@ const initClock = (updater: () => void) => {
   stopClock();
 
   if (info && state && state.status === "started") {
-    const interval = window.setInterval(updater, 100);
+    const interval = window.setInterval(updater, 500);
     assign("clock", { interval, gameId: info.gameId });
   }
 };
@@ -84,7 +84,6 @@ const currentTime = () => {
 const renderClockTime = ({ white, black }: ClockElements) => {
   const setWhite = replaceNodeContent(white);
   const setBlack = replaceNodeContent(black);
-  //   const flag = addClass("flag");
   const current = currentTime();
   setWhite(current.white);
   setBlack(current.black);

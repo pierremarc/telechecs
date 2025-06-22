@@ -138,7 +138,7 @@
 .engine .idle {
   font-size: x-large;
 }
-.engine .compute {
+.engine .compute-animation {
   width: 96px;
   height: 24px;
   display: inline-block;
