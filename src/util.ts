@@ -60,6 +60,7 @@ type MoveObj = {
   to: string;
   promotion?: string;
 };
+
 const uciToObj = (uci: string): MoveObj => {
   const from = uci.slice(0, 2);
   const to = uci.slice(2, 4);
@@ -70,41 +71,67 @@ const uciToObj = (uci: string): MoveObj => {
 export const uciMoveList = (uciString: string) =>
   uciString.split(" ").filter((m) => m.trim().length > 0);
 
-export const legalMoves = (moves: string, at?: number): Move[] => {
+// export const legalMoves = (moves: string, at?: number): Move[] => {
+//   const game = new Chess();
+//   const uciMoves =
+//     at === undefined ? uciMoveList(moves) : uciMoveList(moves).slice(0, at);
+//   uciMoves.forEach((uci) => game.move(uciToObj(uci)));
+//   const check = game.isCheck();
+//   const checkmate = game.isCheckmate();
+//   return game.moves({ verbose: true }).map((m) => {
+//     if (m.isKingsideCastle()) {
+//       if (m.color == "w") {
+//         return moveCastle("E1", "H1", check, checkmate);
+//       } else {
+//         return moveCastle("E8", "H8", check, checkmate);
+//       }
+//     }
+//     if (m.isQueensideCastle()) {
+//       if (m.color == "w") {
+//         return moveCastle("E1", "A1", check, checkmate);
+//       } else {
+//         return moveCastle("E8", "A8", check, checkmate);
+//       }
+//     }
+
+//     if (m.isEnPassant()) {
+//       return moveEnPassant(
+//         m.from.toUpperCase() as Square,
+//         m.to.toUpperCase() as Square,
+//         check,
+//         checkmate
+//       );
+//     }
+
+//     return moveNormal(
+//       uciLetterToRole(m.piece),
+//       m.from.toUpperCase() as Square,
+//       m.to.toUpperCase() as Square,
+//       m.isCapture() ? uciLetterToRole(m.captured!) : null,
+//       m.isPromotion() ? uciLetterToRole(m.promotion!) : null,
+//       check,
+//       checkmate
+//     );
+//   });
+// };
+
+export const legalMoves = (gameMoves: string, at?: number): Move[] => {
   const game = new Chess();
   const uciMoves =
-    at === undefined ? uciMoveList(moves) : uciMoveList(moves).slice(0, at);
+    at === undefined
+      ? uciMoveList(gameMoves)
+      : uciMoveList(gameMoves).slice(0, at);
+
   uciMoves.forEach((uci) => game.move(uciToObj(uci)));
   return game.moves({ verbose: true }).map((m) => {
-    if (m.isKingsideCastle()) {
-      if (m.color == "w") {
-        return moveCastle("E1", "H1");
-      } else {
-        return moveCastle("E8", "H8");
-      }
-    }
-    if (m.isQueensideCastle()) {
-      if (m.color == "w") {
-        return moveCastle("E1", "A1");
-      } else {
-        return moveCastle("E8", "A8");
-      }
-    }
-
-    if (m.isEnPassant()) {
-      return moveEnPassant(
-        m.from.toUpperCase() as Square,
-        m.to.toUpperCase() as Square
-      );
-    }
-
-    return moveNormal(
-      uciLetterToRole(m.piece),
-      m.from.toUpperCase() as Square,
-      m.to.toUpperCase() as Square,
-      m.isCapture() ? uciLetterToRole(m.captured!) : null,
-      m.isPromotion() ? uciLetterToRole(m.promotion!) : null
+    game.move(m);
+    const annotatedMove = chessjsMoveToMove(
+      m,
+      game.isCheck(),
+      game.isCheckmate()
     );
+    game.undo();
+    return annotatedMove;
   });
 };
 
@@ -113,29 +140,44 @@ export const legalMovesForRole = (role: Role, gameMoves: string): Move[] => {
   uciMoveList(gameMoves).forEach((uci) => game.move(uciToObj(uci)));
   return game
     .moves({ piece: roleToUCILetter(role), verbose: true })
-    .map(chessjsMoveToMove);
+    .map((m) => {
+      game.move(m);
+      const annotatedMove = chessjsMoveToMove(
+        m,
+        game.isCheck(),
+        game.isCheckmate()
+      );
+      game.undo();
+      return annotatedMove;
+    });
 };
 
-const chessjsMoveToMove = (m: ChessJSMove): Move => {
+const chessjsMoveToMove = (
+  m: ChessJSMove,
+  check: boolean,
+  checkmate: boolean
+): Move => {
   if (m.isKingsideCastle()) {
     if (m.color == "w") {
-      return moveCastle("E1", "H1");
+      return moveCastle("E1", "H1", check, checkmate);
     } else {
-      return moveCastle("E8", "H8");
+      return moveCastle("E8", "H8", check, checkmate);
     }
   }
   if (m.isQueensideCastle()) {
     if (m.color == "w") {
-      return moveCastle("E1", "A1");
+      return moveCastle("E1", "A1", check, checkmate);
     } else {
-      return moveCastle("E8", "A8");
+      return moveCastle("E8", "A8", check, checkmate);
     }
   }
 
   if (m.isEnPassant()) {
     return moveEnPassant(
       m.from.toUpperCase() as Square,
-      m.to.toUpperCase() as Square
+      m.to.toUpperCase() as Square,
+      check,
+      checkmate
     );
   }
 
@@ -144,7 +186,9 @@ const chessjsMoveToMove = (m: ChessJSMove): Move => {
     m.from.toUpperCase() as Square,
     m.to.toUpperCase() as Square,
     m.isCapture() ? uciLetterToRole(m.captured!) : null,
-    m.isPromotion() ? uciLetterToRole(m.promotion!) : null
+    m.isPromotion() ? uciLetterToRole(m.promotion!) : null,
+    check,
+    checkmate
   );
 };
 
@@ -162,8 +206,15 @@ export const getPGN = (gameMoves: string): string => {
 };
 export const getMoveListFromMoveString = (gameMoves: string): Move[] => {
   const game = new Chess();
-  uciMoveList(gameMoves).forEach((uci) => game.move(uciToObj(uci)));
-  return game.history({ verbose: true }).map(chessjsMoveToMove);
+  const moves: Move[] = [];
+  for (const uciMove of uciMoveList(gameMoves)) {
+    const chessJsMove = game.move(uciToObj(uciMove));
+
+    moves.push(
+      chessjsMoveToMove(chessJsMove, game.isCheck(), game.isCheckmate())
+    );
+  }
+  return moves;
 };
 
 export const noop = () => void 0;

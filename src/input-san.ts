@@ -1,5 +1,6 @@
 import { events, emptyElement } from "./lib/dom";
 import { DIV, replaceNodeContent } from "./lib/html";
+import { GameStateEvent } from "./lib/ucui/lichess-types";
 import {
   Role,
   Color,
@@ -19,6 +20,7 @@ import {
   SquareFile,
   SquareRank,
   inputCandidates,
+  moveToUCI,
 } from "./lib/ucui/types";
 import { sendMove } from "./play";
 import { formatMove } from "./san";
@@ -138,21 +140,30 @@ const makeFinder = (candidates: Move[]) => (s: Square) =>
     }
   });
 
-const renderSelect = (legalMoves: Move[], moves: Move[]) =>
-  moves.map((move) =>
-    events(
-      DIV(
-        "move",
-        formatMove(move, legalMoves, { symbol: true, color: "black" })
-      ),
-      (add) =>
-        add("click", () => {
-          assign("input-san/file", null);
-          playMove(move);
-        })
-    )
+const selectableMove = (game: GameStateEvent) => (move: Move) =>
+  events(
+    DIV(
+      "move",
+      formatMove(move, legalMoves([game.moves, moveToUCI(move)].join(" ")), {
+        symbol: true,
+        color: "black",
+      })
+    ),
+    (add) =>
+      add("click", () => {
+        assign("input-san/file", null);
+        playMove(move);
+      })
   );
 
+const renderSelect = (moves: Move[]) => {
+  const game = get("lichess/game-state");
+  if (game) {
+    return moves.map(selectableMove(game));
+  } else {
+    return [];
+  }
+};
 const renderFiles = (
   input: Input,
   selectedFile: Nullable<SquareFile>,
@@ -223,7 +234,7 @@ const renderMoves = (input: Input, moveList: Move[]) => {
   const selectElement =
     candidates.length === 0
       ? DIV("select hidden")
-      : DIV("select", ...renderSelect(moveList, candidates));
+      : DIV("select", ...renderSelect(candidates));
   const selectedFile = get("input-san/file");
 
   const files = DIV(
@@ -257,7 +268,6 @@ export const mountInput = (root: HTMLElement) => {
         (input._tag === "role" || input._tag === "candidates") &&
         lgs.length > 0
       ) {
-        // replaceMoves(...renderMoves(input.role, pos.legalMoves));
         show(moves);
         replaceMoves(
           ...renderMoves(

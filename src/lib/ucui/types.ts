@@ -88,7 +88,11 @@ export const makeSquare = (f: SquareFile, r: SquareRank) => (f + r) as Square;
 
 export type Nullable<T> = T | null;
 
-export type MoveNormal = {
+export type MoveEffect = {
+  check: boolean;
+  checkmate: boolean;
+};
+export type MoveNormal = MoveEffect & {
   readonly _tag: "Normal";
   role: Role;
   from: Square;
@@ -102,7 +106,9 @@ export const moveNormal = (
   from: Square,
   to: Square,
   capture: Nullable<Role>,
-  promotion: Nullable<Role>
+  promotion: Nullable<Role>,
+  check: boolean,
+  checkmate: boolean
 ): MoveNormal => ({
   _tag: "Normal",
   role,
@@ -110,23 +116,32 @@ export const moveNormal = (
   to,
   capture: capture,
   promotion: promotion,
+  check,
+  checkmate,
 });
 
-export type MoveEnPassant = {
+export type MoveEnPassant = MoveEffect & {
   readonly _tag: "EnPassant";
   from: Square;
   to: Square;
 };
-export const moveEnPassant = (from: Square, to: Square): MoveEnPassant => ({
+export const moveEnPassant = (
+  from: Square,
+  to: Square,
+  check: boolean,
+  checkmate: boolean
+): MoveEnPassant => ({
   _tag: "EnPassant",
   from,
   to,
+  check,
+  checkmate,
 });
 
 type CastleKingSquare = "E1" | "E8";
 type CastleRookSquare = "H1" | "H8" | "A1" | "A8";
 
-export type MoveCastle = {
+export type MoveCastle = MoveEffect & {
   readonly _tag: "Castle";
   king: CastleKingSquare;
   rook: CastleRookSquare;
@@ -134,11 +149,15 @@ export type MoveCastle = {
 
 export const moveCastle = (
   king: CastleKingSquare,
-  rook: CastleRookSquare
+  rook: CastleRookSquare,
+  check: boolean,
+  checkmate: boolean
 ): MoveCastle => ({
   _tag: "Castle",
   king,
   rook,
+  check,
+  checkmate,
 });
 
 export type Move = MoveNormal | MoveCastle | MoveEnPassant;

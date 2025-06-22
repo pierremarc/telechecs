@@ -13,11 +13,9 @@ import {
   gameConfig,
   Input,
   inputNone,
-  position,
   MoveHist,
   Eco,
   Nullable,
-  FEN_INITIAL_POSITION,
   LichessScreen,
   Move,
   ClockState,
@@ -31,7 +29,6 @@ import {
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
 
-import { startingLegalMoves } from "./data";
 import { getMoveListFromMoveString, uciMoveList } from "./util";
 
 export const getTurn = (): Nullable<Color> => {
@@ -71,8 +68,8 @@ export const getLang = () => get("lang") ?? "en";
 export const defaultGameConfig = () =>
   gameConfig(10 * 60 * 1000, 60 * 1000, "black");
 export const defaultInput = (): Input => inputNone();
-export const defaultPosition = () =>
-  position(startingLegalMoves, FEN_INITIAL_POSITION);
+// export const defaultPosition = () =>
+//   position(startingLegalMoves, FEN_INITIAL_POSITION);
 export const defaultScreen = (): LichessScreen => "home";
 export const defaultMoveList = (): MoveHist[] => [];
 export const defaultEcoList = (): Eco[] => [];

@@ -188,7 +188,7 @@ export const defaultFormatSymbol: FormatOptions = {
   color: "white",
 };
 
-const toString = (san: San, { symbol, color }: FormatOptions) => {
+const toString = (origin: Move, san: San, { symbol, color }: FormatOptions) => {
   const result: string[] = [];
   switch (san._tag) {
     case "Normal": {
@@ -226,6 +226,11 @@ const toString = (san: San, { symbol, color }: FormatOptions) => {
     case "null":
       result.push("--");
   }
+  if (origin.checkmate) {
+    result.push("#");
+  } else if (origin.check) {
+    result.push("+");
+  }
   return result.join("");
 };
 
@@ -233,4 +238,4 @@ export const formatMove = (
   move: Move,
   legals: Move[],
   options = defaultFormat
-) => toString(fromMove(legals, move), options);
+) => toString(move, fromMove(legals, move), options);
