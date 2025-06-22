@@ -72,6 +72,7 @@
   border-bottom: 5px solid white;
   font-size: calc(48pt / 2);
   line-height: 48pt;
+  font-family: monospace;
 }
 .clock .time {
   width: 50%;
@@ -108,7 +109,8 @@
   right: 0;
 }
 .engine .info {
-  font-size: small;
+  font-size: medium;
+  font-style: italic;
   position: absolute;
   top: calc(48pt + 1em);
   width: 100%;
@@ -190,7 +192,7 @@
   padding-bottom: 2em;
 }
 .input.input-san .square-select .button-select {
-  font-size: x-large;
+  font-size: xx-large;
   color: #888;
   width: 38px;
 }
@@ -234,43 +236,43 @@
   background: black;
   border-radius: 5px;
 }
-.input .moves .rank {
+.input .moves .rank--old {
   display: flex;
   justify-content: center;
   height: 10vw;
   width: 100%;
 }
-.input .moves .rank .ord {
+.input .moves .rank--old .ord {
   height: 10vw;
   line-height: 10vw;
   width: 10vw;
   background-color: white;
   color: #888;
 }
-.input .moves .rank .ord.selected {
+.input .moves .rank--old .ord.selected {
   color: black;
   font-weight: bold;
 }
-.input .moves .rank .square {
+.input .moves .rank--old .square {
   height: 10vw;
   width: 10vw;
 }
-.input .moves .rank .square.dim {
+.input .moves .rank--old .square.dim {
   filter: opacity(50%);
 }
-.input .moves .rank .square.target .label {
+.input .moves .rank--old .square.target .label {
   background-color: white;
   font-weight: bold;
   line-height: 10vw;
 }
-.input .moves .rank .square.target.selected-file,
-.input .moves .rank .square.target.selected-rank {
+.input .moves .rank--old .square.target.selected-file,
+.input .moves .rank--old .square.target.selected-rank {
   color: #888;
 }
-.input .moves .rank .square.target.selected {
+.input .moves .rank--old .square.target.selected {
   color: white;
 }
-.input .moves .rank .square.target.selected .label {
+.input .moves .rank--old .square.target.selected .label {
   background-color: black;
 }
 .home {

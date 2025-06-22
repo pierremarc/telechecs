@@ -79,6 +79,14 @@
   background-size: contain;
 }
 
+// .file-A,
+// .file-C,
+// .file-E,
+// .file-G {
+//   background-image: url("/ucui-grey.svg");
+//   background-size: cover;
+// }
+
 .to-button {
   position: absolute;
   top: @to-top;
@@ -100,6 +108,7 @@
   border-bottom: 5px solid white;
   font-size: calc(@clock-height / 2);
   line-height: @clock-height;
+  font-family: monospace;
   .time {
     width: 50%;
     text-align: center;
@@ -141,7 +150,9 @@
   }
 
   .info {
-    font-size: small;
+    font-size: medium;
+    font-style: italic;
+    // font-weight: bold;
     position: absolute;
     top: calc(@clock-height + 1em);
     width: 100%;
@@ -255,7 +266,7 @@
       margin-bottom: 2em;
       padding-bottom: 2em;
       .button-select {
-        font-size: x-large;
+        font-size: xx-large;
         color: @text-grey;
         width: 38px;
         &.candidate {
@@ -303,7 +314,7 @@
       }
     }
 
-    .rank {
+    .rank--old {
       display: flex;
       justify-content: center;
       height: @square-size;

@@ -98,9 +98,9 @@ export const GameEventInfoZ = z.strictObject({
   isMyTurn: z.boolean(),
   secondsLeft: z.number().optional(),
   compat: GameCompatZ,
-  winner: ColorZ.optional(), // not documented
-  ratingDiff: z.number().optional(), // not documented
-  tournamentId: z.string().optional(), // not documented
+  winner: ColorZ.optional(),
+  ratingDiff: z.number().optional(),
+  tournamentId: z.string().optional(),
 });
 
 export const GameStartEventZ = z.strictObject({
