@@ -31,7 +31,7 @@ export type LocaleFormatedMessages = typeof formatedMessages;
 export type LocaleFormatedMessageKey = keyof LocaleFormatedMessages;
 
 export const trf = (key: LocaleFormatedMessageKey) =>
-  formatedMessages[key][getLang()];
+  formatedMessages[key][getLang()]();
 
 export const initLang = () => {
   const loc = document.location;

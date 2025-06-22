@@ -36,7 +36,10 @@ const auth = () => {
     if (!userConfig) {
       try {
         const hasAuthCode = await oauth.isReturningFromAuthServer();
-        if (hasAuthCode) await authenticate();
+        if (hasAuthCode) {
+          await authenticate();
+          history.replaceState({ auth: true }, "authenticate", clientUrl);
+        }
       } catch (err) {
         console.error(err);
       }
