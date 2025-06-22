@@ -15,6 +15,7 @@ export const SourceZ = z.union([
   z.literal("relay"),
   z.literal("pool"),
   z.literal("swiss"),
+  z.literal("arena"), // not documented
 ]);
 
 export const StatusZ = z.union([
@@ -99,6 +100,7 @@ export const GameEventInfoZ = z.strictObject({
   compat: GameCompatZ,
   winner: ColorZ.optional(), // not documented
   ratingDiff: z.number().optional(), // not documented
+  tournamentId: z.string().optional(), // not documented
 });
 
 export const GameStartEventZ = z.strictObject({
