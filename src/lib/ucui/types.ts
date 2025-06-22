@@ -464,8 +464,35 @@ export type LichessAI = {
   level: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 };
 
-export type SeekRequest = {
+export type SeekRequestSending = {
+  readonly _tag: "sending";
+  since: number;
+  request: RequestSeekClock;
+};
+
+export const seekRequestSending = (
+  request: RequestSeekClock
+): SeekRequestSending => ({
+  _tag: "sending",
+  since: Date.now(),
+  request,
+});
+
+export type SeekRequestSent = {
+  readonly _tag: "sent";
   since: number;
   request: RequestSeekClock;
   cancel: () => void;
 };
+
+export const seekRequestSent = (
+  request: RequestSeekClock,
+  cancel: () => void
+): SeekRequestSent => ({
+  _tag: "sent",
+  since: Date.now(),
+  request,
+  cancel,
+});
+
+export type SeekRequest = SeekRequestSending | SeekRequestSent;

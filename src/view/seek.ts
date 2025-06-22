@@ -1,7 +1,8 @@
 import { postSeek } from "../api";
 import { events } from "../lib/dom";
-import { DIV, replaceNodeContent } from "../lib/html";
+import { DIV, replaceNodeContent, SPAN } from "../lib/html";
 import { RequestSeekClock } from "../lib/ucui/lichess-types";
+import { seekRequestSending, seekRequestSent } from "../lib/ucui/types";
 import { defaultTimeControls, padStart } from "../lib/util";
 import tr from "../locale";
 import { assign, get, getMutable, subscribe } from "../store";
@@ -21,13 +22,10 @@ const wrapTime = (tc: number, increment: number, node: HTMLElement) =>
   events(node, (add) =>
     add("click", () => {
       const request = seek(tc, increment);
+      assign("lichess/seek", seekRequestSending(request));
 
       postSeek(request, onSeekClose).then((cancel) =>
-        assign("lichess/seek", {
-          since: Date.now(),
-          request,
-          cancel,
-        })
+        assign("lichess/seek", seekRequestSent(request, cancel))
       );
     })
   );
@@ -68,7 +66,9 @@ const update = (replace: ReturnType<typeof replaceNodeContent>) => {
   const seek = getMutable("lichess/seek");
   if (seek === null) {
     replace(...defaultTimeControls.map(renderSeek));
-  } else {
+  } else if (seek._tag === "sending") {
+    replace(DIV("waiting", `Offer `, SPAN("italic", "en route")));
+  } else if (seek._tag === "sent") {
     replace(
       DIV("waiting", `Waiting for someone, anyone.`),
       button(name("Stop waiting", "stop-waiting"), () => {

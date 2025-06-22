@@ -908,3 +908,6 @@
   margin-left: 1em;
   font-size: medium;
 }
+.italic {
+  font-style: italic;
+}
