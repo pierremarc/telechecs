@@ -52,10 +52,7 @@ const joinArena = (id: string) => {
   run();
 };
 
-export const datetime8601 = (d: Date) =>
-  d.toISOString().slice(0, 16).replace("T", " ");
-
-export const time8601 = (d: Date) => d.toISOString().slice(11, 16);
+export const formatTime = (d: Date) => d.toLocaleTimeString().slice(0, 5);
 
 const renderTime = (clock: ArenaTournament["clock"]) =>
   DIV("time-control", `${clock.limit / 60}+${clock.increment}`);
@@ -68,8 +65,8 @@ const detail = (key: string, value: AcNode | undefined) =>
 const renderTournamentDetails = (t: ArenaTournament) => [
   //   detail("id ", t.id),
   detail("Created by", t.createdBy),
-  detail("Start time", time8601(new Date(t.startsAt))),
-  detail("End time", time8601(new Date(t.finishesAt))),
+  detail("Start time", formatTime(new Date(t.startsAt))),
+  detail("End time", formatTime(new Date(t.finishesAt))),
   detail("Rated", t.rated ? "Yes" : "No"),
   detail("Players", t.nbPlayers),
   detail("Variant", t.variant.name),
