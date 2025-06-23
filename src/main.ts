@@ -17,7 +17,7 @@ import { mountEvents } from "./view/events";
 import { connect } from "./play";
 import { mountChallenge } from "./view/challenge";
 import { mountFollowing } from "./view/players";
-import { mountChat } from "./view/chat";
+import { chatbox, mountChat } from "./view/chat";
 import { mountOnline } from "./online";
 import { mountSeek } from "./view/seek";
 import { mountEnd } from "./view/end";
@@ -47,6 +47,9 @@ const monitorStream = () => {
           dispatch("lichess/challenges", (cs) =>
             cs.concat(lastEvent.challenge)
           );
+          if (get("screen") !== "home") {
+            chatbox(lastEvent.challenge.challenger.name, "Shall we play?"); // TODO translation
+          }
         }
       } else if (lastEvent.type === "challengeCanceled") {
         dispatch("lichess/challenges", (cs) =>

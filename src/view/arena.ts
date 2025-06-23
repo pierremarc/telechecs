@@ -1,11 +1,12 @@
 import { postArenaTournamentJoin, postArenaTournamentLeave } from "../api";
 import { AcNode, DETAILS, DIV, H1, replaceNodeContent } from "../lib/html";
 import { ArenaTournament } from "../lib/ucui/lichess-types";
-import { message, TournamentJoin } from "../lib/ucui/types";
+import { TournamentJoin } from "../lib/ucui/types";
 import { padStart } from "../lib/util";
 import tr from "../locale";
 import { assign, get, subscribe } from "../store";
 import { button, navigateHome, name } from "./buttons";
+import { chatbox } from "./chat";
 
 export const clearArenaJoin = () => {
   const state = get("lichess/arena-join");
@@ -39,7 +40,7 @@ const joinArena = (id: string) => {
           interval: window.setInterval(refresh, 5000),
         });
       })
-      .catch((err) => assign("lichess/chat", message("The Server", err.error)));
+      .catch((err) => chatbox("The Server", err.error));
   };
 
   run();
@@ -127,7 +128,7 @@ const renderTournamentCreated = (t: ArenaTournament) => {
       repl(formatRemaining(remaining / 1000));
     }
   };
-  const interval = setInterval(updateCountdown, 300);
+  const interval = setInterval(updateCountdown, 1000);
   const root = DETAILS(
     "tournament created",
     renderTitle(t),

@@ -165,6 +165,7 @@ export const ChallengeJsonZ = z.strictObject({
   perf: z.strictObject({ icon: z.string(), name: z.string() }),
   direction: z.union([z.literal("in"), z.literal("out")]).optional(),
   initialFen: z.string().optional(),
+  rematchOf: z.string().optional(), // not documented
 });
 
 export const PerfTypeZ = z.union([
@@ -401,7 +402,7 @@ export const GameFullEventZ = z.strictObject({
   type: z.literal("gameFull"),
   id: z.string(),
   variant: VariantZ,
-  clock: ClockZ,
+  clock: ClockZ.optional(),
   speed: SpeedZ,
   perf: PerfNameZ,
   rated: z.boolean(),

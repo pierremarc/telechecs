@@ -1,6 +1,7 @@
 import { none, some } from "./lib/option";
-import { message, Nullable } from "./lib/ucui/types";
-import { allKeys, assign, dispatchOpt, get, subscribe } from "./store";
+import { Nullable } from "./lib/ucui/types";
+import { allKeys, dispatchOpt, get, subscribe } from "./store";
+import { chatbox } from "./view/chat";
 
 const hasLockAPI = "wakeLock" in navigator;
 
@@ -48,10 +49,7 @@ export const screenLocker = () => {
         })
         .catch((err) => {
           console.error("failed to lock screen", err);
-          assign(
-            "lichess/chat",
-            message("Téléchecs", `Failed to lock screen: ${err}`)
-          );
+          chatbox("Téléchecs", `Failed to lock screen: ${err}`);
         });
     };
 
