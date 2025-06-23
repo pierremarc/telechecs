@@ -53,10 +53,7 @@ export const fetchWithClient =
 
     return client(url, options)
       .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw response;
+        return response.json();
       })
       .then((obj) => {
         try {
@@ -64,7 +61,7 @@ export const fetchWithClient =
         } catch (err) {
           console.error("Failed to parse obj from", url);
           console.error("=>", obj);
-          throw err;
+          throw obj;
         }
       });
   };
@@ -112,10 +109,10 @@ export const postWithClient =
 
     return client(url, options)
       .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw response;
+        return response.json();
+        // if (response.ok) {
+        // }
+        // throw response;
       })
       .then((obj) => {
         try {
@@ -123,7 +120,7 @@ export const postWithClient =
         } catch (err) {
           console.error("Failed to parse obj from", url);
           console.error("=>", obj);
-          throw err;
+          throw obj;
         }
       });
   };

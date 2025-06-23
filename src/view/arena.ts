@@ -1,7 +1,8 @@
-import { postArenaTournamentJoin } from "../api";
+import { postArenaTournamentJoin, postArenaTournamentLeave } from "../api";
 import { AcNode, DETAILS, DIV, H1, replaceNodeContent } from "../lib/html";
 import { ArenaTournament } from "../lib/ucui/lichess-types";
-import { stampEvent, TournamentJoin } from "../lib/ucui/types";
+import { message, TournamentJoin } from "../lib/ucui/types";
+import { padStart } from "../lib/util";
 import tr from "../locale";
 import { assign, get, subscribe } from "../store";
 import { button, navigateHome, name } from "./buttons";
@@ -10,7 +11,9 @@ export const clearArenaJoin = () => {
   const state = get("lichess/arena-join");
   if (state) {
     clearInterval(state.interval);
-    assign("lichess/arena-join", null);
+    postArenaTournamentLeave(state.id).then(() =>
+      assign("lichess/arena-join", null)
+    );
   }
 };
 
@@ -36,17 +39,7 @@ const joinArena = (id: string) => {
           interval: window.setInterval(refresh, 5000),
         });
       })
-      .catch((err) =>
-        assign(
-          "lichess/chat",
-          stampEvent({
-            room: "spectator",
-            username: "lichess",
-            type: "chatLine",
-            text: err.error,
-          })
-        )
-      );
+      .catch((err) => assign("lichess/chat", message("The Server", err.error)));
   };
 
   run();
@@ -79,25 +72,89 @@ const renderTournamentDetails = (t: ArenaTournament) => [
   detail("Team member", t.teamMember),
 ];
 
+const filterTournament = ({ clock, variant }: ArenaTournament) =>
+  variant.key === "standard" && clock.increment >= 3
+    ? clock.limit >= 5 * 60
+    : clock.limit >= 10 * 60;
+
+const renderTitle = ({ fullName, clock, nbPlayers }: ArenaTournament) =>
+  DIV(
+    "arena-title",
+    DIV("name", fullName),
+    // DIV("variant", variant.name),
+    DIV("players", `(${nbPlayers})`),
+    renderTime(clock)
+  );
 const renderTournament = (t: ArenaTournament) =>
   DETAILS(
     "tournament",
-    DIV(
-      "",
-      DIV("name", t.fullName),
-      DIV("variant", t.variant.name),
-      renderTime(t.clock)
-    ),
+    renderTitle(t),
     button(name(tr("arena/join"), "join"), () => joinArena(t.id)),
     ...renderTournamentDetails(t)
   );
 
-const renderJoin = (_j: TournamentJoin) =>
-  DIV(
-    "join",
-    H1("", tr("arena/waiting")),
-    button(name(tr("arena/leave"), "leave"), clearArenaJoin)
+const formatRemaining = (rem: number) => {
+  const hours = Math.floor(rem / (60 * 60));
+  const remWithoutHours = rem - hours * 60 * 60;
+  const minutes = Math.floor(remWithoutHours / 60);
+  const seconds = Math.floor(remWithoutHours - minutes * 60);
+  return DIV(
+    "remaining",
+    [hours, minutes, seconds]
+      .map((t) => padStart(t.toString(), 2, "0"))
+      .join(":")
   );
+};
+
+const renderTournamentCreated = (t: ArenaTournament) => {
+  const start = t.startsAt;
+  const countdown = DIV("join");
+  const joinButton = DIV("join", countdown);
+  const updateCountdown = () => {
+    if (get("screen") !== "arena" && interval !== null) {
+      clearInterval(interval);
+      return;
+    }
+    const remaining = start - Date.now();
+    const repl = replaceNodeContent(joinButton);
+    if (remaining < 0) {
+      if (interval !== null) clearInterval(interval);
+      repl(button(name(tr("arena/join"), "join"), () => joinArena(t.id)));
+      if (root) {
+        root.classList.remove("created");
+      }
+    } else {
+      repl(formatRemaining(remaining / 1000));
+    }
+  };
+  const interval = setInterval(updateCountdown, 300);
+  const root = DETAILS(
+    "tournament created",
+    renderTitle(t),
+    joinButton,
+    ...renderTournamentDetails(t)
+  );
+
+  return root;
+};
+
+const renderJoin = (j: TournamentJoin) => {
+  const tournament = get("lichess/arena-started")
+    .concat(get("lichess/arena-created"))
+    .find((a) => a.id === j.id);
+  return tournament === undefined
+    ? DIV(
+        "join",
+        H1("", tr("arena/waiting")),
+        button(name(tr("arena/leave"), "leave"), clearArenaJoin)
+      )
+    : DIV(
+        "join",
+        renderTitle(tournament),
+        H1("", tr("arena/waiting")),
+        button(name(tr("arena/leave"), "leave"), clearArenaJoin)
+      );
+};
 
 const update = (root: HTMLElement) => {
   const joinState = get("lichess/arena-join");
@@ -105,7 +162,13 @@ const update = (root: HTMLElement) => {
     replaceNodeContent(root)(renderJoin(joinState));
   } else {
     replaceNodeContent(root)(
-      ...get("lichess/arena-started").map(renderTournament)
+      DIV("help", tr("arena/info")),
+      ...get("lichess/arena-started")
+        .filter(filterTournament)
+        .map(renderTournament),
+      ...get("lichess/arena-created")
+        .filter(filterTournament)
+        .map(renderTournamentCreated)
     );
   }
 };
@@ -116,6 +179,7 @@ export const mountArena = (root: HTMLElement) => {
     DIV(
       "arena-page",
       DIV("header", DIV("title", tr("arena/arena")), navigateHome()),
+
       innerRoot
     )
   );

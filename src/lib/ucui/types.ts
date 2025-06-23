@@ -5,7 +5,7 @@
 
 import { HttpClient } from "@bity/oauth2-auth-code-pkce";
 import { Streamer } from "../stream";
-import { RequestSeekClock } from "./lichess-types";
+import { ChatLineEvent, RequestSeekClock } from "./lichess-types";
 import { z } from "zod/v4";
 
 export const LangZ = z.union([z.literal("en"), z.literal("fr")]);
@@ -501,3 +501,15 @@ export type TournamentJoin = {
   since: number;
   interval: number;
 };
+
+export type Message = {
+  from: string;
+  body: string;
+  timestamp: number;
+};
+
+export const message = (from: string, body: string): Message =>
+  stampEvent({ from, body });
+
+export const messageFromChatEvent = ({ username, text }: ChatLineEvent) =>
+  message(username, text);

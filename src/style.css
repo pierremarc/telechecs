@@ -934,6 +934,21 @@
   font-size: large;
   font-weight: bold;
 }
+.arena-page .arena-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: small;
+}
+.arena-page .arena-title .name {
+  font-weight: bold;
+  max-width: 50%;
+}
+.arena-page .arena-title .time-control {
+  font-size: large;
+  font-weight: bold;
+}
 .arena-page .tournament {
   padding-top: 2em;
   margin-top: 2em;
@@ -942,25 +957,10 @@
 .arena-page .tournament summary {
   display: flex;
 }
-.arena-page .tournament summary > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  font-size: small;
-}
-.arena-page .tournament summary > div .name {
-  font-weight: bold;
-  max-width: 50%;
-}
-.arena-page .tournament summary > div .time-control {
-  font-size: large;
-  font-weight: bold;
-}
 .arena-page .tournament .button-join {
   border-top: 1px solid;
   border-bottom: 1px solid;
-  margin-top: 6px;
+  margin-top: 1em;
   margin-bottom: 6px;
   text-align: center;
   font-size: large;
@@ -976,4 +976,14 @@
 }
 .arena-page .tournament .info.undefined {
   display: none;
+}
+.arena-page .tournament.created {
+  color: #888;
+}
+.arena-page .tournament.created .remaining {
+  color: black;
+  text-align: right;
+  font-weight: bold;
+  font-family: monospace;
+  padding: 0.5em 0;
 }

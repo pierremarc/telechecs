@@ -4,7 +4,13 @@ import {
   GameFullEvent,
   GameStateEvent,
 } from "./lib/ucui/lichess-types";
-import { Move, inputNone, moveToUCI, stampEvent } from "./lib/ucui/types";
+import {
+  Move,
+  inputNone,
+  messageFromChatEvent,
+  moveToUCI,
+  stampEvent,
+} from "./lib/ucui/types";
 import { boardMove, streamBoard } from "./api";
 
 import { playSound } from "./sound";
@@ -29,7 +35,7 @@ const handleMove = (message: GameStateEvent) => {
 };
 
 const handleChat = (message: ChatLineEvent) => {
-  assign("lichess/chat", stampEvent(message));
+  assign("lichess/chat", messageFromChatEvent(message));
   return true;
 };
 

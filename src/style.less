@@ -1164,33 +1164,32 @@
     }
     margin-bottom: @app-margin;
   }
-
+  .arena-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-size: small;
+    .name {
+      font-weight: bold;
+      max-width: 50%;
+    }
+    .time-control {
+      font-size: large;
+      font-weight: bold;
+    }
+  }
   .tournament {
     padding-top: @app-margin;
     margin-top: @app-margin;
     border-top: 1px solid;
     summary {
       display: flex;
-      > div {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        font-size: small;
-        .name {
-          font-weight: bold;
-          max-width: 50%;
-        }
-        .time-control {
-          font-size: large;
-          font-weight: bold;
-        }
-      }
     }
     .button-join {
       border-top: 1px solid;
       border-bottom: 1px solid;
-      margin-top: 6px;
+      margin-top: 1em;
       margin-bottom: 6px;
       text-align: center;
       font-size: large;
@@ -1205,6 +1204,17 @@
       }
       &.undefined {
         display: none;
+      }
+    }
+
+    &.created {
+      color: @text-grey;
+      .remaining {
+        color: black;
+        text-align: right;
+        font-weight: bold;
+        font-family: monospace;
+        padding: 0.5em 0;
       }
     }
   }

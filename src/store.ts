@@ -2,7 +2,6 @@ import { map, Option } from "./lib/option";
 import {
   ArenaTournament,
   ChallengeJson,
-  ChatLineEvent,
   GameEventInfo,
   GameStateEvent,
   StreamEvent,
@@ -27,6 +26,7 @@ import {
   SquareRank,
   SeekRequest,
   TournamentJoin,
+  Message,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -103,7 +103,7 @@ let state = {
   >,
   "lichess/opponent": null as Nullable<User | LichessAI>,
   "lichess/following": [] as User[],
-  "lichess/chat": null as Nullable<ChatLineEvent & { timestamp: number }>,
+  "lichess/chat": null as Nullable<Message>,
   "lichess/seek": null as Nullable<SeekRequest>,
   "lichess/arena-created": [] as ArenaTournament[],
   "lichess/arena-started": [] as ArenaTournament[],

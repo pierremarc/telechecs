@@ -23,4 +23,16 @@ export default {
     en: "Leave arena",
     fr: "Se retirer",
   },
+  "arena/info": {
+    en: `
+    We only display arenas that are started or about to start, 
+    and with time controls which feel compatible with this application. 
+    `,
+    fr: `
+    Ne sont montrées que les arènes qui sont en cours ou sur
+    le point de commencer. De plus, ne sont pas montées celles
+    dont le contôle du temps est compatible avec l'usage 
+    de cette application. 
+    `,
+  },
 };

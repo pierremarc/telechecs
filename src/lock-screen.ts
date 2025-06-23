@@ -1,5 +1,5 @@
 import { none, some } from "./lib/option";
-import { Nullable, stampEvent } from "./lib/ucui/types";
+import { message, Nullable } from "./lib/ucui/types";
 import { allKeys, assign, dispatchOpt, get, subscribe } from "./store";
 
 const hasLockAPI = "wakeLock" in navigator;
@@ -50,12 +50,7 @@ export const screenLocker = () => {
           console.error("failed to lock screen", err);
           assign(
             "lichess/chat",
-            stampEvent({
-              type: "chatLine",
-              room: "spectator",
-              username: "Téléchecs",
-              text: `Failed to lock screen: ${err}`,
-            })
+            message("Téléchecs", `Failed to lock screen: ${err}`)
           );
         });
     };

@@ -1,18 +1,17 @@
 import { emptyElement } from "../lib/dom";
 import { DIV } from "../lib/html";
-import { ChatLineEvent } from "../lib/ucui/lichess-types";
-import { Nullable } from "../lib/ucui/types";
+import { Message, Nullable } from "../lib/ucui/types";
 import { assign, get, subscribe } from "../store";
 import { button } from "./buttons";
 
 let timeoutRef: Nullable<number> = null;
 
-const renderMessage = (root: HTMLElement, event: ChatLineEvent) => {
+const renderMessage = (root: HTMLElement, { body, from }: Message) => {
   emptyElement(root);
 
   root.classList.remove("hidden");
   root.append(
-    DIV("message", DIV("from", event.username), DIV("text", event.text)),
+    DIV("message", DIV("from", from), DIV("text", body)),
     button("close", () => {
       root.classList.add("hidden");
       assign("lichess/chat", null);

@@ -346,3 +346,14 @@ export const postArenaTournamentJoin = (id: string) => {
     pairMeAsap: true,
   });
 };
+
+/**
+ * doc: https://lichess.org/api#tag/Arena-tournaments/operation/apiTournamentWithdraw
+ * path: /tournament/{id}/withdraw
+ */
+export const postArenaTournamentLeave = (id: string) => {
+  const post = getPoster();
+  return post(ResponseOkZ, apiUrl(`/tournament/${id}/withdraw`), {
+    pairMeAsap: true,
+  });
+};
