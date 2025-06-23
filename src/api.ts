@@ -8,6 +8,7 @@ import {
   withQueryString,
 } from "./lib/remote";
 import {
+  ArenaTournamentResponseZ,
   BoardEvent,
   BoardEventZ,
   ChallengeJson,
@@ -325,4 +326,23 @@ export const postSeek = (seek: RequestSeekClock, onClose: () => void) => {
 export const postAbort = (gameId: string) => {
   const post = getPoster();
   return post(ResponseOkZ, apiUrl(`/board/game/${gameId}/abort`), {});
+};
+
+/**
+ * doc: https://lichess.org/api#tag/Arena-tournaments/operation/apiTournament
+ * path: /tournament
+ *
+ */
+export const getArenaTournaments = () =>
+  getFetch()(ArenaTournamentResponseZ, apiUrl("/tournament"));
+
+/**
+ * doc: https://lichess.org/api#tag/Arena-tournaments/operation/apiTournamentJoin
+ * path: /tournament/{id}/join
+ */
+export const postArenaTournamentJoin = (id: string) => {
+  const post = getPoster();
+  return post(ResponseOkZ, apiUrl(`/tournament/${id}/join`), {
+    pairMeAsap: true,
+  });
 };

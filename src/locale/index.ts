@@ -7,6 +7,7 @@ import end from "./end";
 import challenge from "./challenge";
 import formated from "./formated";
 import clock from "./clock";
+import arena from "./arena";
 
 const messages = {
   ...home,
@@ -15,6 +16,7 @@ const messages = {
   ...end,
   ...challenge,
   ...clock,
+  ...arena,
 };
 
 const formatedMessages = {

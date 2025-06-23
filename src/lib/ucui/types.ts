@@ -11,8 +11,7 @@ import { z } from "zod/v4";
 export const LangZ = z.union([z.literal("en"), z.literal("fr")]);
 export type Lang = z.infer<typeof LangZ>;
 
-export type Screen = "home" | "game" | "movelist" | "config" | "history";
-export type LichessScreen =
+export type Screen =
   | "home"
   | "game"
   | "events"
@@ -20,7 +19,8 @@ export type LichessScreen =
   | "movelist"
   | "challenge"
   | "follow"
-  | "end-game";
+  | "end-game"
+  | "arena";
 
 export type Role = "Pawn" | "Knight" | "Bishop" | "Rook" | "Queen" | "King";
 
@@ -495,3 +495,9 @@ export const seekRequestSent = (
 });
 
 export type SeekRequest = SeekRequestSending | SeekRequestSent;
+
+export type TournamentJoin = {
+  id: string;
+  since: number;
+  interval: number;
+};

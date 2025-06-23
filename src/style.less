@@ -412,6 +412,17 @@
     margin-top: 3em;
     border-top: 1px solid;
     border-bottom: 1px solid;
+    .button {
+      text-decoration: none;
+    }
+  }
+  .button-arena {
+    width: 100%;
+    text-align: center;
+    padding: 0.5em;
+    margin-top: 1em;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
     text-decoration: none;
   }
 
@@ -1142,4 +1153,59 @@
 }
 .italic {
   font-style: italic;
+}
+
+.arena-page {
+  margin: @app-margin;
+  .header {
+    .title {
+      font-size: large;
+      font-weight: bold;
+    }
+    margin-bottom: @app-margin;
+  }
+
+  .tournament {
+    padding-top: @app-margin;
+    margin-top: @app-margin;
+    border-top: 1px solid;
+    summary {
+      display: flex;
+      > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        font-size: small;
+        .name {
+          font-weight: bold;
+          max-width: 50%;
+        }
+        .time-control {
+          font-size: large;
+          font-weight: bold;
+        }
+      }
+    }
+    .button-join {
+      border-top: 1px solid;
+      border-bottom: 1px solid;
+      margin-top: 6px;
+      margin-bottom: 6px;
+      text-align: center;
+      font-size: large;
+      padding: 6px;
+    }
+    .info {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      .key {
+        font-size: small;
+      }
+      &.undefined {
+        display: none;
+      }
+    }
+  }
 }

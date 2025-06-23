@@ -1,6 +1,6 @@
 import { events } from "../lib/dom";
 import { DIV } from "../lib/html";
-import { LichessScreen } from "../lib/ucui/types";
+import { Screen } from "../lib/ucui/types";
 import tr from "../locale";
 import { assign } from "../store";
 
@@ -25,7 +25,7 @@ export const button = (name: NameOrFullName, action: () => void) =>
     add("click", action)
   );
 
-export const navigate = (screen: LichessScreen, name: string | HTMLElement) =>
+export const navigate = (screen: Screen, name: string | HTMLElement) =>
   button(name, () => assign("screen", screen));
 
 export const navigateHome = () => navigate("home", tr("button/home"));

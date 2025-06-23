@@ -23,6 +23,7 @@ import { mountSeek } from "./view/seek";
 import { mountEnd } from "./view/end";
 import { setFullScreenRoot, toggleFullscreen } from "./fullscreen";
 import { initLang } from "./locale";
+import { mountArena } from "./view/arena";
 
 const monitorStream = () => {
   const onEvent = subscribe("lichess/stream-events");
@@ -97,6 +98,9 @@ const main = (root: HTMLElement) => {
       case "end-game": {
         toggleFullscreen(false);
         return mountEnd(root);
+      }
+      case "arena": {
+        return mountArena(root);
       }
     }
   });

@@ -314,6 +314,17 @@
   margin-top: 3em;
   border-top: 1px solid;
   border-bottom: 1px solid;
+}
+.home .create-game .button {
+  text-decoration: none;
+}
+.home .button-arena {
+  width: 100%;
+  text-align: center;
+  padding: 0.5em;
+  margin-top: 1em;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
   text-decoration: none;
 }
 .home .footer {
@@ -912,4 +923,57 @@
 }
 .italic {
   font-style: italic;
+}
+.arena-page {
+  margin: 2em;
+}
+.arena-page .header {
+  margin-bottom: 2em;
+}
+.arena-page .header .title {
+  font-size: large;
+  font-weight: bold;
+}
+.arena-page .tournament {
+  padding-top: 2em;
+  margin-top: 2em;
+  border-top: 1px solid;
+}
+.arena-page .tournament summary {
+  display: flex;
+}
+.arena-page .tournament summary > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: small;
+}
+.arena-page .tournament summary > div .name {
+  font-weight: bold;
+  max-width: 50%;
+}
+.arena-page .tournament summary > div .time-control {
+  font-size: large;
+  font-weight: bold;
+}
+.arena-page .tournament .button-join {
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  text-align: center;
+  font-size: large;
+  padding: 6px;
+}
+.arena-page .tournament .info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.arena-page .tournament .info .key {
+  font-size: small;
+}
+.arena-page .tournament .info.undefined {
+  display: none;
 }

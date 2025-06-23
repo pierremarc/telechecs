@@ -1,5 +1,6 @@
 import { map, Option } from "./lib/option";
 import {
+  ArenaTournament,
   ChallengeJson,
   ChatLineEvent,
   GameEventInfo,
@@ -16,7 +17,7 @@ import {
   MoveHist,
   Eco,
   Nullable,
-  LichessScreen,
+  Screen,
   Move,
   ClockState,
   LichessAI,
@@ -25,6 +26,7 @@ import {
   SquareFile,
   SquareRank,
   SeekRequest,
+  TournamentJoin,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -70,7 +72,7 @@ export const defaultGameConfig = () =>
 export const defaultInput = (): Input => inputNone();
 // export const defaultPosition = () =>
 //   position(startingLegalMoves, FEN_INITIAL_POSITION);
-export const defaultScreen = (): LichessScreen => "home";
+export const defaultScreen = (): Screen => "home";
 export const defaultMoveList = (): MoveHist[] => [];
 export const defaultEcoList = (): Eco[] => [];
 
@@ -103,6 +105,9 @@ let state = {
   "lichess/following": [] as User[],
   "lichess/chat": null as Nullable<ChatLineEvent & { timestamp: number }>,
   "lichess/seek": null as Nullable<SeekRequest>,
+  "lichess/arena-created": [] as ArenaTournament[],
+  "lichess/arena-started": [] as ArenaTournament[],
+  "lichess/arena-join": null as Nullable<TournamentJoin>,
 };
 
 export type State = typeof state;

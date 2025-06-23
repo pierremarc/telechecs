@@ -522,6 +522,97 @@ export const RealTimeUserStatusRequestZ = z.strictObject({
   withGameMetas: z.boolean().optional(),
 });
 
+export const ArenaStatusZ = z.union([
+  z.literal(10), // created
+  z.literal(20), // started
+  z.literal(30), // finished
+]);
+
+export const ArenaPerfZ = z.strictObject({
+  key: PerfTypeZ,
+  name: z.string(),
+  position: z.int(),
+  icon: z.string().optional(),
+});
+
+export const ArenaRatingObjZ = z.strictObject({
+  perf: PerfTypeZ.optional(),
+  rating: z.int(),
+});
+
+export const ThematicZ = z.strictObject({
+  eco: z.string().optional(),
+  name: z.string(),
+  fen: z.string(),
+  url: z.string().optional(),
+});
+export const CustomPositionZ = z.strictObject({
+  name: z.string(),
+  fen: z.string(),
+});
+
+export const ArenaPositionZ = z.union([ThematicZ, CustomPositionZ]);
+
+export const LightUserZ = z.strictObject({
+  id: z.string(),
+  name: z.string(),
+  flair: z.string().optional(),
+  title: TitleZ.optional(),
+  patron: z.boolean().optional(),
+});
+
+export const ArenaClockZ = z.strictObject({
+  limit: z.int(),
+  increment: z.int(),
+});
+
+export const ArenaTournamentZ = z.strictObject({
+  id: z.string(),
+  createdBy: z.string(),
+  system: z.literal("arena"),
+  minutes: z.int(),
+  clock: ArenaClockZ,
+  rated: z.boolean(),
+  fullName: z.string(),
+  nbPlayers: z.int(),
+  variant: VariantZ,
+  startsAt: z.int(),
+  finishesAt: z.int(),
+  status: ArenaStatusZ,
+  perf: ArenaPerfZ,
+  // optionals
+  secondsToStart: z.int().optional(),
+  hasMaxRating: z.boolean().optional(),
+  maxRating: ArenaRatingObjZ.optional(),
+  minRating: ArenaRatingObjZ.optional(),
+  minRatedGames: z.strictObject({ nb: z.int() }).optional(),
+  botsAllowed: z.boolean().optional(),
+  minAccountAgeInDays: z.int().optional(),
+  onlyTitled: z.boolean().optional(),
+  teamMember: z.string().optional(),
+  private: z.boolean().optional(),
+  position: ArenaPositionZ.optional(),
+  schedule: z
+    .object({
+      freq: z.string().optional(),
+      speed: z.string().optional(),
+    })
+    .optional(),
+  teamBattle: z
+    .object({
+      teams: z.string().array().optional(),
+      nbLeaders: z.int().optional(),
+    })
+    .optional(),
+  winner: LightUserZ.optional(),
+});
+
+export const ArenaTournamentResponseZ = z.strictObject({
+  created: ArenaTournamentZ.array(),
+  started: ArenaTournamentZ.array(),
+  finished: ArenaTournamentZ.array(),
+});
+
 export type Color = z.infer<typeof ColorZ>;
 export type Source = z.infer<typeof SourceZ>;
 export type Status = z.infer<typeof StatusZ>;
@@ -582,3 +673,6 @@ export type RealTimeUserStatus = z.infer<typeof RealTimeUserStatusZ>;
 export type RealTimeUserStatusRequest = z.infer<
   typeof RealTimeUserStatusRequestZ
 >;
+
+export type ArenaTournament = z.infer<typeof ArenaTournamentZ>;
+export type ArenaTournamentResponse = z.infer<typeof ArenaTournamentResponseZ>;

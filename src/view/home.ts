@@ -1,10 +1,11 @@
 import { events } from ".././lib/dom";
 import { DIV, ANCHOR, replaceNodeContent, IMG } from ".././lib/html";
 import { ChallengeJson, TimeControl } from ".././lib/ucui/lichess-types";
+import { getArenaTournaments } from "../api";
 import { declineChallenge, startNewGame } from "../game";
 import { tr, trf } from "../locale";
 import { assign, get, subscribe } from "../store";
-import { navigateSeek } from "./buttons";
+import { button, name, navigateSeek } from "./buttons";
 import { mountLogin } from "./login";
 import { mountFollowing } from "./players";
 
@@ -90,6 +91,18 @@ export const challengeBlock = () => {
 
 const createGame = () => DIV("section create-game", navigateSeek());
 
+const arena = () =>
+  DIV(
+    "section areana",
+    button(name(tr("arena/arena"), "arena"), () => {
+      getArenaTournaments().then(({ created, started }) => {
+        assign("lichess/arena-created", created);
+        assign("lichess/arena-started", started);
+      });
+      assign("screen", "arena");
+    })
+  );
+
 export const mountHome = (root: HTMLElement) => {
   const replaceRoot = replaceNodeContent(root);
   const updateAll = () => {
@@ -102,7 +115,15 @@ export const mountHome = (root: HTMLElement) => {
       const players = DIV("players");
       mountFollowing(players);
       replaceRoot(
-        DIV("home", header, players, challengeBlock(), createGame(), footer())
+        DIV(
+          "home",
+          header,
+          players,
+          challengeBlock(),
+          createGame(),
+          arena(),
+          footer()
+        )
       );
     } else {
       replaceRoot(DIV("home", header, intro(), footer()));
