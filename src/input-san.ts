@@ -30,6 +30,8 @@ import {
   get,
   subscribe,
   defaultInput,
+  withBatch,
+  Assign,
 } from "./store";
 
 import {
@@ -53,7 +55,7 @@ import {
 
 const setFile = (file: SquareFile) => assign("input-san/file", file);
 const setRank = (rank: SquareRank) => assign("input-san/rank", rank);
-const clearSan = () => {
+const clearSan = (assign: Assign) => {
   assign("input-san/file", null);
   assign("input-san/rank", null);
 };
@@ -97,12 +99,15 @@ const renderPieces = (selected: Nullable<Role>, moveList: Move[]) =>
             symbol(role, "black")
           ),
           (add) =>
-            add("click", () => {
-              clearSan();
-              selected === role
-                ? assign("input", defaultInput())
-                : assign("input", inputRole(role));
-            })
+            add("click", () =>
+              withBatch(({ assign, end }) => {
+                clearSan(assign);
+                selected === role
+                  ? assign("input", defaultInput())
+                  : assign("input", inputRole(role));
+                end();
+              })
+            )
         )
       : DIV(
           `piece ${role}  ${selClass(selected === role)}`,
@@ -110,11 +115,13 @@ const renderPieces = (selected: Nullable<Role>, moveList: Move[]) =>
         )
   );
 
-const playMove = (move: Move) => {
-  clearSan();
-  assign("input", inputMove(move));
-  sendMove(move);
-};
+const playMove = (move: Move) =>
+  withBatch(({ assign, end }) => {
+    clearSan(assign);
+    assign("input", inputMove(move));
+    end();
+    sendMove(move);
+  });
 
 const makeFinder = (candidates: Move[]) => (s: Square) =>
   candidates.filter((move) => {
@@ -179,14 +186,17 @@ const renderFiles = (
       return events(
         DIV(`button-select file file-${file} candidate`, file.toLowerCase()),
         (add) =>
-          add("click", () => {
-            clearSan();
-            assign("input", {
-              _tag: "role",
-              role: getInputRole(input),
-            });
-            setFile(file);
-          })
+          add("click", () =>
+            withBatch(({ assign, end }) => {
+              clearSan(assign);
+              assign("input", {
+                _tag: "role",
+                role: getInputRole(input),
+              });
+              end();
+              setFile(file);
+            })
+          )
       );
     } else {
       return DIV(`button-select file file-${file} nothing`, file.toLowerCase());

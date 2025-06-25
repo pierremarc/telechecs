@@ -14,25 +14,28 @@ import {
 import { boardMove, streamBoard } from "./api";
 
 import { playSound } from "./sound";
-import { assign, get, getPlayerColor, getTurn } from "./store";
+import { assign, get, getPlayerColor, getTurn, withBatch } from "./store";
 
-const handleStart = (message: GameFullEvent) => {
-  assign("input", inputNone());
-  assign("lichess/game-state", stampEvent(message.state));
-  assign("started", true);
+const handleStart = (message: GameFullEvent) =>
+  withBatch(({ assign, end }) => {
+    assign("input", inputNone());
+    assign("lichess/game-state", stampEvent(message.state));
+    assign("started", true);
+    end();
+    return true;
+  });
 
-  return true;
-};
-
-const handleMove = (message: GameStateEvent) => {
-  // console.debug("handleMove", message);
-  assign("input", inputNone());
-  assign("lichess/game-state", stampEvent(message));
-  if (getPlayerColor() === getTurn()) {
-    playSound();
-  }
-  return true;
-};
+const handleMove = (message: GameStateEvent) =>
+  withBatch(({ assign, end }) => {
+    // console.debug("handleMove", message);
+    assign("input", inputNone());
+    assign("lichess/game-state", stampEvent(message));
+    if (getPlayerColor() === getTurn()) {
+      playSound();
+    }
+    end();
+    return true;
+  });
 
 const handleChat = (message: ChatLineEvent) => {
   assign("lichess/chat", messageFromChatEvent(message));

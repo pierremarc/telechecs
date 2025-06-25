@@ -21,7 +21,9 @@ export const clearArenaJoin = () => {
 const joinArena = (id: string) => {
   const refresh = () => {
     const state = get("lichess/arena-join");
-    if (state) {
+    const gameState = get("lichess/game-state");
+    // avoid asking for pairing when already playing
+    if (state && (gameState === null || gameState.status !== "started")) {
       const ellapsed = Date.now() - state.since;
       if (ellapsed > 60 * 1000) {
         clearInterval(state.interval);
@@ -73,10 +75,11 @@ const renderTournamentDetails = (t: ArenaTournament) => [
   detail("Team member", t.teamMember),
 ];
 
-const filterTournament = ({ clock, variant }: ArenaTournament) =>
-  variant.key === "standard" && clock.increment >= 3
-    ? clock.limit >= 5 * 60
-    : clock.limit >= 10 * 60;
+const goodTime = (clock: ArenaTournament["clock"]) =>
+  clock.increment >= 3 ? clock.limit >= 5 * 60 : clock.limit >= 10 * 60;
+
+const filterTournament = ({ clock, variant, position }: ArenaTournament) =>
+  position === undefined && variant.key === "standard" && goodTime(clock);
 
 const renderTitle = ({ fullName, clock, nbPlayers }: ArenaTournament) =>
   DIV(
@@ -86,6 +89,11 @@ const renderTitle = ({ fullName, clock, nbPlayers }: ArenaTournament) =>
     DIV("players", `(${nbPlayers})`),
     renderTime(clock)
   );
+
+//   const renderPosition = map((position: ArenaPosition) =>
+//     DIV("position", renderBoard(position.fen))
+//   );
+
 const renderTournament = (t: ArenaTournament) =>
   DETAILS(
     "tournament",
@@ -133,6 +141,7 @@ const renderTournamentCreated = (t: ArenaTournament) => {
     "tournament created",
     renderTitle(t),
     joinButton,
+    // renderPosition(fromNullable(t.position)),
     ...renderTournamentDetails(t)
   );
 

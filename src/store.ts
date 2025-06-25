@@ -127,29 +127,64 @@ loadFromStorage();
 
 let subs: [StateKey, (key: StateKey) => void][] = [];
 
+export const batch_dispacther = () => {
+  const keys = new Set<StateKey>();
+
+  const dispatch = <K extends StateKey>(
+    key: K,
+    f: (val: State[K]) => State[K]
+  ) => {
+    let val = get(key);
+    state[key] = f(val);
+    if (storedKeys.includes(key)) {
+      localStorage.setItem(key, JSON.stringify(state[key]));
+    }
+
+    if (key !== "clock") {
+      console.groupCollapsed(key);
+      console.debug("from", val);
+      console.debug("to", state[key]);
+      console.groupEnd();
+    }
+    keys.add(key);
+    return get(key);
+  };
+
+  const assign = <K extends StateKey>(key: K, val: State[K]) =>
+    dispatch(key, () => val);
+
+  const end = () => {
+    setTimeout(() => {
+      for (const key of keys) {
+        const subscribers = subs.filter(([k, _]) => k == key);
+        for (const sub of subscribers) {
+          const handler = sub[1];
+          handler(key);
+          keys.delete(key);
+        }
+      }
+    }, 0);
+  };
+
+  return { dispatch, assign, end };
+};
+
+export const withBatch = <R>(
+  f: (d: ReturnType<typeof batch_dispacther>) => R
+) => f(batch_dispacther());
+
+const immediate_dispatch = batch_dispacther();
+
 export const dispatch = <K extends StateKey>(
   key: K,
   f: (val: State[K]) => State[K]
 ) => {
-  let val = get(key);
-  state[key] = f(val);
-  if (storedKeys.includes(key)) {
-    localStorage.setItem(key, JSON.stringify(state[key]));
-  }
-  const subscribers = subs.filter(([k, _]) => k == key);
-  for (const sub of subscribers) {
-    const handler = sub[1];
-    handler(key);
-  }
-  if (key !== "clock") {
-    console.groupCollapsed(key);
-    console.debug("from", val);
-    console.debug("to", state[key]);
-    console.debug("subscribers", subscribers);
-    console.groupEnd();
-  }
+  immediate_dispatch.dispatch(key, f);
+  immediate_dispatch.end();
   return get(key);
 };
+
+export type Dispath = typeof dispatch;
 
 export const dispatchOpt = <K extends StateKey>(
   key: K,
@@ -158,6 +193,8 @@ export const dispatchOpt = <K extends StateKey>(
 
 export const assign = <K extends StateKey>(key: K, val: State[K]) =>
   dispatch(key, () => val);
+
+export type Assign = typeof assign;
 
 export const get = <K extends StateKey>(key: K): State[K] =>
   JSON.parse(JSON.stringify(state[key]));

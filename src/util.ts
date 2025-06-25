@@ -115,7 +115,15 @@ export const uciMoveList = (uciString: string) =>
 //   });
 // };
 
+const legalMovesCache = new Map<string, Move[]>();
+
+const legalKey = (gameMoves: string, at?: number) => `${gameMoves}/${at}`;
+
 export const legalMoves = (gameMoves: string, at?: number): Move[] => {
+  const key = legalKey(gameMoves, at);
+  if (legalMovesCache.has(key)) {
+    return legalMovesCache.get(key)!;
+  }
   const game = new Chess();
   const uciMoves =
     at === undefined
@@ -123,7 +131,7 @@ export const legalMoves = (gameMoves: string, at?: number): Move[] => {
       : uciMoveList(gameMoves).slice(0, at);
 
   uciMoves.forEach((uci) => game.move(uciToObj(uci)));
-  return game.moves({ verbose: true }).map((m) => {
+  const moves = game.moves({ verbose: true }).map((m) => {
     game.move(m);
     const annotatedMove = chessjsMoveToMove(
       m,
@@ -133,6 +141,8 @@ export const legalMoves = (gameMoves: string, at?: number): Move[] => {
     game.undo();
     return annotatedMove;
   });
+  legalMovesCache.set(key, moves);
+  return moves;
 };
 
 export const legalMovesForRole = (role: Role, gameMoves: string): Move[] => {

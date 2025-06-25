@@ -27,6 +27,7 @@ export default {
     en: `
     We only display arenas that are started or about to start, 
     and with time controls which feel compatible with this application. 
+    And we do not support starting positions, yet.
     `,
     fr: `
     Ne sont montrées que les arènes qui sont en cours ou sur

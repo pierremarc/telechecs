@@ -676,4 +676,5 @@ export type RealTimeUserStatusRequest = z.infer<
 >;
 
 export type ArenaTournament = z.infer<typeof ArenaTournamentZ>;
+export type ArenaPosition = z.infer<typeof ArenaPositionZ>;
 export type ArenaTournamentResponse = z.infer<typeof ArenaTournamentResponseZ>;

@@ -1,6 +1,6 @@
 import "./style.css";
 import {
-  assign,
+  batch_dispacther,
   clearSubscriptions,
   dispatch,
   get,
@@ -27,6 +27,7 @@ import { mountArena } from "./view/arena";
 
 const monitorStream = () => {
   const onEvent = subscribe("lichess/stream-events");
+  const { assign, end } = batch_dispacther();
   onEvent(() => {
     const events = get("lichess/stream-events");
     if (events.length > 0) {
@@ -57,6 +58,7 @@ const monitorStream = () => {
         );
       }
     }
+    end();
   });
 };
 
