@@ -1,8 +1,8 @@
 # Téléchecs
 
-Play on [Lichess](https://lichess.org/) over the board, for cheap.
+Play on [Lichess](https://lichess.org/) over the board, for cheap (well, with your mobile phone and an internet connection).
 
-You can try it on https://pierremarc.github.io/telechecs/
+Try it on [telechecs.com](https://telechecs.com).
 
 ![scene with a chess set and a smartphone running Téléchecs](./picture.jpg)
 
@@ -20,7 +20,7 @@ https://github.com/user-attachments/assets/d421356c-0898-4b62-8dbc-56b4bf455c94
 
 The program is just a Javascript bundle out of Typescript [source code](./src/) . It does mean that you don't need much to get it running anywhere.
 
-If you want to experiment with it (or even fix things 😉), a simple `npm install && npm run dev` will do to have it running locally and watching.
+If you want to experiment with it (or even fix things 😉), a simple `npm install && npm run dev` will do to have it running locally and watching ([edit] the dev server now points to a local instance of lichess, see [lila-docker](https://github.com/lichess-org/lila-docker) to get up and running smoothly).
 
 ### Publish
 
