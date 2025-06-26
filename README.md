@@ -30,16 +30,17 @@ _rather a note for myself though_
 npm run build \
     && git add www \
     && git commit www/ -m 'Build' \
-    && git subtree push --prefix www/telechecs origin pages
+    && git push
 ```
 
+<!--
 And if pushing doesn't work, as per [this gist](https://gist.github.com/tduarte/eac064b4778711b116bb827f8c9bef7b)
 
 ```
 git subtree split --prefix  www/telechecs -b  pages
 git push -f origin pages:pages
 git branch -D pages
-```
+``` -->
 
 ## License
 
