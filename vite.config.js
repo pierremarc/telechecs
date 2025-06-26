@@ -9,7 +9,7 @@ export default defineConfig(({ command }) => ({
   publicDir: resolve(__dirname, "assets"),
   base: "",
   build: {
-    outDir: resolve(__dirname, "dist"),
+    outDir: resolve(__dirname, "www"),
   },
   plugins:
     command === "serve"
