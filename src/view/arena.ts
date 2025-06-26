@@ -1,11 +1,12 @@
 import { postArenaTournamentJoin, postArenaTournamentLeave } from "../api";
+import { emptyElement } from "../lib/dom";
 import { AcNode, DETAILS, DIV, H1, replaceNodeContent } from "../lib/html";
 import { ArenaTournament } from "../lib/ucui/lichess-types";
 import { TournamentJoin } from "../lib/ucui/types";
 import { padStart } from "../lib/util";
 import tr from "../locale";
 import { assign, get, subscribe } from "../store";
-import { button, navigateHome, name } from "./buttons";
+import { button, navigateHome, name, navigate } from "./buttons";
 import { chatbox } from "./chat";
 
 export const clearArenaJoin = () => {
@@ -201,4 +202,35 @@ export const mountArena = (root: HTMLElement) => {
     "lichess/arena-started",
     "lichess/arena-join"
   )(() => update(innerRoot));
+};
+
+const renderPersistent = (root: HTMLElement, state: TournamentJoin) => {
+  emptyElement(root);
+  root.classList.remove("hidden");
+
+  const tournament = get("lichess/arena-started")
+    .concat(get("lichess/arena-created"))
+    .find((a) => a.id === state.id);
+
+  const label = tournament === undefined ? "Tournament" : tournament.fullName;
+  root.append(DIV("title", navigate("arena", label)));
+};
+
+export const mountArenaPersistent = (root: HTMLElement) => {
+  const box = DIV("arena-persist hidden");
+  root.append(box);
+
+  subscribe(
+    "lichess/arena-join",
+    "screen"
+  )(() => {
+    const state = get("lichess/arena-join");
+    const screen = get("screen");
+    if (state && screen !== "arena" && screen !== "game") {
+      renderPersistent(box, state);
+    } else {
+      box.classList.add("hidden");
+      emptyElement(box);
+    }
+  });
 };

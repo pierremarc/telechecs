@@ -987,3 +987,22 @@
   font-family: monospace;
   padding: 0.5em 0;
 }
+.arena-persist {
+  position: absolute;
+  bottom: -1em;
+  text-align: center;
+  font-size: large;
+  font-weight: bold;
+  padding-bottom: 2em;
+  background-color: white;
+  left: 1em;
+  right: 1em;
+  border: 1px solid;
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+  border-bottom: none;
+  padding-top: 1em;
+}
+.arena-persist.hidden {
+  display: none;
+}

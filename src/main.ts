@@ -23,7 +23,7 @@ import { mountSeek } from "./view/seek";
 import { mountEnd } from "./view/end";
 import { setFullScreenRoot, toggleFullscreen } from "./fullscreen";
 import { initLang } from "./locale";
-import { mountArena } from "./view/arena";
+import { mountArena, mountArenaPersistent } from "./view/arena";
 
 const monitorStream = () => {
   const onEvent = subscribe("lichess/stream-events");
@@ -68,6 +68,7 @@ const main = (root: HTMLElement) => {
   screenLocker();
   mountHome(root);
   mountChat(document.body);
+  mountArenaPersistent(document.body);
   mountOnline(document.body);
   monitorStream();
 

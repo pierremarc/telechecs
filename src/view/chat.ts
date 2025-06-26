@@ -36,6 +36,7 @@ export const mountChat = (root: HTMLElement) => {
     if (message) {
       renderMessage(chatBox, message);
     } else {
+      chatBox.classList.add("hidden");
       emptyElement(chatBox);
     }
   });
