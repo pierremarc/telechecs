@@ -22,7 +22,7 @@ import {
   SomeInput,
 } from "./lib/ucui/types";
 import { sendMove } from "./play";
-import { formatMove } from "./san";
+import { formatOptions, formatMove } from "./san";
 import {
   assign,
   getPlayerColor,
@@ -150,10 +150,7 @@ const selectableMove = (game: GameStateEvent) => (move: Move) =>
   events(
     DIV(
       "move",
-      formatMove(move, legalMoves(game.moves), {
-        symbol: true,
-        color: "black",
-      })
+      formatMove(move, legalMoves(game.moves), formatOptions(true, "black"))
     ),
     (add) =>
       add("click", () => {

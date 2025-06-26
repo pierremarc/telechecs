@@ -18,7 +18,7 @@ import {
   SomeInput,
 } from "./lib/ucui/types";
 import { sendMove } from "./play";
-import { formatMove } from "./san";
+import { formatMove, formatOptions } from "./san";
 import {
   assign,
   getPlayerColor,
@@ -137,10 +137,7 @@ const makeSelect = (selectElement: HTMLDivElement, moveList: Move[]) => {
     replaceSelect(
       ...moves.map((move) =>
         events(
-          DIV(
-            "move",
-            formatMove(move, moveList, { symbol: true, color: "black" })
-          ),
+          DIV("move", formatMove(move, moveList, formatOptions(true, "black"))),
           (add) => add("click", () => playMove(move))
         )
       )

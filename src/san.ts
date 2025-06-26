@@ -176,19 +176,35 @@ export const fromMove = (legalMoves: Move[], move: Move): San => {
 type FormatOptions = {
   symbol: boolean;
   color: Color;
+  withAnnotation: boolean;
 };
 
-export const defaultFormat: FormatOptions = {
+export const formatOptions = (
+  symbol: boolean,
+  color: Color
+): FormatOptions => ({
+  symbol,
+  color,
+  withAnnotation: false,
+});
+
+export const defaultFormat = (): FormatOptions => ({
   symbol: false,
   color: "white",
-};
+  withAnnotation: false,
+});
 
-export const defaultFormatSymbol: FormatOptions = {
+export const defaultFormatSymbol = (): FormatOptions => ({
   symbol: true,
   color: "white",
-};
+  withAnnotation: false,
+});
 
-const toString = (origin: Move, san: San, { symbol, color }: FormatOptions) => {
+const toString = (
+  origin: Move,
+  san: San,
+  { symbol, color, withAnnotation }: FormatOptions
+) => {
   const result: string[] = [];
   switch (san._tag) {
     case "Normal": {
@@ -226,10 +242,12 @@ const toString = (origin: Move, san: San, { symbol, color }: FormatOptions) => {
     case "null":
       result.push("--");
   }
-  if (origin.checkmate) {
-    result.push("#");
-  } else if (origin.check) {
-    result.push("+");
+  if (withAnnotation) {
+    if (origin.checkmate) {
+      result.push("#");
+    } else if (origin.check) {
+      result.push("+");
+    }
   }
   return result.join("");
 };
@@ -237,5 +255,5 @@ const toString = (origin: Move, san: San, { symbol, color }: FormatOptions) => {
 export const formatMove = (
   move: Move,
   legals: Move[],
-  options = defaultFormat
+  options: FormatOptions
 ) => toString(move, fromMove(legals, move), options);

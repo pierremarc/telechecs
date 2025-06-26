@@ -3,16 +3,16 @@ import { defaultFormatSymbol, formatMove } from "./san";
 import { get, getPlayerColor, getTurn, subscribe } from "./store";
 import { getMoveListFromMoveString, legalMoves } from "./util";
 
-const render = (engineInfo: HTMLElement, engineState: HTMLElement) => {
+const render = (opponentInfo: HTMLElement, opponentState: HTMLElement) => {
   const info = get("lichess/game-info");
   const state = get("lichess/game-state");
   const turn = getTurn();
   const playerColor = getPlayerColor();
   if (info && state && turn && playerColor) {
-    const setEngine = replaceNodeContent(engineState);
-    const setEngineInfo = replaceNodeContent(engineInfo);
+    const setOpponent = replaceNodeContent(opponentState);
+    const setOpponentInfo = replaceNodeContent(opponentInfo);
 
-    setEngineInfo(SPAN("name", info.opponent.username));
+    setOpponentInfo(SPAN("name", info.opponent.username));
 
     if (turn === playerColor) {
       const moves = getMoveListFromMoveString(state.moves);
@@ -22,30 +22,30 @@ const render = (engineInfo: HTMLElement, engineState: HTMLElement) => {
         const formated = formatMove(
           move,
           legalMoves(state.moves, moves.length),
-          defaultFormatSymbol
+          { ...defaultFormatSymbol(), withAnnotation: true }
         );
-        setEngine(formated);
+        setOpponent(formated);
       } else {
-        setEngine(DIV("idle", `Your turn to play ${turn}`));
+        setOpponent(DIV("idle", `Your turn to play ${turn}`));
       }
     } else {
-      setEngine(DIV("opponent-think", "…"));
+      setOpponent(DIV("opponent-think", "…"));
     }
   }
 };
 
 export const mountOpponent = (root: HTMLElement) => {
-  const engineInfo = DIV("info");
-  const engineState = DIV("state");
+  const opponentInfo = DIV("info");
+  const opponentState = DIV("state");
 
   // const toListButton = events(DIV("to-list to-button", "↪"), (add) =>
   //   add("click", () => assign("screen", "movelist"))
   // );
 
-  render(engineInfo, engineState);
-  const engine = DIV("engine", engineInfo, engineState);
+  render(opponentInfo, opponentState);
+  const engine = DIV("engine", opponentInfo, opponentState);
 
   root.append(engine);
 
-  subscribe("lichess/game-state")(() => render(engineInfo, engineState));
+  subscribe("lichess/game-state")(() => render(opponentInfo, opponentState));
 };

@@ -35,7 +35,10 @@ const renderNonPendingMove = (
 ) =>
   SPAN(
     "move",
-    formatMove(move, legalMoves(state.moves, moveIndex), defaultFormatSymbol),
+    formatMove(move, legalMoves(state.moves, moveIndex), {
+      ...defaultFormatSymbol(),
+      withAnnotation: true,
+    }),
     "  "
   );
 

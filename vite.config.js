@@ -7,9 +7,9 @@ const name = "telechecs";
 export default defineConfig(({ command }) => ({
   root: resolve(__dirname, "src"),
   publicDir: resolve(__dirname, "assets"),
-  base: `/${name}/`,
+  base: "",
   build: {
-    outDir: resolve(__dirname, "www", name),
+    outDir: resolve(__dirname, "dist"),
   },
   plugins:
     command === "serve"
