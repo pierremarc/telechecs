@@ -6,4 +6,5 @@ const join = (...parts: string[]) => {
   return parts.join(separator).replace(replace, separator);
 };
 
-export const basedPath = (...path: string[]) => join(basePath, ...path);
+export const basedPath = (...path: string[]) =>
+  path.length > 1 ? join(basePath, ...path) : path;
