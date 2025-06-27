@@ -4,6 +4,7 @@ import {
   moveCastle,
   moveEnPassant,
   moveNormal,
+  Nullable,
   Role,
   roleToUCILetter,
   Square,
@@ -202,12 +203,21 @@ const chessjsMoveToMove = (
   );
 };
 
+export const lastMove = (gameMoves: string): Nullable<Move> => {
+  const moves = getMoveListFromMoveString(gameMoves);
+  if (moves.length > 0) {
+    return moves[moves.length - 1];
+  }
+  return null;
+};
+
 export const lastMoveSan = (gameMoves: string): string => {
   const game = new Chess();
   uciMoveList(gameMoves).forEach((uci) => game.move(uciToObj(uci)));
   const hist = game.history();
   return hist.length > 0 ? hist[hist.length - 1] : "";
 };
+
 export const getPGN = (gameMoves: string): string => {
   const game = new Chess();
   // TODO: game.setHeader()...

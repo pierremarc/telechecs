@@ -1,6 +1,7 @@
 import { emptyElement } from "../lib/dom";
 import { DIV } from "../lib/html";
 import { message, Message, Nullable } from "../lib/ucui/types";
+import { playSound } from "../sound";
 import { assign, get, subscribe } from "../store";
 import { button } from "./buttons";
 
@@ -42,5 +43,7 @@ export const mountChat = (root: HTMLElement) => {
   });
 };
 
-export const chatbox = (from: string, body: string) =>
+export const chatbox = (from: string, body: string) => {
   assign("lichess/chat", message(from, body));
+  playSound("challenge");
+};

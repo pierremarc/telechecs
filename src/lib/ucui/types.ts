@@ -199,6 +199,17 @@ export const getMoveFrom = (move: Move): Square => {
       return move.from;
   }
 };
+export const getMoveCapture = (move: Move): boolean => {
+  switch (move._tag) {
+    case "Castle": {
+      return false;
+    }
+    case "EnPassant":
+      return true;
+    case "Normal":
+      return move.capture !== null;
+  }
+};
 
 export const moveToUCI = (move: Move): string => {
   const parts = [

@@ -1,11 +1,23 @@
 import { attrs } from "./lib/dom";
 import { AUDIO } from "./lib/html";
-import { basedPath } from "./env";
+// import { basedPath } from "./env";
 
-const soundUrl = basedPath("chess.ogg");
-const audio = attrs(AUDIO("-", soundUrl), (set) => set("preload", "auto"));
-document.body.append(audio);
+// const soundUrl = basedPath("chess.ogg");
 
-export const playSound = () => {
-  audio.play();
+const makeAudio = (path: string) => {
+  const audio = attrs(AUDIO("-", path), (set) => set("preload", "auto"));
+  document.body.append(audio);
+  return audio;
+};
+
+const sounds = {
+  move: makeAudio("/lichess-sounds/Move.ogg"),
+  capture: makeAudio("/lichess-sounds/Capture.ogg"),
+  challenge: makeAudio("/lichess-sounds/NewChallenge.ogg"),
+};
+
+type Sound = keyof typeof sounds;
+
+export const playSound = (key: Sound) => {
+  sounds[key].play();
 };
