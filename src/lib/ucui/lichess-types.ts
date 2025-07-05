@@ -19,19 +19,19 @@ export const SourceZ = z.union([
 ]);
 
 export const StatusZ = z.union([
-  z.strictObject({ id: z.literal(10), name: z.literal("created") }),
-  z.strictObject({ id: z.literal(20), name: z.literal("started") }),
-  z.strictObject({ id: z.literal(25), name: z.literal("aborted") }),
-  z.strictObject({ id: z.literal(30), name: z.literal("mate") }),
-  z.strictObject({ id: z.literal(31), name: z.literal("resign") }),
-  z.strictObject({ id: z.literal(32), name: z.literal("stalemate") }),
-  z.strictObject({ id: z.literal(33), name: z.literal("timeout") }),
-  z.strictObject({ id: z.literal(34), name: z.literal("draw") }),
-  z.strictObject({ id: z.literal(35), name: z.literal("outoftime") }),
-  z.strictObject({ id: z.literal(36), name: z.literal("cheat") }),
-  z.strictObject({ id: z.literal(37), name: z.literal("noStart") }),
-  z.strictObject({ id: z.literal(38), name: z.literal("unknownFinish") }),
-  z.strictObject({ id: z.literal(60), name: z.literal("variantEnd") }),
+  z.object({ id: z.literal(10), name: z.literal("created") }),
+  z.object({ id: z.literal(20), name: z.literal("started") }),
+  z.object({ id: z.literal(25), name: z.literal("aborted") }),
+  z.object({ id: z.literal(30), name: z.literal("mate") }),
+  z.object({ id: z.literal(31), name: z.literal("resign") }),
+  z.object({ id: z.literal(32), name: z.literal("stalemate") }),
+  z.object({ id: z.literal(33), name: z.literal("timeout") }),
+  z.object({ id: z.literal(34), name: z.literal("draw") }),
+  z.object({ id: z.literal(35), name: z.literal("outoftime") }),
+  z.object({ id: z.literal(36), name: z.literal("cheat") }),
+  z.object({ id: z.literal(37), name: z.literal("noStart") }),
+  z.object({ id: z.literal(38), name: z.literal("unknownFinish") }),
+  z.object({ id: z.literal(60), name: z.literal("variantEnd") }),
 ]);
 
 export const SpeedZ = z.union([
@@ -43,21 +43,21 @@ export const SpeedZ = z.union([
   z.literal("correspondence"),
 ]);
 
-export const GameEventOpponentZ = z.strictObject({
+export const GameEventOpponentZ = z.object({
   id: z.string(),
   username: z.string(),
   rating: z.number(),
   ratingDiff: z.number().optional(),
 });
 
-export const GameEventOpponentAIZ = z.strictObject({
+export const GameEventOpponentAIZ = z.object({
   id: z.string().nullable(),
   username: z.string(),
   rating: z.number().optional(),
   ai: z.number(),
 });
 
-export const GameCompatZ = z.strictObject({
+export const GameCompatZ = z.object({
   bot: z.boolean(),
   board: z.boolean(),
 });
@@ -75,12 +75,12 @@ export const VariantKeyZ = z.union([
   z.literal("fromPosition"),
 ]);
 
-export const VariantZ = z.strictObject({
+export const VariantZ = z.object({
   key: VariantKeyZ,
   name: z.string(),
   short: z.string().optional(),
 });
-export const GameEventInfoZ = z.strictObject({
+export const GameEventInfoZ = z.object({
   id: z.string(),
   fullId: z.string(),
   gameId: z.string(),
@@ -103,12 +103,12 @@ export const GameEventInfoZ = z.strictObject({
   tournamentId: z.string().optional(),
 });
 
-export const GameStartEventZ = z.strictObject({
+export const GameStartEventZ = z.object({
   type: z.literal("gameStart"),
   game: GameEventInfoZ,
 });
 
-export const GameFinishEventZ = z.strictObject({
+export const GameFinishEventZ = z.object({
   type: z.literal("gameFinish"),
   game: GameEventInfoZ,
 });
@@ -121,7 +121,7 @@ export const ChallengeStatusZ = z.union([
   z.literal("accepted"),
 ]);
 
-export const ChallengeUserZ = z.strictObject({
+export const ChallengeUserZ = z.object({
   id: z.string(),
   name: z.string(),
   rating: z.number(),
@@ -133,24 +133,24 @@ export const ChallengeUserZ = z.strictObject({
   lag: z.number().optional(),
 });
 
-const RealTimeZ = z.strictObject({
+const RealTimeZ = z.object({
   type: z.literal("clock"),
   limit: z.number(),
   increment: z.number(),
   show: z.string(),
 });
 
-const CorrespondenceZ = z.strictObject({
+const CorrespondenceZ = z.object({
   type: z.literal("correspondence"),
   daysPerTurn: z.number(),
 });
-const UnlimitedZ = z.strictObject({
+const UnlimitedZ = z.object({
   type: z.literal("unlimited"),
 });
 
 export const TimeControlZ = z.union([RealTimeZ, CorrespondenceZ, UnlimitedZ]);
 
-export const ChallengeJsonZ = z.strictObject({
+export const ChallengeJsonZ = z.object({
   id: z.string(),
   url: z.url(),
   status: ChallengeStatusZ,
@@ -162,7 +162,7 @@ export const ChallengeJsonZ = z.strictObject({
   timeControl: TimeControlZ,
   color: z.union([ColorZ, z.literal("random")]),
   finalColor: ColorZ,
-  perf: z.strictObject({ icon: z.string(), name: z.string() }),
+  perf: z.object({ icon: z.string(), name: z.string() }),
   direction: z.union([z.literal("in"), z.literal("out")]).optional(),
   initialFen: z.string().optional(),
   rematchOf: z.string().optional(), // not documented
@@ -201,10 +201,10 @@ export const GameStatusNameZ = z.union([
   z.literal("variantEnd"),
 ]);
 
-export const ChallengeAIJsonZ = z.strictObject({
+export const ChallengeAIJsonZ = z.object({
   id: z.string(),
   fullId: z.string(),
-  status: z.strictObject({ id: z.int(), name: GameStatusNameZ }),
+  status: z.object({ id: z.int(), name: GameStatusNameZ }),
   variant: VariantZ,
   rated: z.boolean(),
   speed: SpeedZ,
@@ -217,13 +217,13 @@ export const ChallengeAIJsonZ = z.strictObject({
   player: ColorZ.optional(),
 });
 
-export const ChallengeEventZ = z.strictObject({
+export const ChallengeEventZ = z.object({
   type: z.literal("challenge"),
   challenge: ChallengeJsonZ,
   compat: GameCompatZ.optional(),
 });
 
-export const ChallengeCanceledEventZ = z.strictObject({
+export const ChallengeCanceledEventZ = z.object({
   type: z.literal("challengeCanceled"),
   challenge: ChallengeJsonZ,
   compat: GameCompatZ.optional(),
@@ -248,7 +248,7 @@ const ChallengeDeclinedJsonZ = ChallengeJsonZ.extend({
   declineReasonKey: DeclineReasonZ,
 });
 
-export const ChallengeDeclinedEventZ = z.strictObject({
+export const ChallengeDeclinedEventZ = z.object({
   type: z.literal("challengeDeclined"),
   challenge: ChallengeDeclinedJsonZ,
   compat: GameCompatZ.optional(),
@@ -262,7 +262,7 @@ export const StreamEventZ = z.union([
   ChallengeDeclinedEventZ,
 ]);
 
-export const ChallengeListZ = z.strictObject({
+export const ChallengeListZ = z.object({
   in: ChallengeJsonZ.array(),
   out: ChallengeJsonZ.array(),
 });
@@ -275,7 +275,7 @@ export const RulesZ = z.union([
   z.literal("noEarlyDraw"),
 ]);
 
-export const RequestChallengeCreateClockZ = z.strictObject({
+export const RequestChallengeCreateClockZ = z.object({
   rated: z.boolean(),
   "clock.limit": z.int(),
   "clock.increment": z.int(),
@@ -286,7 +286,7 @@ export const RequestChallengeCreateClockZ = z.strictObject({
   rules: RulesZ.optional(),
 });
 
-export const RequestSeekClockZ = z.strictObject({
+export const RequestSeekClockZ = z.object({
   time: z.int(),
   increment: z.int(),
   rated: z.boolean().optional(),
@@ -295,7 +295,7 @@ export const RequestSeekClockZ = z.strictObject({
   ratingRange: z.string().optional(),
 });
 
-export const ResponseIdZ = z.strictObject({ id: z.string() });
+export const ResponseIdZ = z.object({ id: z.string() });
 
 export const CorrespondenceDaysZ = z.union([
   z.literal(1),
@@ -308,7 +308,7 @@ export const CorrespondenceDaysZ = z.union([
   z.literal(14),
 ]);
 
-export const RequesChallengeCreateCorrespondenceZ = z.strictObject({
+export const RequesChallengeCreateCorrespondenceZ = z.object({
   rated: z.boolean(),
   days: CorrespondenceDaysZ,
   color: z.union([ColorZ, z.literal("random")]),
@@ -323,7 +323,7 @@ export const RequesChallengeCreateZ = z.union([
   RequesChallengeCreateCorrespondenceZ,
 ]);
 
-export const RequesChallengeCreateAIZ = z.strictObject({
+export const RequesChallengeCreateAIZ = z.object({
   "clock.limit": z.int(),
   "clock.increment": z.int(),
   color: z.union([ColorZ, z.literal("random")]),
@@ -340,16 +340,16 @@ export const RequesChallengeCreateAIZ = z.strictObject({
     z.literal(8),
   ]),
 });
-export const ResponseOkZ = z.strictObject({
+export const ResponseOkZ = z.object({
   ok: z.boolean(),
 });
 
-export const ClockZ = z.strictObject({
+export const ClockZ = z.object({
   initial: z.int(),
   increment: z.int(),
 });
 
-export const PerfNameZ = z.strictObject({ name: z.string() });
+export const PerfNameZ = z.object({ name: z.string() });
 
 export const TitleZ = z.union([
   z.literal("GM"),
@@ -366,7 +366,7 @@ export const TitleZ = z.union([
   z.literal("BOT"),
 ]);
 
-export const GameEventPlayerNormalZ = z.strictObject({
+export const GameEventPlayerNormalZ = z.object({
   id: z.string(),
   name: z.string(),
   title: TitleZ.nullable(),
@@ -374,7 +374,7 @@ export const GameEventPlayerNormalZ = z.strictObject({
   provisional: z.boolean().optional(),
 });
 
-export const GameEventPlayerAIZ = z.strictObject({
+export const GameEventPlayerAIZ = z.object({
   aiLevel: z.int(),
 });
 
@@ -383,7 +383,7 @@ export const GameEventPlayerZ = z.union([
   GameEventPlayerAIZ,
 ]);
 
-export const GameStateEventZ = z.strictObject({
+export const GameStateEventZ = z.object({
   type: z.literal("gameState"),
   moves: z.string(),
   wtime: z.int(),
@@ -398,7 +398,7 @@ export const GameStateEventZ = z.strictObject({
   btakeback: z.boolean().optional(),
 });
 
-export const GameFullEventZ = z.strictObject({
+export const GameFullEventZ = z.object({
   type: z.literal("gameFull"),
   id: z.string(),
   variant: VariantZ,
@@ -414,14 +414,14 @@ export const GameFullEventZ = z.strictObject({
   tournamentId: z.string().optional(),
 });
 
-export const ChatLineEventZ = z.strictObject({
+export const ChatLineEventZ = z.object({
   type: z.literal("chatLine"),
   room: z.union([z.literal("player"), z.literal("spectator")]),
   username: z.string(),
   text: z.string(),
 });
 
-export const OpponentGoneEventZ = z.strictObject({
+export const OpponentGoneEventZ = z.object({
   type: z.literal("opponentGone"),
   gone: z.boolean(),
   claimWinInSeconds: z.int(),
@@ -434,13 +434,13 @@ export const BoardEventZ = z.union([
   OpponentGoneEventZ,
 ]);
 
-export const BoardMoveZ = z.strictObject({
+export const BoardMoveZ = z.object({
   gameId: z.string(),
   move: z.string(),
   offeringDraw: z.boolean().optional(),
 });
 
-export const PerfZ = z.strictObject({
+export const PerfZ = z.object({
   games: z.int(),
   rating: z.int(),
   rd: z.int(),
@@ -448,7 +448,7 @@ export const PerfZ = z.strictObject({
   prov: z.boolean().optional(),
 });
 
-export const PerfsZ = z.strictObject({
+export const PerfsZ = z.object({
   chess960: PerfZ.optional(),
   atomic: PerfZ.optional(),
   racingKings: PerfZ.optional(),
@@ -469,7 +469,7 @@ export const PerfsZ = z.strictObject({
   streak: PerfZ.optional(),
 });
 
-export const ProfileZ = z.strictObject({
+export const ProfileZ = z.object({
   flag: z.string().optional(),
   location: z.string().optional(),
   bio: z.string().optional(),
@@ -483,7 +483,7 @@ export const ProfileZ = z.strictObject({
   links: z.string().optional(),
 });
 
-export const PlayTimeZ = z.strictObject({
+export const PlayTimeZ = z.object({
   total: z.int(),
   tv: z.int(),
 });
@@ -505,7 +505,7 @@ export const UserZ = z.object({
   verified: z.boolean().optional(),
 });
 
-export const RealTimeUserStatusZ = z.strictObject({
+export const RealTimeUserStatusZ = z.object({
   id: z.string(),
   name: z.string(),
   flair: z.string().optional(),
@@ -516,7 +516,7 @@ export const RealTimeUserStatusZ = z.strictObject({
   patron: z.boolean().optional(),
 });
 
-export const RealTimeUserStatusRequestZ = z.strictObject({
+export const RealTimeUserStatusRequestZ = z.object({
   ids: z.string(),
   withSignal: z.boolean().optional(),
   withGameIds: z.boolean().optional(),
@@ -529,32 +529,32 @@ export const ArenaStatusZ = z.union([
   z.literal(30), // finished
 ]);
 
-export const ArenaPerfZ = z.strictObject({
+export const ArenaPerfZ = z.object({
   key: PerfTypeZ,
   name: z.string(),
   position: z.int(),
   icon: z.string().optional(),
 });
 
-export const ArenaRatingObjZ = z.strictObject({
+export const ArenaRatingObjZ = z.object({
   perf: PerfTypeZ.optional(),
   rating: z.int(),
 });
 
-export const ThematicZ = z.strictObject({
+export const ThematicZ = z.object({
   eco: z.string().optional(),
   name: z.string(),
   fen: z.string(),
   url: z.string().optional(),
 });
-export const CustomPositionZ = z.strictObject({
+export const CustomPositionZ = z.object({
   name: z.string(),
   fen: z.string(),
 });
 
 export const ArenaPositionZ = z.union([ThematicZ, CustomPositionZ]);
 
-export const LightUserZ = z.strictObject({
+export const LightUserZ = z.object({
   id: z.string(),
   name: z.string(),
   flair: z.string().optional(),
@@ -562,12 +562,12 @@ export const LightUserZ = z.strictObject({
   patron: z.boolean().optional(),
 });
 
-export const ArenaClockZ = z.strictObject({
+export const ArenaClockZ = z.object({
   limit: z.int(),
   increment: z.int(),
 });
 
-export const ArenaTournamentZ = z.strictObject({
+export const ArenaTournamentZ = z.object({
   id: z.string(),
   createdBy: z.string(),
   system: z.literal("arena"),
@@ -586,7 +586,7 @@ export const ArenaTournamentZ = z.strictObject({
   hasMaxRating: z.boolean().optional(),
   maxRating: ArenaRatingObjZ.optional(),
   minRating: ArenaRatingObjZ.optional(),
-  minRatedGames: z.strictObject({ nb: z.int() }).optional(),
+  minRatedGames: z.object({ nb: z.int() }).optional(),
   botsAllowed: z.boolean().optional(),
   minAccountAgeInDays: z.int().optional(),
   onlyTitled: z.boolean().optional(),
@@ -608,7 +608,7 @@ export const ArenaTournamentZ = z.strictObject({
   winner: LightUserZ.optional(),
 });
 
-export const ArenaTournamentResponseZ = z.strictObject({
+export const ArenaTournamentResponseZ = z.object({
   created: ArenaTournamentZ.array(),
   started: ArenaTournamentZ.array(),
   finished: ArenaTournamentZ.array(),

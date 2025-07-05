@@ -1,5 +1,6 @@
 import { attrs } from "./lib/dom";
 import { AUDIO } from "./lib/html";
+import { chatbox } from "./view/chat";
 // import { basedPath } from "./env";
 
 // const soundUrl = basedPath("chess.ogg");
@@ -19,5 +20,9 @@ const sounds = {
 type Sound = keyof typeof sounds;
 
 export const playSound = (key: Sound) => {
-  sounds[key].play();
+  sounds[key]
+    .play()
+    .catch((err) =>
+      chatbox("Téléchecs", `Could not play a sound because of: ${err}`)
+    );
 };
