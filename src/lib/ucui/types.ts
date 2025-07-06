@@ -82,6 +82,28 @@ export const squareRanks: SquareRank[] = [
   "7",
   "8",
 ];
+
+export const invertRank = (r: SquareRank): SquareRank => {
+  switch (r) {
+    case "1":
+      return "8";
+    case "2":
+      return "7";
+    case "3":
+      return "6";
+    case "4":
+      return "5";
+    case "5":
+      return "4";
+    case "6":
+      return "3";
+    case "7":
+      return "2";
+    case "8":
+      return "1";
+  }
+};
+
 export const getFile = (s: Square) => s[0] as SquareFile;
 export const getRank = (s: Square) => s[1] as SquareRank;
 export const makeSquare = (f: SquareFile, r: SquareRank) => (f + r) as Square;

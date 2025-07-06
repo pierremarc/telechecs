@@ -472,12 +472,30 @@
   color: #888;
   text-decoration: none;
 }
+.movelist .position .pos-details .top {
+  margin-left: -0.5em;
+  margin-top: 1em;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+.movelist .position .pos-details .top .r {
+  line-height: 10vw;
+  width: 1em;
+  flex-shrink: 0;
+  color: #888;
+}
+.movelist .position .pos-details .f {
+  margin-left: 0.5em;
+  width: 10vw;
+  text-align: center;
+  color: #888;
+}
 .movelist .position .board {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: center;
-  margin: 1em;
 }
 .movelist .position .board .rank {
   display: flex;

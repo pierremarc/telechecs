@@ -87,7 +87,12 @@ const makeMoves = map((state: GameStateEvent) =>
 
 const makePosition = map((state: GameStateEvent) => {
   const board = renderBoard(fenFromUciMoves(state.moves));
-  return DETAILS("pos-details", "Position", board);
+  return DETAILS(
+    "pos-details",
+    "Position",
+    DIV("top", DIV("r", "1"), board),
+    DIV("f", "a")
+  );
 });
 
 const renderResign = (info: GameEventInfo) =>

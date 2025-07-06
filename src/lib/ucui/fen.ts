@@ -23,6 +23,7 @@ import {
   squareFiles,
   squareRanks,
   makeSquare,
+  invertRank,
 } from "./types";
 
 const rolesIds: [string, Role][] = [
@@ -71,7 +72,9 @@ export const fenToRanks = <R>(fen: string, proc: OccupProc<R>): R[][] => {
         }
         current += n;
       });
-      return squareFiles.map<R>((f, fi) => proc(makeSquare(f, r), occups[fi]));
+      return squareFiles.map<R>((f, fi) =>
+        proc(makeSquare(f, invertRank(r)), occups[fi])
+      );
     });
   } catch (error) {
     console.error("Failed to procees FEN", error);

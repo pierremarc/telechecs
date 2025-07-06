@@ -619,13 +619,34 @@
   }
 
   .position {
+    .pos-details {
+      .top {
+        margin-left: -0.5em;
+        margin-top: 1em;
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        .r {
+          line-height: @square-size;
+          width: 1em;
+          flex-shrink: 0;
+          color: @text-grey;
+        }
+      }
+      .f {
+        margin-left: 0.5em;
+        width: @square-size;
+        text-align: center;
+        color: @text-grey;
+      }
+    }
     .board {
       @square-size: 36px;
       display: flex;
       flex-direction: column;
       flex-wrap: nowrap;
       align-items: center;
-      margin: 1em;
+      // margin: 1em;
 
       .rank {
         display: flex;
