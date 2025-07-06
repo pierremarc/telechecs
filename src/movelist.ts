@@ -1,6 +1,7 @@
 import { boardDraw, boardResign } from "./api";
+import { renderBoard } from "./board";
 import { events } from "./lib/dom";
-import { DIV, replaceNodeContent, H2, SPAN } from "./lib/html";
+import { DIV, replaceNodeContent, H2, SPAN, DETAILS } from "./lib/html";
 import { fromNullable, map, orElse, pipe2 } from "./lib/option";
 import { GameEventInfo, GameStateEvent } from "./lib/ucui/lichess-types";
 import { Move } from "./lib/ucui/types";
@@ -14,7 +15,7 @@ import {
   getTurn,
   subscribe,
 } from "./store";
-import { legalMoves } from "./util";
+import { fenFromUciMoves, legalMoves } from "./util";
 import { navigateHome } from "./view/buttons";
 import { renderWinner } from "./view/end";
 
@@ -84,6 +85,11 @@ const makeMoves = map((state: GameStateEvent) =>
   })
 );
 
+const makePosition = map((state: GameStateEvent) => {
+  const board = renderBoard(fenFromUciMoves(state.moves));
+  return DETAILS("pos-details", "Position", board);
+});
+
 const renderResign = (info: GameEventInfo) =>
   events(DIV("button", "Resign"), (add) =>
     add("click", () => boardResign(info.gameId))
@@ -139,16 +145,30 @@ export const mountMoveList = (root: HTMLElement) => {
       orElse([DIV("no-moves")])
     )
   );
+
+  const board = DIV(
+    "position",
+    pipe2(
+      fromNullable(get("lichess/game-state")),
+      makePosition,
+      orElse(DIV("no-board"))
+    )
+  );
+
   const header = DIV("header", ...renderHeader());
   const actions = DIV("actions", ...renderActions());
   const outcome = DIV("outcome", renderOutcome());
-  root.append(DIV("movelist", header, DIV("listing", moves), outcome, actions));
+  root.append(
+    DIV("movelist", header, DIV("listing", moves), outcome, board, actions)
+  );
 
   const replaceMoves = replaceNodeContent(moves);
+  const replaceBoard = replaceNodeContent(board);
   const replaceOutcome = replaceNodeContent(outcome);
   const replaceActions = replaceNodeContent(actions);
   const replaceHeader = replaceNodeContent(header);
   const subList = subscribe("lichess/game-state");
+  const subBoard = subscribe("lichess/game-state");
   const onInfoChanged = subscribe("started", "lichess/game-info");
 
   subList(() => {
@@ -160,6 +180,17 @@ export const mountMoveList = (root: HTMLElement) => {
       )
     );
   });
+
+  subBoard(() => {
+    replaceBoard(
+      pipe2(
+        fromNullable(get("lichess/game-state")),
+        makePosition,
+        orElse(DIV("no-board"))
+      )
+    );
+  });
+
   onInfoChanged(() => {
     replaceHeader(...renderHeader());
     replaceActions(...renderActions());

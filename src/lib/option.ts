@@ -45,8 +45,8 @@ export const alt =
     isSome(o) ? none : some(f());
 
 export const orElse =
-  <T>(value: T) =>
-  (o: Option<T>) =>
+  <O, T>(value: T) =>
+  (o: Option<O>) =>
     isNone(o) ? value : o.value;
 
 export const orElseL =

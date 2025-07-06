@@ -472,6 +472,25 @@
   color: #888;
   text-decoration: none;
 }
+.movelist .position .board {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  margin: 1em;
+}
+.movelist .position .board .rank {
+  display: flex;
+  width: calc(8 * 36px);
+}
+.movelist .position .board .rank .square {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  font-size: calc(36px * 0.7);
+  background: none;
+}
 .history {
   margin: 2em;
 }

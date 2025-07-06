@@ -617,6 +617,31 @@
       }
     }
   }
+
+  .position {
+    .board {
+      @square-size: 36px;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: center;
+      margin: 1em;
+
+      .rank {
+        display: flex;
+        width: calc(8 * @square-size);
+
+        .square {
+          width: @square-size;
+          height: @square-size;
+          line-height: @square-size;
+          text-align: center;
+          font-size: calc(@square-size * 0.7);
+          background: none;
+        }
+      }
+    }
+  }
 }
 
 .history {

@@ -163,6 +163,12 @@ export const legalMovesForRole = (role: Role, gameMoves: string): Move[] => {
     });
 };
 
+export const fenFromUciMoves = (gameMoves: string) => {
+  const game = new Chess();
+  uciMoveList(gameMoves).forEach((uci) => game.move(uciToObj(uci)));
+  return game.fen();
+};
+
 const chessjsMoveToMove = (
   m: ChessJSMove,
   check: boolean,
