@@ -424,7 +424,7 @@ export const ChatLineEventZ = z.object({
 export const OpponentGoneEventZ = z.object({
   type: z.literal("opponentGone"),
   gone: z.boolean(),
-  claimWinInSeconds: z.int(),
+  claimWinInSeconds: z.int().optional(),
 });
 
 export const BoardEventZ = z.union([

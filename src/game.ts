@@ -12,7 +12,7 @@ import {
   challengeDecline,
 } from "./api";
 import { mountClock } from "./view/clock";
-import { mountOpponent } from "./opponent";
+import { mountOpponent } from "./view/opponent";
 import { mountInput } from "./input-san";
 import {
   assign,

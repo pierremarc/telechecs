@@ -27,6 +27,8 @@ import {
   SeekRequest,
   TournamentJoin,
   Message,
+  VictoryClaim,
+  nullable,
 } from "./lib/ucui/types";
 import { isPrivateIP } from "./lib/util";
 import { UserConfig } from "./lib/ucui/types";
@@ -77,12 +79,12 @@ export const defaultMoveList = (): MoveHist[] => [];
 export const defaultEcoList = (): Eco[] => [];
 
 let state = {
-  lang: null as Nullable<Lang>,
+  lang: nullable<Lang>(),
   screen: defaultScreen(),
-  clock: null as Nullable<ClockState>,
+  clock: nullable<ClockState>(),
   input: defaultInput(),
-  "input-san/file": null as Nullable<SquareFile>,
-  "input-san/rank": null as Nullable<SquareRank>,
+  "input-san/file": nullable<SquareFile>(),
+  "input-san/rank": nullable<SquareRank>(),
   started: false,
   lockScreen: false,
   online: true,
@@ -92,22 +94,21 @@ let state = {
   "lichess/host": import.meta.env.PROD
     ? "https://lichess.org"
     : "http://localhost:8080",
-  "lichess/user": null as Nullable<UserConfig>,
+  "lichess/user": nullable<UserConfig>(),
   "lichess/stream-events": [] as StreamEvent[],
   "lichess/challenges": [] as ChallengeJson[],
-  "lichess/current-challenge": null as Nullable<ChallengeJson>,
-  "lichess/my-challenge": null as Nullable<ChallengeJson>,
-  "lichess/game-info": null as Nullable<GameEventInfo>,
-  "lichess/game-state": null as Nullable<
-    GameStateEvent & { timestamp: number }
-  >,
-  "lichess/opponent": null as Nullable<User | LichessAI>,
+  "lichess/current-challenge": nullable<ChallengeJson>(),
+  "lichess/my-challenge": nullable<ChallengeJson>(),
+  "lichess/game-info": nullable<GameEventInfo>(),
+  "lichess/game-state": nullable<GameStateEvent & { timestamp: number }>(),
+  "lichess/opponent": nullable<User | LichessAI>(),
   "lichess/following": [] as User[],
-  "lichess/chat": null as Nullable<Message>,
-  "lichess/seek": null as Nullable<SeekRequest>,
+  "lichess/chat": nullable<Message>(),
+  "lichess/seek": nullable<SeekRequest>(),
   "lichess/arena-created": [] as ArenaTournament[],
   "lichess/arena-started": [] as ArenaTournament[],
-  "lichess/arena-join": null as Nullable<TournamentJoin>,
+  "lichess/arena-join": nullable<TournamentJoin>(),
+  "lichess/claim": nullable<VictoryClaim>(),
 };
 
 export type State = typeof state;

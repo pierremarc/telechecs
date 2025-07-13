@@ -110,6 +110,8 @@ export const makeSquare = (f: SquareFile, r: SquareRank) => (f + r) as Square;
 
 export type Nullable<T> = T | null;
 
+export const nullable = <T>(): Nullable<T> => null;
+
 export type MoveEffect = {
   check: boolean;
   checkmate: boolean;
@@ -546,3 +548,10 @@ export const message = (from: string, body: string): Message =>
 
 export const messageFromChatEvent = ({ username, text }: ChatLineEvent) =>
   message(username, text);
+
+export type VictoryClaim = {
+  readonly _tag: "claim";
+  at: number;
+};
+
+export const claim = (at: number): VictoryClaim => ({ _tag: "claim", at });

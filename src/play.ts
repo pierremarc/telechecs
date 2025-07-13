@@ -3,9 +3,11 @@ import {
   ChatLineEvent,
   GameFullEvent,
   GameStateEvent,
+  OpponentGoneEvent,
 } from "./lib/ucui/lichess-types";
 import {
   Move,
+  claim,
   getMoveCapture,
   inputNone,
   messageFromChatEvent,
@@ -18,6 +20,7 @@ import { playSound } from "./sound";
 import { assign, get, getPlayerColor, getTurn, withBatch } from "./store";
 import { lastMove } from "./util";
 import { fromNullable, map } from "./lib/option";
+import { chatbox } from "./view/chat";
 
 const handleStart = (message: GameFullEvent) =>
   withBatch(({ assign, end }) => {
@@ -53,6 +56,18 @@ const handleChat = (message: ChatLineEvent) => {
   return true;
 };
 
+const handleGone = (event: OpponentGoneEvent) => {
+  if (event.gone && event.claimWinInSeconds !== undefined) {
+    assign("lichess/claim", claim(Date.now() + event.claimWinInSeconds * 1000));
+    // chatbox("Lichess", `Your opponent is gone`); // TODO: translation
+  } else if (!event.gone) {
+    assign("lichess/claim", null);
+    chatbox("Lichess", `Your opponent is back!`); // TODO: translation
+  }
+
+  return true;
+};
+
 const handleIcoming = (event: BoardEvent) => {
   switch (event.type) {
     case "gameFull":
@@ -62,7 +77,7 @@ const handleIcoming = (event: BoardEvent) => {
     case "chatLine":
       return handleChat(event);
     case "opponentGone":
-      return true;
+      return handleGone(event);
   }
 };
 

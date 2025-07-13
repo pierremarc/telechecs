@@ -3,9 +3,9 @@ import { emptyElement } from "../lib/dom";
 import { AcNode, DETAILS, DIV, H1, replaceNodeContent } from "../lib/html";
 import { ArenaTournament } from "../lib/ucui/lichess-types";
 import { TournamentJoin } from "../lib/ucui/types";
-import { padStart } from "../lib/util";
 import tr from "../locale";
 import { assign, get, subscribe } from "../store";
+import { formatRemaining } from "../util";
 import { button, navigateHome, name, navigate } from "./buttons";
 import { chatbox } from "./chat";
 
@@ -103,22 +103,9 @@ const renderTournament = (t: ArenaTournament) =>
     ...renderTournamentDetails(t)
   );
 
-const formatRemaining = (rem: number) => {
-  const hours = Math.floor(rem / (60 * 60));
-  const remWithoutHours = rem - hours * 60 * 60;
-  const minutes = Math.floor(remWithoutHours / 60);
-  const seconds = Math.floor(remWithoutHours - minutes * 60);
-  return DIV(
-    "remaining",
-    [hours, minutes, seconds]
-      .map((t) => padStart(t.toString(), 2, "0"))
-      .join(":")
-  );
-};
-
 const renderTournamentCreated = (t: ArenaTournament) => {
   const start = t.startsAt;
-  const countdown = DIV("join");
+  const countdown = DIV("countdown");
   const joinButton = DIV("join", countdown);
   const updateCountdown = () => {
     if (get("screen") !== "arena" && interval !== null) {

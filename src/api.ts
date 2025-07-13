@@ -357,3 +357,12 @@ export const postArenaTournamentLeave = (id: string) => {
     pairMeAsap: true,
   });
 };
+
+/**
+ * doc: https://lichess.org/api#tag/Board/operation/boardGameClaimVictory
+ * path: /board/game/{gameId}/claim-victory
+ */
+export const postVictoryClaim = (gameId: string) => {
+  const post = getPoster();
+  return post(ResponseOkZ, apiUrl(`/board/game/${gameId}/claim-victory`), {});
+};

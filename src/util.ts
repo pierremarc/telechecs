@@ -1,4 +1,4 @@
-import { addClass, removeClass } from "./lib/html";
+import { addClass, DIV, removeClass } from "./lib/html";
 import {
   Move,
   moveCastle,
@@ -11,6 +11,7 @@ import {
   uciLetterToRole,
 } from "./lib/ucui/types";
 import { Chess, Move as ChessJSMove } from "chess.js";
+import { padStart } from "./lib/util";
 
 export const ROLE_LIST: Role[] = [
   "Pawn",
@@ -244,3 +245,15 @@ export const getMoveListFromMoveString = (gameMoves: string): Move[] => {
 };
 
 export const noop = () => void 0;
+export const formatRemaining = (rem: number) => {
+  const hours = Math.floor(rem / (60 * 60));
+  const remWithoutHours = rem - hours * 60 * 60;
+  const minutes = Math.floor(remWithoutHours / 60);
+  const seconds = Math.floor(remWithoutHours - minutes * 60);
+  return DIV(
+    "remaining",
+    [hours, minutes, seconds]
+      .map((t) => padStart(t.toString(), 2, "0"))
+      .join(":")
+  );
+};

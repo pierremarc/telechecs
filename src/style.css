@@ -115,6 +115,10 @@
 .engine .to-list {
   right: 0;
 }
+.engine .gone {
+  font-size: xx-large;
+  color: #a2a2a2;
+}
 .engine .info {
   font-size: medium;
   font-style: italic;
