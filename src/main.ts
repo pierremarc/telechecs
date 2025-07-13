@@ -1,12 +1,5 @@
 import "./style.css";
-import {
-  batch_dispacther,
-  clearSubscriptions,
-  dispatch,
-  get,
-  StateKey,
-  subscribe,
-} from "./store";
+import { clearSubscriptions, get, StateKey, subscribe } from "./store";
 import { mountHome } from "./view/home";
 import { mountGame } from "./game";
 import { screenLocker } from "./lock-screen";
@@ -14,53 +7,16 @@ import { mountMoveList } from "./movelist";
 import { emptyElement } from "./lib/dom";
 import { map, fromNullable } from "./lib/option";
 import { mountEvents } from "./view/events";
-import { connect } from "./play";
 import { mountChallenge } from "./view/challenge";
 import { mountFollowing } from "./view/players";
-import { chatbox, mountChat } from "./view/chat";
+import { mountChat } from "./view/chat";
 import { mountOnline } from "./online";
 import { mountSeek } from "./view/seek";
 import { mountEnd } from "./view/end";
 import { setFullScreenRoot, toggleFullscreen } from "./fullscreen";
 import { initLang } from "./locale";
 import { mountArena, mountArenaPersistent } from "./view/arena";
-
-const monitorStream = () => {
-  const onEvent = subscribe("lichess/stream-events");
-  const { assign, end } = batch_dispacther();
-  onEvent(() => {
-    const events = get("lichess/stream-events");
-    if (events.length > 0) {
-      const lastEvent = events[events.length - 1];
-
-      if (lastEvent.type === "gameStart") {
-        assign("lichess/game-info", lastEvent.game);
-        assign("lichess/challenges", []);
-        assign("screen", "game");
-        connect(lastEvent.game.gameId);
-      } else if (lastEvent.type === "gameFinish") {
-        assign("lichess/current-challenge", null);
-        assign("lichess/game-info", lastEvent.game);
-        // assign("lichess/game-state", null);
-        assign("screen", "end-game");
-      } else if (lastEvent.type === "challenge") {
-        if (lastEvent.challenge.status === "created") {
-          dispatch("lichess/challenges", (cs) =>
-            cs.concat(lastEvent.challenge)
-          );
-          if (get("screen") !== "home") {
-            chatbox(lastEvent.challenge.challenger.name, "Shall we play?"); // TODO translation
-          }
-        }
-      } else if (lastEvent.type === "challengeCanceled") {
-        dispatch("lichess/challenges", (cs) =>
-          cs.filter((c) => c.id === lastEvent.challenge.id)
-        );
-      }
-    }
-    end();
-  });
-};
+import { monitorStream } from "./events";
 
 const main = (root: HTMLElement) => {
   initLang();
