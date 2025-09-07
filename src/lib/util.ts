@@ -135,9 +135,9 @@ export const defaultTimeControls: [number, number][] = [
   [30, 20],
   [40, 30],
   // [50, 0],
-  [60, 60],
-  [90, 60],
-  [120, 60],
+  [60, 30],
+  [90, 30],
+  [120, 30],
 ];
 
 // from https://github.com/behnammodi/polyfill/blob/master/string.polyfill.js
