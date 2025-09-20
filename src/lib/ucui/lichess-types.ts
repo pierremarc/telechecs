@@ -440,6 +440,11 @@ export const BoardMoveZ = z.object({
   offeringDraw: z.boolean().optional(),
 });
 
+export const PuzzleModePerfZ = z.object({
+  runs: z.int(),
+  score: z.int(),
+});
+
 export const PerfZ = z.object({
   games: z.int(),
   rating: z.int(),
@@ -464,9 +469,9 @@ export const PerfsZ = z.object({
   puzzle: PerfZ.optional(),
   classical: PerfZ.optional(),
   rapid: PerfZ.optional(),
-  storm: PerfZ.optional(),
-  racer: PerfZ.optional(),
-  streak: PerfZ.optional(),
+  storm: PuzzleModePerfZ.optional(),
+  racer: PuzzleModePerfZ.optional(),
+  streak: PuzzleModePerfZ.optional(),
 });
 
 export const ProfileZ = z.object({
