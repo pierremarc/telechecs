@@ -70,8 +70,26 @@ const uciToObj = (uci: string): MoveObj => {
   return { from, to, promotion };
 };
 
+const translateCastlingFromChess960ToStandard = (moveString: string) => {
+  switch (moveString) {
+    case "e1h1":
+      return "e1g1";
+    case "e8h8":
+      return "e8g8";
+    case "e1a1":
+      return "e1c1";
+    case "e8a8":
+      return "e8c8";
+    default:
+      return moveString;
+  }
+};
+
 export const uciMoveList = (uciString: string) =>
-  uciString.split(" ").filter((m) => m.trim().length > 0);
+  uciString
+    .split(" ")
+    .filter((m) => m.trim().length > 0)
+    .map(translateCastlingFromChess960ToStandard);
 
 // export const legalMoves = (moves: string, at?: number): Move[] => {
 //   const game = new Chess();
