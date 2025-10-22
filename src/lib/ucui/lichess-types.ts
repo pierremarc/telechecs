@@ -125,7 +125,7 @@ export const ChallengeUserZ = z.object({
   id: z.string(),
   name: z.string(),
   rating: z.number(),
-  title: z.string().nullable(),
+  title: z.string().optional(),
   flair: z.string().optional(),
   patron: z.boolean().optional(),
   provisional: z.boolean().optional(),
