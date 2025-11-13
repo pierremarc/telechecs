@@ -408,6 +408,10 @@
 .home .challenge-block .challenge .actions .button.button-decline {
   color: #888;
 }
+.home .challenge-block .challenge .actions .button.button-accept {
+  font-size: larger;
+  line-height: 3em;
+}
 .home .waiting {
   font-size: small;
   font-style: italic;
