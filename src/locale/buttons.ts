@@ -11,4 +11,12 @@ export default {
     en: "Create a game",
     fr: "Initier une partie",
   },
+  "button/confirm": {
+    en: "Confirm",
+    fr: "Confirmer",
+  },
+  "button/cancel": {
+    en: "Cancel",
+    fr: "Annuler",
+  },
 };

@@ -751,7 +751,7 @@
   color: #888;
 }
 .players-inner .users {
-  max-height: 24vh;
+  max-height: 20vh;
   overflow-y: auto;
   margin-top: 1em;
 }
@@ -1052,4 +1052,31 @@
 }
 .arena-persist.hidden {
   display: none;
+}
+#confirm {
+  display: none;
+}
+#confirm.active {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+}
+#confirm .inner-message {
+  margin: 1em;
+  margin-top: 3em;
+  text-align: center;
+  font-size: large;
+}
+#confirm .inner-buttons {
+  margin: 1em;
+  margin-top: 3em;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-around;
+  font-size: x-large;
+  font-weight: bold;
 }

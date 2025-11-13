@@ -10,8 +10,9 @@ import { ChallengeColor, LichessAI } from "../lib/ucui/types";
 import { defaultTimeControls, padStart } from "../lib/util";
 import tr from "../locale";
 import { assign, get, subscribe } from "../store";
-import { BLACK_KING, WHITE_KING } from "../util";
+import { BLACK_KING, noop, WHITE_KING } from "../util";
 import { button, name, navigateHome } from "./buttons";
+import confirm from "./confirm";
 
 type Challenged = User | LichessAI;
 
@@ -65,14 +66,32 @@ const challengeButton = (
   events(node, (add) =>
     add("click", () => {
       if (isAI(user)) {
-        challengeLichessAI(
-          challengeAI(tc, increment, get("challengeColor"), user.level)
-        ).then((challenge) => assign("lichess/my-challenge", challenge));
+        const message = DIV(
+          "ai-challenge-msg",
+          `Please confirm your challenge to LichessAI #${user.level}`
+        );
+
+        confirm(message)
+          .then(() =>
+            challengeLichessAI(
+              challengeAI(tc, increment, get("challengeColor"), user.level)
+            ).then((challenge) => assign("lichess/my-challenge", challenge))
+          )
+          .catch(noop);
       } else {
-        challengeUser(
-          user.username,
-          challenge(tc, increment, get("challengeColor"))
-        ).then((challenge) => assign("lichess/my-challenge", challenge));
+        const message = DIV(
+          "challenge-msg",
+          `Please confirm your challenge to ${user.username}`
+        );
+
+        confirm(message)
+          .then(() =>
+            challengeUser(
+              user.username,
+              challenge(tc, increment, get("challengeColor"))
+            ).then((challenge) => assign("lichess/my-challenge", challenge))
+          )
+          .catch(noop);
       }
     })
   );

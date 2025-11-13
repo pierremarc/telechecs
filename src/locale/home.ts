@@ -10,7 +10,7 @@ export default {
   },
 
   "home/challenges": {
-    en: "Challenges",
+    en: "Incoming Challenges",
     fr: "Défis",
   },
 
