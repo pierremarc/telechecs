@@ -49,7 +49,7 @@ export const screenLocker = () => {
         })
         .catch((err) => {
           console.error("failed to lock screen", err);
-          chatbox("Téléchecs", `Failed to lock screen: ${err}`);
+          // chatbox("Téléchecs", `Failed to lock screen: ${err}`);
         });
     };
 
