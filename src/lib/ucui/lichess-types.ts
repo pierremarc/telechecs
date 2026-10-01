@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+import { components } from "@lichess-org/types";
 
 export const ColorZ = z.union([z.literal("white"), z.literal("black")]);
 
@@ -619,8 +620,16 @@ export const ArenaTournamentResponseZ = z.object({
   finished: ArenaTournamentZ.array(),
 });
 
-export type Color = z.infer<typeof ColorZ>;
-export type Source = z.infer<typeof SourceZ>;
+type Schema = components['schemas']
+type SchemaKey = keyof Schema
+type CheckCompat<X, K extends SchemaKey> =
+    (<T>() => T extends Schema[K] ? 1 : 2) extends
+    (<T>() => T extends Schema[K] ? 1 : 2) ? X : never;
+
+
+
+export type Color = CheckCompat<z.infer<typeof ColorZ>, 'GameCompat'>;
+export type Source = CheckCompat<z.infer<typeof SourceZ>, 'GameSource'>;
 export type Status = z.infer<typeof StatusZ>;
 export type Speed = z.infer<typeof SpeedZ>;
 export type GameEventOpponent = z.infer<typeof GameEventOpponentZ>;
