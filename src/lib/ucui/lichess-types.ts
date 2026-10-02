@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { components } from "@lichess-org/types";
+import { components, operations } from "@lichess-org/types";
 
 export const ColorZ = z.union([z.literal("white"), z.literal("black")]);
 
@@ -126,7 +126,7 @@ export const ChallengeUserZ = z.object({
   id: z.string(),
   name: z.string(),
   rating: z.number(),
-  title: z.string().optional(),
+  title: z.string().nullable().optional(),
   flair: z.string().optional(),
   patron: z.boolean().optional(),
   provisional: z.boolean().optional(),
@@ -620,37 +620,101 @@ export const ArenaTournamentResponseZ = z.object({
   finished: ArenaTournamentZ.array(),
 });
 
-type Schema = components['schemas']
-type SchemaKey = keyof Schema
-type CheckCompat<X, K extends SchemaKey> =
-    (<T>() => T extends Schema[K] ? 1 : 2) extends
-    (<T>() => T extends Schema[K] ? 1 : 2) ? X : never;
+type Schema = components["schemas"];
+type SchemaKey = keyof Schema;
+type CheckSchema<X, K extends SchemaKey> =
+  (<T>() => T extends Schema[K] ? 1 : 2) extends <T>() => T extends Schema[K]
+    ? 1
+    : 2
+    ? X
+    : never;
 
+type No200 =
+  | "bookmarkToggle"
+  | "apiSwissScheduleNextRound"
+  | "studyAllChaptersHead"
+  | "apiStudyChapterTags"
+  | "apiStudyChapterMoves"
+  | "apiStudyStudyIdChapterIdDelete"
+  | "challengeAi"
+  | "apiTokenDelete";
 
+type FilteredOps = Omit<operations, No200>;
+type OpKey = keyof FilteredOps;
+type ContentType = "application/x-ndjson" | "application/json"|"application/x-chess-pgn";
+type CheckOpContent<X, K extends OpKey, Ct extends ContentType> =
+  (<T>() => T extends FilteredOps[K]["responses"][200]["content"][Ct]
+    ? 1
+    : 2) extends <
+    T,
+  >() => T extends FilteredOps[K]["responses"][200]["content"][Ct] ? 1 : 2
+    ? X
+    : never;
 
-export type Color = CheckCompat<z.infer<typeof ColorZ>, 'GameCompat'>;
-export type Source = CheckCompat<z.infer<typeof SourceZ>, 'GameSource'>;
-export type Status = z.infer<typeof StatusZ>;
-export type Speed = z.infer<typeof SpeedZ>;
-export type GameEventOpponent = z.infer<typeof GameEventOpponentZ>;
-export type GameCompat = z.infer<typeof GameCompatZ>;
-export type VariantKey = z.infer<typeof VariantKeyZ>;
-export type GameEventInfo = z.infer<typeof GameEventInfoZ>;
-export type GameStartEvent = z.infer<typeof GameStartEventZ>;
-export type GameFinishEvent = z.infer<typeof GameFinishEventZ>;
-export type ChallengeStatus = z.infer<typeof ChallengeStatusZ>;
-export type ChallengeUser = z.infer<typeof ChallengeUserZ>;
-export type RealTime = z.infer<typeof RealTimeZ>;
-export type Correspondence = z.infer<typeof CorrespondenceZ>;
-export type Unlimited = z.infer<typeof UnlimitedZ>;
-export type TimeControl = z.infer<typeof TimeControlZ>;
-export type ChallengeJson = z.infer<typeof ChallengeJsonZ>;
-export type ChallengeAIJson = z.infer<typeof ChallengeAIJsonZ>;
-export type ChallengeEvent = z.infer<typeof ChallengeEventZ>;
-export type ChallengeCanceledEvent = z.infer<typeof ChallengeCanceledEventZ>;
-export type DeclineReason = z.infer<typeof DeclineReasonZ>;
-export type ChallengeDeclinedJson = z.infer<typeof ChallengeDeclinedJsonZ>;
-export type ChallengeDeclinedEvent = z.infer<typeof ChallengeDeclinedEventZ>;
+export type Color = CheckSchema<z.infer<typeof ColorZ>, "GameCompat">;
+export type Source = CheckSchema<z.infer<typeof SourceZ>, "GameSource">;
+export type Status = CheckSchema<z.infer<typeof StatusZ>, "GameStatus">;
+export type Speed = CheckSchema<z.infer<typeof SpeedZ>, "Speed">;
+export type GameEventOpponent = CheckSchema<
+  z.infer<typeof GameEventOpponentZ>,
+  "GameEventOpponent"
+>;
+export type GameCompat = CheckSchema<z.infer<typeof GameCompatZ>, "GameCompat">;
+export type VariantKey = CheckSchema<z.infer<typeof VariantKeyZ>, "VariantKey">;
+export type GameEventInfo = CheckSchema<
+  z.infer<typeof GameEventInfoZ>,
+  "GameEventInfo"
+>;
+export type GameStartEvent = CheckSchema<
+  z.infer<typeof GameStartEventZ>,
+  "GameStartEvent"
+>;
+export type GameFinishEvent = CheckSchema<
+  z.infer<typeof GameFinishEventZ>,
+  "GameFinishEvent"
+>;
+export type ChallengeStatus = CheckSchema<
+  z.infer<typeof ChallengeStatusZ>,
+  "ChallengeStatus"
+>;
+export type ChallengeUser = CheckSchema<
+  z.infer<typeof ChallengeUserZ>,
+  "ChallengeUser"
+>;
+
+export type RealTime = z.infer<typeof RealTimeZ>; // lichess NN
+export type Correspondence = z.infer<typeof CorrespondenceZ>; // lichess NN
+export type Unlimited = z.infer<typeof UnlimitedZ>; // lichess NN
+
+export type TimeControl = CheckSchema<
+  z.infer<typeof TimeControlZ>,
+  "TimeControl"
+>;
+export type ChallengeJson = CheckSchema<
+  z.infer<typeof ChallengeJsonZ>,
+  "ChallengeJson"
+>;
+// export type ChallengeAIJson = z.infer<typeof ChallengeAIJsonZ>;
+export type ChallengeEvent = CheckSchema<
+  z.infer<typeof ChallengeEventZ>,
+  "ChallengeEvent"
+>;
+export type ChallengeCanceledEvent = CheckSchema<
+  z.infer<typeof ChallengeCanceledEventZ>,
+  "ChallengeCanceledEvent"
+>;
+
+export type DeclineReason = z.infer<typeof DeclineReasonZ>; // lichess NN
+export type ChallengeDeclinedJson = CheckSchema<
+  z.infer<typeof ChallengeDeclinedJsonZ>,
+  "ChallengeDeclinedJson"
+>;
+export type ChallengeDeclinedEvent = CheckSchema<
+  z.infer<typeof ChallengeDeclinedEventZ>,
+  "ChallengeDeclinedEvent"
+>;
+
+// in operation.apiStreamEvent.responses.content['application/x-ndjson']
 export type StreamEvent = z.infer<typeof StreamEventZ>;
 
 export type ChallengeList = z.infer<typeof ChallengeListZ>;
@@ -668,17 +732,41 @@ export type ResponseOk = z.infer<typeof ResponseOkZ>;
 export type RequestSeekClock = z.infer<typeof RequestSeekClockZ>;
 export type ResponseId = z.infer<typeof ResponseIdZ>;
 
-export type Clock = z.infer<typeof ClockZ>;
-export type PerfName = z.infer<typeof PerfNameZ>;
-export type Title = z.infer<typeof TitleZ>;
-export type GameEventPlayer = z.infer<typeof GameEventPlayerZ>;
-export type GameStatusName = z.infer<typeof GameStatusNameZ>;
-export type GameStateEvent = z.infer<typeof GameStateEventZ>;
-export type GameFullEvent = z.infer<typeof GameFullEventZ>;
-export type ChatLineEvent = z.infer<typeof ChatLineEventZ>;
-export type OpponentGoneEvent = z.infer<typeof OpponentGoneEventZ>;
-export type BoardEvent = z.infer<typeof BoardEventZ>;
-export type BoardMove = z.infer<typeof BoardMoveZ>;
+export type Clock = CheckSchema<z.infer<typeof ClockZ>, "Clock">;
+export type PerfName = z.infer<typeof PerfNameZ>; // lichess NN
+export type Title = CheckSchema<z.infer<typeof TitleZ>, "Title">;
+export type GameEventPlayer = CheckSchema<
+  z.infer<typeof GameEventPlayerZ>,
+  "GameEventPlayer"
+>;
+export type GameStatusName = CheckSchema<
+  z.infer<typeof GameStatusNameZ>,
+  "GameStatusName"
+>;
+export type GameStateEvent = CheckSchema<
+  z.infer<typeof GameStateEventZ>,
+  "GameStateEvent"
+>;
+export type GameFullEvent = CheckSchema<
+  z.infer<typeof GameFullEventZ>,
+  "GameFullEvent"
+>;
+export type ChatLineEvent = CheckSchema<
+  z.infer<typeof ChatLineEventZ>,
+  "ChatLineEvent"
+>;
+export type OpponentGoneEvent = CheckSchema<
+  z.infer<typeof OpponentGoneEventZ>,
+  "OpponentGoneEvent"
+>;
+
+// in operation.boardGameStream.responses.content['application/x-ndjson']
+export type BoardEvent = CheckOpContent<
+  z.infer<typeof BoardEventZ>,
+  "boardGameStream",
+  "application/x-ndjson"
+>;
+
 export type User = z.infer<typeof UserZ>;
 export type Perf = z.infer<typeof PerfZ>;
 export type Perfs = z.infer<typeof PerfsZ>;
